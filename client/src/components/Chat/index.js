@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import qs from 'query-string';
 import io from 'socket.io-client';
-import Input from '../Input/Input';
-import InfoBar from '../InfoBar/InfoBar';
-import Messages from '../Messages/Messages';
+import Input from '../Input';
+import InfoBar from '../InfoBar';
+import Messages from '../Messages';
 let socket;
 
 const Chat = () => {

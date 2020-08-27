@@ -4,24 +4,32 @@ import { Button, Container, Row, Col } from 'react-bootstrap';
 import './join.scss';
 
 const Join = () => {
-    const [name, setName] = useState('');
-    const [room, setRoom] = useState('');
+  const [name, setName] = useState('');
+  const [room, setRoom] = useState('');
 
-    return (
-        <div className="join-wrapper">
-            <h1>Join</h1>
-            <div><input placeholder="name" onChange={(e) => setName(e.target.value)} /></div>
-            <div><input placeholder="room" onChange={(e) => setRoom(e.target.value)} /></div>
-            <Link onClick={event => (!name||!room) ? event.preventDefault(): null} to={`/chat?name=${name}&room=${room}`}>
-                <Button className="button" type="submit">Join In</Button>
-            </Link>
-            <Container fluid>
-                <Row>
-                    <Col>1 of 1</Col>
-                </Row>
-            </Container>
-        </div>
-    )
+  return (
+    <Container>
+      <h1>Join</h1>
+      <input
+        className="chat__input"
+        placeholder="name"
+        onChange={e => setName(e.target.value)}
+      />
+      <input
+        className="chat__input"
+        placeholder="room"
+        onChange={e => setRoom(e.target.value)}
+      />
+      <Link
+        onClick={event => (!name || !room ? event.preventDefault() : null)}
+        to={`/chat?name=${name}&room=${room}`}
+      >
+        <Button className="btn-primary" type="submit">
+          Join In
+        </Button>
+      </Link>
+    </Container>
+  );
 };
 
 export default Join;

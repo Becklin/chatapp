@@ -1,11 +1,18 @@
-@import "~bootstrap/scss/bootstrap";
-$main-color: '#0050C1';
+@import './variables.scss';
+@import '~bootstrap/scss/bootstrap';
+
+#root {
+  background-color: $main;
+  height: 100vh;
+  display: flex;
+}
+
 .chat {
-    &__input {
-        display: block;
-        width: 100%;
-        margin: 6px 0;
-    }
+  &__input {
+    display: block;
+    width: 100%;
+    margin: 8px 0;
+  }
 }
 //https://itnext.io/structuring-your-sass-projects-c8d41fa55ed4
 // sass/

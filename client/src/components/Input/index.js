@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
-import './Input.css';
+import './index.scss';
 
 const Input = ({ message, setMessage, sendMessage }) => (
   <form className="chat__form">

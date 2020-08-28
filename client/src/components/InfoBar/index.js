@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './InfoBar.css';
+import './index.scss';
 
 const InfoBar = ({room}) => (
     <div className="infoBar">

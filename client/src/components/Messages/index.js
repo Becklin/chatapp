@@ -4,9 +4,12 @@ import Message from '../Message';
 import './index.scss';
 
 const Messages = ({messages, name}) => (
-    <ScrollToBottom>
-        {messages.map((message, index) => <div key={index}><Message message={message} name={name} /></div>)}
+    <ScrollToBottom className="chat__messages" >
+        {messages.map((message, index) => {
+            console.log(index);
+        return (<Message key={`name-${index}`} message={message} name={name} />)
+        })}
     </ScrollToBottom>
 );
 
-export default Messages;
+export default React.memo(Messages);

@@ -14,15 +14,21 @@ const Chat = () => {
   const [room, setRoom] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-
+  const [counts, setCounts] = useState(0);
   const ENDPOINT = 'localhost:5000';
+
+
   useEffect(() => {
     const { name, room } = qs.parse(search);
     socket = io(ENDPOINT);
     setName(name);
     setRoom(room);
-    console.log(socket);
-    socket.emit('join', { name, room }, () => {});
+
+    socket.emit('join', { name, room }, (error) => {
+      if(error) {
+        alert(error);
+      }
+    });
 
     return () => {
       socket.emit('disconnect');
@@ -31,11 +37,22 @@ const Chat = () => {
   }, [ENDPOINT, search]);
 
   useEffect(() => {
-    // wierd
+    // message 包含user, text, 這邊效能很像有問題
     socket.on('message', message => {
-      setMessages([...messages, message]);
+      console.log('message', message);
+      // setMessages([...messages, message]);
+      setMessages(messages => [ ...messages, message ]);
     });
-  }, [messages]);
+  }, []);
+
+  //自己加的
+  useEffect(() => {
+    // message 包含user, text
+    socket.on('roomData', ({users}) => {
+      setCounts(users.length);
+    });
+  }, [counts]);
+
 
   const sendMessage = event => {
     event.preventDefault();
@@ -43,9 +60,10 @@ const Chat = () => {
       socket.emit('sendMessage', message, () => setMessage(''));
     }
   };
+  console.log('重複');
   return (
     <Container fluid>
-      <InfoBar room={room} />
+      <InfoBar room={room} counts={counts} />
       <Messages messages={messages} name={name} />
       <Input
         message={message}

@@ -5,7 +5,7 @@ import ReactEmoji from 'react-emoji';
 import './index.scss';
 
 //USER送發訊息的人，name該聊天室使用者名字
-const Message = ({message: { user, text }, name, avatarSrc }) => {
+const Message = ({message: { user, text, address }, name, avatarSrc }) => {
     let isSentByCurrentUser = false;
     const trimmedName = name.trim().toLowerCase();
     if (trimmedName === user) isSentByCurrentUser = true;
@@ -18,7 +18,7 @@ const Message = ({message: { user, text }, name, avatarSrc }) => {
                 <h4>{title}</h4>
             </div>
             <div className={`chat-message__content chat-message__content--${role}`}>
-                {ReactEmoji.emojify(text)}
+                {address ? <div dangerouslySetInnerHTML={{ __html: address }} /> : ReactEmoji.emojify(text)}
            </div>
         </div>
     )

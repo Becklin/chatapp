@@ -37,10 +37,8 @@ const Chat = () => {
   }, [ENDPOINT, search]);
 
   useEffect(() => {
-    // message 包含user, text, 這邊效能很像有問題
+    // message 包含user, text
     socket.on('message', message => {
-      console.log('message', message);
-      // setMessages([...messages, message]);
       setMessages(messages => [ ...messages, message ]);
     });
   }, []);

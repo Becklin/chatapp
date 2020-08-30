@@ -23,14 +23,14 @@ io.on('connection', (socket) => {
     })
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id);
-        // const isGoogleTyping = message.includes("@gg=");
-        // if(isGoogleTyping) {
-        //  const address = message.split("@gg=").pop();
-        //  const addressUrl = `<a href='https://www.google.com.tw/maps/place/${address}'>${address}</a>`;
-        //  io.to(user.room).emit('message', { user: user.name, text: addressUrl });
-        //  callback(); //奇怪
-        //  return;
-        // }
+        const isGoogleTyping = message.includes("@gg=");
+        if(isGoogleTyping) {
+         const destination = message.split("@gg=").pop();
+         const addressDom = `<a target="blank" href='https://www.google.com.tw/maps/place/${destination}'>${destination}</a>`;
+         io.to(user.room).emit('message', { user: user.name, text: null, address: addressDom });
+         callback(); //奇怪
+         return;
+        }
         //io.to要查
         io.to(user.room).emit('message', { user: user.name, text: message });
         // io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});

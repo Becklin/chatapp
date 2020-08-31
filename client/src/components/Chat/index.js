@@ -17,15 +17,14 @@ const Chat = () => {
   const [counts, setCounts] = useState(0);
   const ENDPOINT = 'localhost:5000';
 
-
   useEffect(() => {
     const { name, room } = qs.parse(search);
     socket = io(ENDPOINT);
     setName(name);
     setRoom(room);
 
-    socket.emit('join', { name, room }, (error) => {
-      if(error) {
+    socket.emit('join', { name, room }, error => {
+      if (error) {
         alert(error);
       }
     });
@@ -39,18 +38,28 @@ const Chat = () => {
   useEffect(() => {
     // message 包含user, text
     socket.on('message', message => {
-      setMessages(messages => [ ...messages, message ]);
+      setMessages(messages => [...messages, message]);
+    });
+
+    socket.on('image', info => {
+      console.log('觸發', info);
+      if (info.image) {
+        var img = new Image();
+        console.log('buffer', info.buffer);
+        // img.src = 'data:image/jpeg;base64,' + info.buffer;
+        setMessages(messages => [...messages, { imgBuffer: info.buffer }]);
+        // ctx.drawImage(img, 0, 0);
+      }
     });
   }, []);
 
   //自己加的
   useEffect(() => {
     // message 包含user, text
-    socket.on('roomData', ({users}) => {
+    socket.on('roomData', ({ users }) => {
       setCounts(users.length);
     });
   }, [counts]);
-
 
   const sendMessage = event => {
     event.preventDefault();

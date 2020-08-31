@@ -5,23 +5,43 @@ import ReactEmoji from 'react-emoji';
 import './index.scss';
 
 //USER送發訊息的人，name該聊天室使用者名字
-const Message = ({message: { user, text, address }, name, avatarSrc }) => {
-    let isSentByCurrentUser = false;
-    const trimmedName = name.trim().toLowerCase();
-    if (trimmedName === user) isSentByCurrentUser = true;
-    const role = isSentByCurrentUser ? 'user':'friend';
-    const title = role === "user" ? trimmedName : user;
-    return (
-        <div className="chat-message__wrapper">
-            <div className={`chat-message__userInfo chat-message__userInfo--${role}`}>
-                <span className="chat-message__avatar">{avatarSrc ? <Image src={avatarSrc} roundedCircle /> : <PersonCircle size={24}/>}</span>
-                <h4>{title}</h4>
-            </div>
-            <div className={`chat-message__content chat-message__content--${role}`}>
-                {address ? <div dangerouslySetInnerHTML={{ __html: address }} /> : ReactEmoji.emojify(text)}
-           </div>
-        </div>
-    )
+const Message = ({
+  message: { user, text, address, imgBuffer },
+  name,
+  avatarSrc
+}) => {
+  let isSentByCurrentUser = false;
+  const trimmedName = name.trim().toLowerCase();
+  if (trimmedName === user) isSentByCurrentUser = true;
+  const role = isSentByCurrentUser ? 'user' : 'friend';
+  const title = role === 'user' ? trimmedName : user;
+  return (
+    <div className="chat-message__wrapper">
+      <div className={`chat-message__userInfo chat-message__userInfo--${role}`}>
+        <span className="chat-message__avatar">
+          {avatarSrc ? (
+            <Image src={avatarSrc} roundedCircle />
+          ) : (
+            <PersonCircle size={24} />
+          )}
+        </span>
+        <h4>{title}</h4>
+      </div>
+      <div className={`chat-message__content chat-message__content--${role}`}>
+        {address ? (
+          <div dangerouslySetInnerHTML={{ __html: address }} />
+        ) : (
+          ReactEmoji.emojify(text)
+        )}
+        {imgBuffer && (
+          <img
+            className="img-thumbnail img-fluid"
+            src={`data:image/png;base64, ${imgBuffer}`}
+          />
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default Message;

@@ -40,17 +40,23 @@ const Chat = () => {
     socket.on('message', message => {
       setMessages(messages => [...messages, message]);
     });
-
     socket.on('image', info => {
       console.log('觸發', info);
-      if (info.image) {
-        var img = new Image();
-        console.log('buffer', info.buffer);
-        // img.src = 'data:image/jpeg;base64,' + info.buffer;
-        setMessages(messages => [...messages, { imgBuffer: info.buffer }]);
-        // ctx.drawImage(img, 0, 0);
+      if (info.upload) {
+        console.log('info.upload', info.upload);
+        setMessages(messages => [...messages, { upload: info.upload }]);
       }
     });
+    // socket.on('image', info => {
+    //   console.log('觸發', info);
+    //   if (info.image) {
+    //     var img = new Image();
+    //     console.log('buffer', info.buffer);
+    //     // img.src = 'data:image/jpeg;base64,' + info.buffer;
+    //     setMessages(messages => [...messages, { imgBuffer: info.buffer }]);
+    //     // ctx.drawImage(img, 0, 0);
+    //   }
+    // });
   }, []);
 
   //自己加的
@@ -67,6 +73,11 @@ const Chat = () => {
       socket.emit('sendMessage', message, () => setMessage(''));
     }
   };
+
+  const sendImage = img => {
+    socket.emit('sendImage', img, () => {});
+  };
+
   console.log('重複');
   return (
     <Container fluid>
@@ -76,6 +87,7 @@ const Chat = () => {
         message={message}
         setMessage={setMessage}
         sendMessage={sendMessage}
+        sendImage={sendImage}
       />
     </Container>
   );

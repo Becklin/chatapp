@@ -17,11 +17,11 @@ const {
 io.on('connection', socket => {
   console.log('we have connection!!!');
 
-  fs.readFile(__dirname + '/images/img1.jpg', function(err, buf) {
-    console.log(buf);
-    socket.emit('image', { image: true, buffer: buf.toString('base64') });
-    console.log('image file is initialized');
-  });
+//   fs.readFile(__dirname + '/images/img1.jpg', function(err, buf) {
+//     console.log(buf);
+//     socket.emit('image', { image: true, buffer: buf.toString('base64') });
+//     console.log('image file is initialized');
+//   });
 
   socket.on('join', ({ name, room }, errorCallback) => {
     const { error, user } = addUser({ id: socket.id, name, room });
@@ -66,6 +66,13 @@ io.on('connection', socket => {
     io.to(user.room).emit('message', { user: user.name, text: message });
     // io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
     callback(); //奇怪
+  });
+  
+  socket.on('sendImage', (img, callback) => {
+    const user = getUser(socket.id);
+    //io.to要查
+    io.to(user.room).emit('image', { user: user.name, upload: img  });
+    callback();
   });
 
   socket.on('disconnect', () => {

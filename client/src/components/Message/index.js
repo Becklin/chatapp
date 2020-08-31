@@ -6,7 +6,7 @@ import './index.scss';
 
 //USER送發訊息的人，name該聊天室使用者名字
 const Message = ({
-  message: { user, text, address, imgBuffer },
+  message: { user, text, address, imgBuffer, upload },
   name,
   avatarSrc
 }) => {
@@ -15,6 +15,13 @@ const Message = ({
   if (trimmedName === user) isSentByCurrentUser = true;
   const role = isSentByCurrentUser ? 'user' : 'friend';
   const title = role === 'user' ? trimmedName : user;
+  console.log('upload', upload);
+
+  var arrayBufferView = new Uint8Array( upload );
+  var blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
+  var urlCreator = window.URL || window.webkitURL;
+  var imageUrl = urlCreator.createObjectURL( blob );
+
   return (
     <div className="chat-message__wrapper">
       <div className={`chat-message__userInfo chat-message__userInfo--${role}`}>
@@ -25,7 +32,7 @@ const Message = ({
             <PersonCircle size={24} />
           )}
         </span>
-        <h4>{title}</h4>
+        <h6>{title}</h6>
       </div>
       <div className={`chat-message__content chat-message__content--${role}`}>
         {address ? (
@@ -38,6 +45,9 @@ const Message = ({
             className="img-thumbnail img-fluid"
             src={`data:image/png;base64, ${imgBuffer}`}
           />
+        )}
+        {upload && (
+          <img src={imageUrl} />
         )}
       </div>
     </div>

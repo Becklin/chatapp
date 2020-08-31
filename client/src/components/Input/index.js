@@ -1,8 +1,9 @@
 import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
+import UploadButton from '../UploadButton';
 import './index.scss';
 
-const Input = ({ message, setMessage, sendMessage }) => (
+const Input = ({ message, setMessage, sendMessage, sendImage }) => (
   <form className="chat__form">
     <Row>
       <Col xs={8}>
@@ -18,11 +19,17 @@ const Input = ({ message, setMessage, sendMessage }) => (
       <Col xs={4}>
         <Button
         disabled={!message}
-        size="lg"
+        size="sm"
         onClick={event => sendMessage(event)}
         >
           send
         </Button>
+        <UploadButton
+          size="sm"
+          sendImage={sendImage}
+          >
+          images
+        </UploadButton>
       </Col>
     </Row>
   </form>

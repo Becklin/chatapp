@@ -40,26 +40,14 @@ const Chat = () => {
     socket.on('message', message => {
       setMessages(messages => [...messages, message]);
     });
-    socket.on('image', info => {
-      console.log('觸發', info);
-      if (info.upload) {
-        console.log('info.upload', info.upload);
-        setMessages(messages => [...messages, { upload: info.upload }]);
+    socket.on('file', ({ user, upload, type }) => {
+      console.log('觸發', user, upload, type);
+      if (upload) {
+        setMessages(messages => [...messages, { user, upload, type }]);
       }
     });
-    // socket.on('image', info => {
-    //   console.log('觸發', info);
-    //   if (info.image) {
-    //     var img = new Image();
-    //     console.log('buffer', info.buffer);
-    //     // img.src = 'data:image/jpeg;base64,' + info.buffer;
-    //     setMessages(messages => [...messages, { imgBuffer: info.buffer }]);
-    //     // ctx.drawImage(img, 0, 0);
-    //   }
-    // });
   }, []);
 
-  //自己加的
   useEffect(() => {
     // message 包含user, text
     socket.on('roomData', ({ users }) => {
@@ -74,11 +62,14 @@ const Chat = () => {
     }
   };
 
-  const sendImage = img => {
-    socket.emit('sendImage', img, () => {});
+  const sendFile = file => {
+    const data = {
+      type: file.type,
+      buf: file
+    };
+    socket.emit('sendFile', data, () => {});
   };
 
-  console.log('重複');
   return (
     <Container fluid>
       <InfoBar room={room} counts={counts} />
@@ -87,7 +78,7 @@ const Chat = () => {
         message={message}
         setMessage={setMessage}
         sendMessage={sendMessage}
-        sendImage={sendImage}
+        sendFile={sendFile}
       />
     </Container>
   );

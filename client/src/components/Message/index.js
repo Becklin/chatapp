@@ -20,8 +20,10 @@ const Message = ({
     if (type) {
       switch (type) {
         case 'video/mp4':
+        case 'video/quicktime':
+
           return (
-            <video width="320" height="240" controls>
+            <video controls>
               <source
                 src={`data:image/png;base64, ${upload}`}
                 type="video/mp4"
@@ -34,6 +36,7 @@ const Message = ({
             </video>
           );
         case 'image/jpeg':
+        case 'image/png':
           return (
             <img
               className="img-thumbnail img-fluid"
@@ -56,10 +59,10 @@ const Message = ({
             <PersonCircle size={24} />
           )}
         </span>
-        <h6>{title}</h6>
-      </div>
-      <div className={`chat-message__content chat-message__content--${role}`}>
-        {renderFile(address, type)}
+        <span>{title}</span>
+        <div className={`chat-message__content chat-message__content--${role}`}>
+          {renderFile(address, type)}
+        </div>
       </div>
     </div>
   );

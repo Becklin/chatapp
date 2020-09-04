@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import qs from 'query-string';
 import io from 'socket.io-client';
+import ss from 'socket.io-stream';
 import { Container } from 'react-bootstrap';
 import Input from '../Input';
 import InfoBar from '../InfoBar';
@@ -61,14 +62,18 @@ const Chat = () => {
       socket.emit('sendMessage', message, () => setMessage(''));
     }
   };
-
   const sendFile = file => {
-    const data = {
-      type: file.type,
-      buf: file
-    };
-    socket.emit('sendFile', data, () => {});
+  var stream = ss.createStream(file);
+    console.log('files', file);
+    ss(socket).emit('sendFile', stream, {name: file.name});
   };
+  // const sendFile = file => {
+  //   const data = {
+  //     type: file.type,
+  //     buf: file
+  //   };
+  //   socket.emit('sendFile', data, () => {});
+  // };
 
   return (
     <Container fluid>

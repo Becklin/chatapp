@@ -1,7 +1,9 @@
 const express = require('express');
 const socketio = require('socket.io');
+var ss = require('socket.io-stream');
 const http = require('http');
 const fs = require('fs');
+const path = require('path');
 
 const PORT = process.env.PORT || 5000;
 const router = require('./router');
@@ -22,6 +24,15 @@ io.on('connection', socket => {
   //     socket.emit('image', { image: true, buffer: buf.toString('base64') });
   //     console.log('image file is initialized');
   //   });
+  // let medium = '';
+  // var readableStream = fs.createReadStream('../DigitalGlobe_QuickBird_60cm_8bit_RGB_DRA_Boulder_2005JUL04_8bits_sub_r_1.jpg');
+  // readableStream.on('data', function(chunk) {
+  //   console.log('強克', chunk);
+  //   medium+=chunk;
+  // });
+  // readableStream.on('end', function() {
+  //     console.log(medium);
+  // });
 
   socket.on('join', ({ name, room }, errorCallback) => {
     const { error, user } = addUser({ id: socket.id, name, room });
@@ -68,18 +79,32 @@ io.on('connection', socket => {
     callback(); //奇怪
   });
 
-  socket.on('sendFile', (data, callback) => {
+  // socket.on('sendFile', (data, callback) => {
+  //   const user = getUser(socket.id);
+  //   //io.to要查
+  //   console.log('data', data); //自動轉換成bufferz
+  //   io.to(user.room).emit('file', {
+  //     user: user.name,
+  //     upload: data.buf.toString('base64'),
+  //     type: data.type
+  //   });
+  //   callback();
+  // });
+  ss(socket).on('sendFile', (stream, data) => {
+    console.log('data', data);
+    console.log('stream', stream);
     const user = getUser(socket.id);
     //io.to要查
-    console.log('data', data); //自動轉換成buffer
-    io.to(user.room).emit('file', {
-      user: user.name,
-      upload: data.buf.toString('base64'),
-      type: data.type
-    });
-    callback();
+    const filename = path.basename(data.name);
+    console.log('filename', filename);
+    stream.pipe(fs.createWriteStream(filename));
+    // io.to(user.room).emit('file', {
+    //   user: user.name,
+    //   upload: data.buf.toString('base64'),
+    //   type: data.type
+    // });
+    // callback();
   });
-
   socket.on('disconnect', () => {
     console.log('disconnect!!!');
     const user = removeUser(socket.id);

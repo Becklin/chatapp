@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image } from 'react-bootstrap';
-import { PersonCircle, SimFill } from 'react-bootstrap-icons';
+import { PersonCircle } from 'react-bootstrap-icons';
 import ReactEmoji from 'react-emoji';
 import './index.scss';
 

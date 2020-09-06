@@ -42,7 +42,6 @@ const Chat = () => {
       setMessages(messages => [...messages, message]);
     });
     socket.on('file', ({ user, upload, type }) => {
-      console.log('觸發', user, upload, type);
       if (upload) {
         setMessages(messages => [...messages, { user, upload, type }]);
       }
@@ -63,17 +62,16 @@ const Chat = () => {
     }
   };
   const sendFile = file => {
-  var stream = ss.createStream(file);
-    console.log('files', file);
+    const stream = ss.createStream();
     ss(socket).emit('sendFile', stream, {name: file.name});
+    const blobStream = ss.createBlobReadStream(file);//for browser use
+    let size = 0;
+    blobStream.on('data', function(chunk) {
+      size += chunk.length;
+      console.log(Math.floor(size / file.size * 100) + '%');
+    });
+    blobStream.pipe(stream);
   };
-  // const sendFile = file => {
-  //   const data = {
-  //     type: file.type,
-  //     buf: file
-  //   };
-  //   socket.emit('sendFile', data, () => {});
-  // };
 
   return (
     <Container fluid>

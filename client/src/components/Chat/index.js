@@ -42,6 +42,7 @@ const Chat = () => {
       setMessages(messages => [...messages, message]);
     });
     socket.on('file', ({ user, upload, type }) => {
+      console.log(user, type, upload);
       if (upload) {
         setMessages(messages => [...messages, { user, upload, type }]);
       }
@@ -62,15 +63,12 @@ const Chat = () => {
     }
   };
   const sendFile = file => {
+    //socket.emit('sendFile', file, {name: file.name, type: file.type, size: file.size}, () => {});
+   
+   
     const stream = ss.createStream();
-    ss(socket).emit('sendFile', stream, {name: file.name});
-    const blobStream = ss.createBlobReadStream(file);//for browser use
-    let size = 0;
-    blobStream.on('data', function(chunk) {
-      size += chunk.length;
-      console.log(Math.floor(size / file.size * 100) + '%');
-    });
-    blobStream.pipe(stream);
+    ss(socket).emit('sendFile', stream, {name: file.name, type: file.type, size: file.size}, () => {});
+    ss.createBlobReadStream(file).pipe(stream);
   };
 
   return (

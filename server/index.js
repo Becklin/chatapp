@@ -17,23 +17,23 @@ const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
-let myBucket = 'eazychat';
-let myKey = 'test';
-s3.createBucket({ Bucket: myBucket }, function(err, data) {
-  if (err) {
-    console.log(err);
-  } else {
-    params = { Bucket: myBucket, Key: myKey, Body: "Hello!" };
+// let myBucket = 'eazychat';
+// let myKey = 'test';
+// s3.createBucket({ Bucket: myBucket }, function(err, data) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     params = { Bucket: myBucket, Key: myKey, Body: "Hello!" };
 
-    s3.putObject(params, function(err, data) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("Successfully uploaded data to myBucket/myKey");
-      }
-    });
-  }
-});
+//     s3.putObject(params, function(err, data) {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         console.log("Successfully uploaded data to myBucket/myKey");
+//       }
+//     });
+//   }
+// });
 
 const {
   addUser,
@@ -73,14 +73,11 @@ io.on('connection', socket => {
   // });
 
   //來玩玩socket.io-stream
-  ss(socket).on('sendFile', function(stream, data) {
-    console.log('data', data);
-    var filename = path.basename(data.name);
-    stream.pipe(fs.createWriteStream(filename));
-  });
-
-
-
+  // ss(socket).on('sendFile', function(stream, data) {
+  //   console.log('data', data);
+  //   var filename = path.basename(data.name);
+  //   stream.pipe(fs.createWriteStream(filename));
+  // });
 
 
   socket.on('join', ({ name, room }, errorCallback) => {
@@ -128,34 +125,41 @@ io.on('connection', socket => {
     callback(); //奇怪
   });
 
-  // socket.on('sendFile', (data, callback) => {
-  //   const user = getUser(socket.id);
-  //   //io.to要查
-  //   console.log('data', data); //自動轉換成bufferz
-  //   io.to(user.room).emit('file', {
-  //     user: user.name,
-  //     upload: data.buf.toString('base64'),
-  //     type: data.type
-  //   });
-  //   callback();
-  // });
-  ss(socket).on('sendFile_bak', (stream, data) => {
-    console.log('data', data);
-    console.log('stream', stream);
+  /* 可用的snippet
+  socket.on('sendFile', (file, data, callback) => {
+    const user = getUser(socket.id);
+    //io.to要查
+    console.log('file', file); //自動轉換成buffer
+    console.log('data', data); //自動轉換成buffer
+
+    io.to(user.room).emit('file', {
+      user: data.name,
+      upload: file.toString('base64'),
+      type: data.type
+    });
+    callback();
+  });
+  */
+  ss(socket).on('sendFile', (stream, data, callback) => {
     const user = getUser(socket.id);
     //io.to要查
     const filename = path.basename(data.name);
-    console.log('filename', filename);
+    let fileBuffer = [];
+    let size = 0;
     stream.on('data', (chunk) => {
-      console.log(chunk);
-    })
-    stream.pipe(fs.createWriteStream(filename));
-    // io.to(user.room).emit('file', {
-    //   user: user.name,
-    //   upload: data.buf.toString('base64'),
-    //   type: data.type
-    // });
-    // callback();
+      size += chunk.length;
+      console.log(Math.floor(size / data.size * 100) + '%');
+      fileBuffer.push(chunk)
+    });
+    //TODO 要把檔案縮小再傳回前端
+    stream.on("end", () => {
+      io.to(user.room).emit("file", {
+        user: user.name,
+        upload: Buffer.concat(fileBuffer).toString('base64'),
+        type: data.type,
+      });
+    });
+    callback();
   });
   socket.on('disconnect', () => {
     console.log('disconnect!!!');

@@ -25,7 +25,6 @@ const UploadButton = ({ sendFile }) => {
     // webkitRelativePath: ""
     let formData = new FormData();
     formData.append(0, files[0]);
-    console.log(formData.get(0));
     sendFile(formData.get(0));
   };
 

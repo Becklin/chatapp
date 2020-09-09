@@ -15,7 +15,7 @@ const io = socketio(server);
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  accessKeyId: process.env.AWS_ACCESS_KEY,
 });
 // let myBucket = 'eazychat';
 // let myKey = 'test';
@@ -139,28 +139,53 @@ io.on('connection', socket => {
     callback();
   });
   */
-  ss(socket).on('sendFile', (stream, data, callback) => {
+
+  const uploadFile = (bufferData, fileName, userName) => {
+    const params = {
+        Bucket: 'eazychat', // pass your bucket name
+        Key: fileName, // file will be saved as testBucket/contacts.csv
+        Body: bufferData, //JSON.stringify(data, null, 2)
+    };
+    s3.upload(params, function(s3Err, data) {
+        if (s3Err) throw s3Err
+        console.log(`上傳成功位子在 ${data.Location}`)
+    });
+  };
+
+  ss(socket).on('uploadFile', (stream, data, callback) => {
     const user = getUser(socket.id);
     //io.to要查
-    const filename = path.basename(data.name);
-    let fileBuffer = [];
+    // const filename = path.basename(data.name);
     let size = 0;
+    let fileBuffer = [];
     stream.on('data', chunk => {
       size += chunk.length;
       console.log(Math.floor((size / data.size) * 100) + '%');
       fileBuffer.push(chunk);
     });
-    /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
-    右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/
     stream.on("end", () => {
-      io.to(user.room).emit("file", {
-        user: user.name,
-        upload: Buffer.concat(fileBuffer).toString('base64'),
-        type: data.type,
-      });
+      const BufferData = Buffer.concat(fileBuffer);
+      uploadFile(BufferData, data.name, user.name);
     });
-    */
-    callback();
+    
+    // stream.pipe(fs.createWriteStream(filename));
+    /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
+    右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/ */
+    // stream.on("end", () => {
+      // io.to(user.room).emit("file", {
+      //   user: user.name,
+      //   upload: Buffer.concat(fileBuffer).toString('base64'),
+      //   type: data.type,
+      // });
+      
+    // });
+      //來玩玩socket.io-stream
+  // ss(socket).on('sendFile', function(stream, data) {
+  //   console.log('data', data);
+  //   var filename = path.basename(data.name);
+  //   stream.pipe(fs.createWriteStream(filename));
+  // });
+    callback && callback();
   });
   socket.on('disconnect', () => {
     console.log('disconnect!!!');

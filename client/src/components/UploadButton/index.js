@@ -8,7 +8,6 @@ const UploadButton = ({ sendFile }) => {
   // const [uploading, setUploading] = useState(false);
 
   const onChange = e => {
-    console.log(e.target.files);
     const files = Array.from(e.target.files);
     // lastModified: 1598938657151
     // lastModifiedDate: Tue Sep 01 2020 13:37:37 GMT+0800 (Taipei Standard Time) {}

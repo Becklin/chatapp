@@ -79,7 +79,6 @@ io.on('connection', socket => {
   //   stream.pipe(fs.createWriteStream(filename));
   // });
 
-
   socket.on('join', ({ name, room }, errorCallback) => {
     const { error, user } = addUser({ id: socket.id, name, room });
     if (error) return errorCallback(error);
@@ -146,12 +145,13 @@ io.on('connection', socket => {
     const filename = path.basename(data.name);
     let fileBuffer = [];
     let size = 0;
-    stream.on('data', (chunk) => {
+    stream.on('data', chunk => {
       size += chunk.length;
-      console.log(Math.floor(size / data.size * 100) + '%');
-      fileBuffer.push(chunk)
+      console.log(Math.floor((size / data.size) * 100) + '%');
+      fileBuffer.push(chunk);
     });
-    //TODO 要把檔案縮小再傳回前端
+    /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
+    右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/
     stream.on("end", () => {
       io.to(user.room).emit("file", {
         user: user.name,
@@ -159,6 +159,7 @@ io.on('connection', socket => {
         type: data.type,
       });
     });
+    */
     callback();
   });
   socket.on('disconnect', () => {

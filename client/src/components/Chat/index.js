@@ -62,8 +62,9 @@ const Chat = () => {
     }
   };
   const sendFile = file => {
+    /* upload large file */
     const stream = ss.createStream();
-    ss(socket).emit('sendFile', stream, { name: file.name, data: file.type });
+    ss(socket).emit('uploadFile', stream, { name: file.name, type: file.type, size: file.size });
     const blobStream = ss.createBlobReadStream(file); //for browser use, 本來寫法是什麼
     let size = 0;
     blobStream.on('data', function(chunk) {
@@ -71,6 +72,10 @@ const Chat = () => {
       console.log(Math.floor((size / file.size) * 100) + '%');
     });
     blobStream.pipe(stream);
+
+    /* generage compressed image designed to be broacasted to chatroom
+      https://stackoverflow.com/questions/14672746/how-to-compress-an-image-via-javascript-in-the-browser
+    */ 
   };
 
   return (

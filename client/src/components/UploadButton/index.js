@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Upload } from 'react-bootstrap-icons';
+import React from 'react';
 import './index.scss';
 
 //USER送發訊息的人，name該聊天室使用者名字

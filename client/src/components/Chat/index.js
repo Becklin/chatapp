@@ -79,9 +79,9 @@ const Chat = () => {
     // });
     // blobStream.pipe(stream);
 
-    const canvasDataURL = (path, obj, callback) => {
+    const canvasDataURL = (readerData, obj, callback) => {
       var img = new Image();
-      img.src = path;
+      img.src = readerData;
       img.onload = function() {
         var that = this;
         // 預設按比例壓縮
@@ -108,9 +108,13 @@ const Chat = () => {
           quality = obj.quality;
         }
         // quality值越小，所繪製出的影象越模糊
-        var base64 = canvas.toDataURL('image/jpeg', quality);
+        /*
+        我們只需要把<img>獲取到的圖片放到<canvas>裡再通過.toDataURL()方法轉化下，
+        就可以得到以 base64 編碼的 dataURL。來看這個方法的語法： 
+        */
+        var base64 = canvas.toDataURL('image/jpeg', 'image/webp', quality);
         // 回撥函式返回base64的值
-        callback(base64);
+        callback(base64);// 非同步onload只能回用回掉函數
       };
     };
     /*
@@ -121,15 +125,33 @@ const Chat = () => {
       objDiv：一個是容器或者回調函式
       photoCompress()
     */
-    const compressImage = (file, w, objDiv) => {
-      var ready = new FileReader();
-      /*開始讀取指定的Blob物件或File物件中的內容. 當讀取操作完成時,readyState屬性的值會成為DONE,如果設定了onloadend事件處理程式,則呼叫之.同時,result屬性中將包含一個data: URL格式的字串以表示所讀取檔案的內容.*/
-      ready.readAsDataURL(file);
-      ready.onload = function() {
-        var re = this.result;
-        canvasDataURL(re, w, objDiv);
+    const compressImage = (file, width, callback) => {
+      // 王牌文件 https://kknews.cc/zh-tw/code/e6p2ygq.html
+      // 神文 https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/227679/
+      /* 使用FileReader對象分三步走： 一 創建FileReader實例 */
+      var reader = new FileReader(); 
+      /* 開始讀取指定的Blob物件或File物件中的內容. 當讀取操作完成時,readyState屬性的值會成為DONE,
+        如果設定了onloadend事件處理程式,則呼叫之.
+        同時,result屬性中將包含一個data: URL格式的字串以表示所讀取檔案的內容.
+      */
+      
+      /* 讀取Blob或者File對象的數據內容 */
+      reader.readAsDataURL(file); // 讀取文件內容，結果用data:url的字符串形式表示
+
+      reader.onloadstart = function(){ console.log("加載已經開始") }
+      reader.onprogress = function(what) {
+        console.log('啥', what);  //注意必包
       };
+      /** 設置回調函數，這裡以讀取成功的回調函數為例： */
+      reader.onload = function() {
+        console.log('這裡', this);  //注意必包
+        var readerData = this.result;
+        // console.log('readerData', readerData);
+        canvasDataURL(readerData, width, callback);
+      };
+      reader.onloadend= function(){ console.log("加載已經結束") };
     };
+
     compressImage(file, 200, console.log);
     // ss(socket).emit('sendFile', stream, { name: file.name, data: file.type });
     // const blobStream = ss.createBlobReadStream(file); //for browser use, 本來寫法是什麼
@@ -139,7 +161,6 @@ const Chat = () => {
     //   console.log(Math.floor((size / file.size) * 100) + '%');
     // });
     // blobStream.pipe(stream);
->>>>>>> 30dc47722643ae4fb0cefcea42e1107fb180e530
   };
 
   return (

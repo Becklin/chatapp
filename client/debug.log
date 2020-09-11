@@ -290,3 +290,5 @@
 [0831/215859.236:ERROR:process_reader_win.cc(151)] SuspendThread: 存取被拒。 (0x5)
 [0831/215859.236:ERROR:process_reader_win.cc(123)] NtOpenThread: {拒絕存取} 程序已請求存取一物件，但未被授與存取權。 (0xc0000022)
 [0831/215859.236:ERROR:exception_snapshot_win.cc(98)] thread ID 10840 not found in process
+[0911/090057.299:ERROR:file_io.cc(90)] ReadExactly: expected 1400, observed 0
+[0911/090057.300:ERROR:crash_report_database_win.cc(447)] failed to read records

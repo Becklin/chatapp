@@ -62,6 +62,7 @@ const Chat = () => {
     }
   };
   const sendFile = file => {
+    /* upload large file */
     const stream = ss.createStream();
 
     /* 以下上傳原始檔案 */
@@ -77,39 +78,56 @@ const Chat = () => {
     //   console.log(Math.floor((size / file.size) * 100) + '%');
     // });
     // blobStream.pipe(stream);
+    const dataURLtoFile = (base64, filename) => {
+      var arr = base64.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
 
-    const canvasDataURL = (path, obj, callback) => {
-      var img = new Image();
-      img.src = path;
-      img.onload = function() {
-        var that = this;
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    };
+
+    const canvasDataURL = (readerData, config, callback) => {
+      let img = new Image();
+      img.src = readerData;
+      img.onload = () => {
+        // var that = this;
         // 預設按比例壓縮
-        var w = that.width,
-          h = that.height,
+        let w = img.width,
+          h = img.height,
           scale = w / h;
-        w = obj.width || w;
-        h = obj.height || w / scale;
-        var quality = 0.7; // 預設圖片質量為0.7
+        let scaledwidth = config.width || w;
+        let scaledHeight = scaledwidth / scale;
+        let quality = 0.7; // 預設圖片質量為0.7
         //生成canvas
         // 關鍵字
-        var canvas = document.createElement('canvas');
-        var ctx = canvas.getContext('2d');
+        let canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
         // 建立屬性節點
-        var anw = document.createAttribute('width');
+        const anw = document.createAttribute('width');
         anw.nodeValue = w;
-        var anh = document.createAttribute('height');
+        const anh = document.createAttribute('height');
         anh.nodeValue = h;
         canvas.setAttributeNode(anw);
         canvas.setAttributeNode(anh);
-        ctx.drawImage(that, 0, 0, w, h);
+        ctx.drawImage(img, 0, 0, scaledwidth, scaledHeight);
         // 影象質量
-        if (obj.quality && obj.quality <= 1 && obj.quality > 0) {
-          quality = obj.quality;
+        if (config.quality && config.quality <= 1 && config.quality > 0) {
+          quality = config.quality;
         }
-        // quality值越小，所繪製出的影象越模糊
-        var base64 = canvas.toDataURL('image/jpeg', quality);
+        /*
+        我們只需要把<img>獲取到的圖片放到<canvas>裡再通過.toDataURL()方法轉化下，
+        就可以得到以 base64 編碼的 dataURL。來看這個方法的語法： 
+        */
+        var base64 = canvas.toDataURL('image/jpeg', 'image/webp', quality);
+        const resizedFile = dataURLtoFile(base64);
+        console.log('resizedFile', resizedFile);
         // 回撥函式返回base64的值
-        callback(base64);
+        callback(resizedFile); // 非同步onload只能回用回掉函數
       };
     };
     /*
@@ -120,18 +138,43 @@ const Chat = () => {
       objDiv：一個是容器或者回調函式
       photoCompress()
     */
-    const compressImage = (file, w, objDiv) => {
-      var ready = new FileReader();
-      /*開始讀取指定的Blob物件或File物件中的內容. 當讀取操作完成時,readyState屬性的值會成為DONE,如果設定了onloadend事件處理程式,則呼叫之.同時,result屬性中將包含一個data: URL格式的字串以表示所讀取檔案的內容.*/
-      ready.readAsDataURL(file);
-      ready.onload = function() {
-        var re = this.result;
-        canvasDataURL(re, w, objDiv);
+    const compressImage = (file, config, callback) => {
+      console.log('開始', file); //注意必包
+
+      // 王牌文件 https://kknews.cc/zh-tw/code/e6p2ygq.html
+      // 神文 https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/227679/
+      /* 使用FileReader對象分三步走： 一 創建FileReader實例 */
+      var reader = new FileReader();
+      /* 開始讀取指定的Blob物件或File物件中的內容. 當讀取操作完成時,readyState屬性的值會成為DONE,
+        如果設定了onloadend事件處理程式,則呼叫之.
+        同時,result屬性中將包含一個data: URL格式的字串以表示所讀取檔案的內容.
+      */
+
+      /* 讀取Blob或者File對象的數據內容 */
+      reader.readAsDataURL(file); // 讀取文件內容，結果用data:url的字符串形式表示
+
+      reader.onloadstart = function() {
+        console.log('加載已經開始');
+      };
+      reader.onprogress = function(what) {
+        console.log('啥', what); //注意必包
+      };
+      /** 設置回調函數，這裡以讀取成功的回調函數為例： */
+      reader.onload = function() {
+        console.log('這裡', this); //注意必包
+        var readerData = this.result;
+        // console.log('readerData', readerData);
+        canvasDataURL(readerData, config, callback);
+      };
+      reader.onloadend = function() {
+        console.log('加載已經結束');
       };
     };
-    compressImage(file, 200, console.log);
-    //https://developer.mozilla.org/en-US/docs/Archive/B2G_OS/API/Camera_API
-
+    const config = {
+      width: 200,
+      quality: 0.6
+    };
+    compressImage(file, config, console.log);
     // ss(socket).emit('sendFile', stream, { name: file.name, data: file.type });
     // const blobStream = ss.createBlobReadStream(file); //for browser use, 本來寫法是什麼
     // let size = 0;

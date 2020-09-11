@@ -130,6 +130,8 @@ const Chat = () => {
       };
     };
     compressImage(file, 200, console.log);
+    //https://developer.mozilla.org/en-US/docs/Archive/B2G_OS/API/Camera_API
+
     // ss(socket).emit('sendFile', stream, { name: file.name, data: file.type });
     // const blobStream = ss.createBlobReadStream(file); //for browser use, 本來寫法是什麼
     // let size = 0;

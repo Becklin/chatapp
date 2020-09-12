@@ -4,13 +4,12 @@
     padding: 12px;
   }
   &__content {
-    width: 70vw;
-    border: 0.4px solid gray;
-    border-radius: 5px;
-    padding: 8px;
+     width: 70vw;
     margin-top: 8px;
-    img, video {
-      width: 100%;
+    &--text {
+      border: 0.4px solid gray;
+      border-radius: 5px;
+      padding: 8px;
     }
   }
   &__userInfo {

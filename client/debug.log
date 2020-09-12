@@ -292,3 +292,15 @@
 [0831/215859.236:ERROR:exception_snapshot_win.cc(98)] thread ID 10840 not found in process
 [0911/090057.299:ERROR:file_io.cc(90)] ReadExactly: expected 1400, observed 0
 [0911/090057.300:ERROR:crash_report_database_win.cc(447)] failed to read records
+[0912/171155.955:ERROR:file_io.cc(90)] ReadExactly: expected 1400, observed 0
+[0912/171155.956:ERROR:crash_report_database_win.cc(447)] failed to read records
+[0912/210104.672:ERROR:file_io.cc(90)] ReadExactly: expected 1400, observed 0
+[0912/210104.674:ERROR:crash_report_database_win.cc(447)] failed to read records
+[0912/211104.684:ERROR:file_io.cc(90)] ReadExactly: expected 1400, observed 0
+[0912/211104.684:ERROR:crash_report_database_win.cc(447)] failed to read records
+[0912/211104.685:ERROR:file_io.cc(90)] ReadExactly: expected 1400, observed 0
+[0912/211104.685:ERROR:crash_report_database_win.cc(447)] failed to read records
+[0912/211604.675:ERROR:file_io.cc(90)] ReadExactly: expected 1400, observed 0
+[0912/211604.675:ERROR:crash_report_database_win.cc(447)] failed to read records
+[0912/213104.683:ERROR:file_io.cc(90)] ReadExactly: expected 1400, observed 0
+[0912/213104.683:ERROR:crash_report_database_win.cc(447)] failed to read records

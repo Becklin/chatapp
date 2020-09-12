@@ -15,6 +15,9 @@ const Message = ({
   if (trimmedName === user) isSentByCurrentUser = true;
   const role = isSentByCurrentUser ? 'user' : 'friend';
   const title = role === 'user' ? trimmedName : user;
+  console.log('葬載', upload);
+  console.log('type', type);
+
   const renderFile = (address, type) => {
     if (address) return <div dangerouslySetInnerHTML={{ __html: address }} />;
     if (type) {
@@ -34,8 +37,7 @@ const Message = ({
               Your browser does not support the video tag.
             </video>
           );
-        case 'image/jpeg':
-        case 'image/png':
+        case 'image/*':
           return (
             <img
               className="img-thumbnail img-fluid"
@@ -43,10 +45,15 @@ const Message = ({
             />
           );
         default:
-          return;
+          return (
+            <img
+              className="img-thumbnail img-fluid"
+              src={`data:image/png;base64, ${upload}`}
+            />
+          );
       }
     }
-    return ReactEmoji.emojify(text);
+    return (<p className="chat-message__content--text">{ReactEmoji.emojify(text)}</p>);
   };
   return (
     <div className="chat-message__wrapper">

@@ -42,7 +42,9 @@ const Chat = () => {
       setMessages(messages => [...messages, message]);
     });
     socket.on('file', ({ user, upload, type }) => {
+      console.log('hehrehreh', user, upload, type);
       if (upload) {
+        console.log('hehrehreh2', user, upload, type);
         setMessages(messages => [...messages, { user, upload, type }]);
       }
     });
@@ -63,6 +65,7 @@ const Chat = () => {
   };
   const uploadFile = file => {
     const stream = ss.createStream();
+    console.log('file', file);
     ss(socket).emit('uploadFile', stream, {
       name: file.name,
       type: file.type,
@@ -93,7 +96,9 @@ const Chat = () => {
     //   console.log(Math.floor((size / file.size) * 100) + '%');
     // });
     // blobStream.pipe(stream);
-    const dataURLtoFile = (base64, filename) => {
+    const dataURLtoFile = (base64, config) => {
+      //return dataURLtoFile(base64, config, callback);
+
       var arr = base64.split(','),
         mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]),
@@ -103,7 +108,7 @@ const Chat = () => {
       while (n--) {
         u8arr[n] = bstr.charCodeAt(n);
       }
-      return new File([u8arr], filename, { type: mime });
+      return new File([u8arr], config.name, { type: mime });
     };
 
     const canvasDataURL = (readerData, config, callback) => {
@@ -113,11 +118,11 @@ const Chat = () => {
         img.onload = () => {
           // var that = this;
           // 預設按比例壓縮
-          let w = img.width,
-            h = img.height,
-            scale = w / h;
-          let scaledwidth = config.width || w;
-          let scaledHeight = scaledwidth / scale;
+          let width = img.width,
+              height = img.height,
+          scale = width / height;
+          const resizedWidth = 400;
+          let resizedHeight = resizedWidth / scale;
           let quality = 0.7; // 預設圖片質量為0.7
           //生成canvas
           // 關鍵字
@@ -125,12 +130,12 @@ const Chat = () => {
           const ctx = canvas.getContext('2d');
           // 建立屬性節點
           const anw = document.createAttribute('width');
-          anw.nodeValue = w;
+          anw.nodeValue = resizedWidth;
           const anh = document.createAttribute('height');
-          anh.nodeValue = h;
+          anh.nodeValue = resizedHeight;
           canvas.setAttributeNode(anw);
           canvas.setAttributeNode(anh);
-          ctx.drawImage(img, 0, 0, scaledwidth, scaledHeight);
+          ctx.drawImage(img, 0, 0, resizedWidth, resizedHeight);
           // 影象質量
           if (config.quality && config.quality <= 1 && config.quality > 0) {
             quality = config.quality;
@@ -171,12 +176,12 @@ const Chat = () => {
         /* 讀取Blob或者File對象的數據內容 */
         reader.readAsDataURL(file); // 讀取文件內容，結果用data:url的字符串形式表示
 
-        reader.onloadstart = function() {
-          console.log('加載已經開始');
-        };
-        reader.onprogress = function(what) {
-          console.log('啥', what); //注意必包
-        };
+        // reader.onloadstart = function() {
+        //   console.log('加載已經開始');
+        // };
+        // reader.onprogress = function(what) {
+        //   console.log('啥', what); //注意必包
+        // };
         /** 設置回調函數，這裡以讀取成功的回調函數為例： */
         reader.onload = function() {
           const readerData = this.result;
@@ -188,8 +193,9 @@ const Chat = () => {
       });
     };
     const config = {
-      width: 200,
-      quality: 0.6
+      // width: 400,
+      // quality: 0.6,
+      name: file.name,
     };
     // const minifiedFile = compressImage(file, config, console.log);
     /* 看完來改 https://developers.google.com/web/fundamentals/primers/async-functions?hl=zh-tw */

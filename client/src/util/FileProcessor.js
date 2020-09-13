@@ -1,17 +1,73 @@
+import ss from "socket.io-stream";
 
-import ss from 'socket.io-stream';
+/*
+  以下縮小檔案
+  三個引數
+  file：一個是檔案(型別是圖片格式)，
+  w：一個是檔案壓縮的後寬度，寬度越小，位元組越小
+  objDiv：一個是容器或者回調函式
+  photoCompress()
+*/
 
-  /*
-    以下縮小檔案
-    三個引數
-    file：一個是檔案(型別是圖片格式)，
-    w：一個是檔案壓縮的後寬度，寬度越小，位元組越小
-    objDiv：一個是容器或者回調函式
-    photoCompress()
-  */
+class FileProcessor {
+  constructor(file, socket, callback) {
+    this.socket = socket;
+    this.file = file;
+    this.name = file.name;
+  }
+  static process(file, socket) {
+    const config = {
+      name: file.name,
+      quality: 0.6
+    };
+    return convertToDataUrl(file, config)
+    .then(({ readerData, config, callback }) => {
+      this.base64 = readerData;
+      return minifiedDataURL(readerData, config, callback);
+    })
+    .then(({ base64, config, callback }) => {
+      this.minifiedBase64 = base64;
+      return dataURLtoFile(base64, config, callback);
+    })
+    .then(minifiedFile => {
+      this.minifiedFile = minifiedFile;
+        return new FileProcessor(this.minifiedFile, socket);
+    });
+  }
+  send() {
+    const stream = ss.createStream();
+    ss(this.socket).emit("sendFile", stream, {
+      name: this.file.name,
+      type: this.file.type,
+      size: this.file.size
+    });
+    const blobStream = ss.createBlobReadStream(this.file); //for browser use, 本來寫法是什麼
+    let size = 0;
+    // blobStream.on('data', function(chunk) {
+    //   size += chunk.length;
+    //   console.log(Math.floor((size / file.size) * 100) + '%');
+    // });
+    blobStream.pipe(stream);
+  }
+  upload() {
+    const stream = ss.createStream();
+    ss(this.socket).emit("uploadFile", stream, {
+      name: this.file.name,
+      type: this.file.type,
+      size: this.file.size
+    });
+    const blobStream = ss.createBlobReadStream(this.file); //for browser use, 本來寫法是什麼
+    let size = 0;
+    // blobStream.on('data', function(chunk) {
+    //   size += chunk.length;
+    //   console.log(Math.floor((size / file.size) * 100) + '%');
+    // });
+    blobStream.pipe(stream);
+  }
+}
 
 const convertToDataUrl = (file, config, callback) => {
-  console.log('開始', file); //注意必包
+  console.log("開始", file); //注意必包
   return new Promise(resolve => {
     // 王牌文件 https://kknews.cc/zh-tw/code/e6p2ygq.html
     // 神文 https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/227679/
@@ -37,12 +93,12 @@ const convertToDataUrl = (file, config, callback) => {
       resolve({ readerData, config, callback });
     };
     reader.onloadend = function() {
-      console.log('加載已經結束');
+      console.log("加載已經結束");
     };
   });
 };
 
-const canvasDataURL = (readerData, config, callback) => {
+const minifiedDataURL = (readerData, config, callback) => {
   return new Promise(resolve => {
     let img = new Image();
     img.src = readerData;
@@ -50,19 +106,19 @@ const canvasDataURL = (readerData, config, callback) => {
       // var that = this;
       // 預設按比例壓縮
       let width = img.width,
-          height = img.height,
-      scale = width / height;
+        height = img.height,
+        scale = width / height;
       const resizedWidth = 400;
       let resizedHeight = resizedWidth / scale;
       let quality = 0.7; // 預設圖片質量為0.7
       //生成canvas
       // 關鍵字
-      let canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      let canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
       // 建立屬性節點
-      const anw = document.createAttribute('width');
+      const anw = document.createAttribute("width");
       anw.nodeValue = resizedWidth;
-      const anh = document.createAttribute('height');
+      const anh = document.createAttribute("height");
       anh.nodeValue = resizedHeight;
       canvas.setAttributeNode(anw);
       canvas.setAttributeNode(anh);
@@ -75,7 +131,7 @@ const canvasDataURL = (readerData, config, callback) => {
     我們只需要把<img>獲取到的圖片放到<canvas>裡再通過.toDataURL()方法轉化下，
     就可以得到以 base64 編碼的 dataURL。來看這個方法的語法： 
     */
-      var base64 = canvas.toDataURL('image/jpeg', 'image/webp', quality);
+      var base64 = canvas.toDataURL("image/jpeg", "image/webp", quality);
       resolve({ base64, config, callback });
       // const resizedFile = dataURLtoFile(base64);
       // console.log('resizedFile', resizedFile);
@@ -88,7 +144,7 @@ const canvasDataURL = (readerData, config, callback) => {
 const dataURLtoFile = (base64, config) => {
   //return dataURLtoFile(base64, config, callback);
 
-  var arr = base64.split(','),
+  var arr = base64.split(","),
     mime = arr[0].match(/:(.*?);/)[1],
     bstr = atob(arr[1]),
     n = bstr.length,
@@ -105,14 +161,14 @@ const emitFileToServer = (socket, file, action) => {
   console.log("file", file);
   console.log("action", action);
 
-  if(action === 'send') {
+  if (action === "send") {
     ss(socket).emit("sendFile", stream, {
       name: file.name,
       type: file.type,
       size: file.size
     });
   }
-  if(action === 'upload') {
+  if (action === "upload") {
     ss(socket).emit("uploadFile", stream, {
       name: file.name,
       type: file.type,
@@ -128,4 +184,4 @@ const emitFileToServer = (socket, file, action) => {
   blobStream.pipe(stream);
 };
 
-export { convertToDataUrl, emitFileToServer, dataURLtoFile, canvasDataURL, };
+export default FileProcessor;

@@ -2,17 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import qs from 'query-string';
 import io from 'socket.io-client';
-import ss from 'socket.io-stream';
 import { Container } from 'react-bootstrap';
 import Input from '../Input';
 import InfoBar from '../InfoBar';
 import Messages from '../Messages';
-import { 
-  convertToDataUrl, 
-  canvasDataURL, 
-  dataURLtoFile, 
-  emitFileToServer, 
-} from '../../util/index';
+import FileProcessor from '../../util/FileProcessor';
 
 let socket;
 
@@ -49,9 +43,7 @@ const Chat = () => {
       setMessages(messages => [...messages, message]);
     });
     socket.on('file', ({ user, upload, type }) => {
-      console.log('hehrehreh', user, upload, type);
       if (upload) {
-        console.log('hehrehreh2', user, upload, type);
         setMessages(messages => [...messages, { user, upload, type }]);
       }
     });
@@ -72,47 +64,17 @@ const Chat = () => {
   };
 
   const sendFile = file => {
-    const config = {
-      name: file.name,
-    };
-    convertToDataUrl(file, config)
-      .then(({ readerData, config, callback }) => {
-        return canvasDataURL(readerData, config, callback);
-      })
-      .then(({ base64, config, callback }) => {
-        return dataURLtoFile(base64, config, callback);
-      })
-      .then(minifiedFile => {
-        emitFileToServer(socket, minifiedFile, "send");
-      });
-  };
+    /* build => 非同步promise處裡檔案 */
+    FileProcessor.process(file, socket).then((minifiedFileProcessor) => {
+      minifiedFileProcessor.send();
+    });
+  }
 
   const uploadFile = file => {
-    /* upload large file */
-    const config = {
-      name: file.name,
-    };
-    /* 看完來改 https://developers.google.com/web/fundamentals/primers/async-functions?hl=zh-tw */
-    convertToDataUrl(file, config)
-      .then(({ readerData, config, callback }) => {
-        return canvasDataURL(readerData, config, callback);
-      })
-      .then(({ base64, config, callback }) => {
-        return dataURLtoFile(base64, config, callback);
-      })
-      .then(minifiedFile => {
-        emitFileToServer(socket, minifiedFile, "upload");
-      });
-
-    // ss(socket).emit('sendFile', stream, { name: file.name, data: file.type });
-    // const blobStream = ss.createBlobReadStream(file); //for browser use, 本來寫法是什麼
-    // let size = 0;
-    // blobStream.on('data', function(chunk) {
-    //   size += chunk.length;
-    //   console.log(Math.floor((size / file.size) * 100) + '%');
-    // });
-    // blobStream.pipe(stream);
-  };
+    FileProcessor.process(file, socket).then((originalFileProcessor) => {
+      originalFileProcessor.upload();
+    });
+  }
 
   return (
     <Container fluid>

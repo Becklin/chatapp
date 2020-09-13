@@ -163,13 +163,10 @@ io.on("connection", socket => {
       fileBuffer.push(chunk);
     });
     stream.on("end", () => {
-      const BufferData = Buffer.concat(fileBuffer);
-      // uploadFileToAws(BufferData, data.name, user.name);
       /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
     右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/ */
       // stream.on("end", () => {
       const sentFile = Buffer.concat(fileBuffer).toString("base64");
-      console.log("sentFile", sentFile);
       io.to(user.room).emit("file", {
         user: user.name,
         upload: sentFile,

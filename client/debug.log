@@ -308,3 +308,5 @@
 [0912/214604.694:ERROR:crash_report_database_win.cc(447)] failed to read records
 [0913/100939.925:ERROR:file_io.cc(90)] ReadExactly: expected 1400, observed 0
 [0913/100939.926:ERROR:crash_report_database_win.cc(447)] failed to read records
+[0913/121608.274:ERROR:file_io.cc(90)] ReadExactly: expected 1400, observed 0
+[0913/121608.275:ERROR:crash_report_database_win.cc(447)] failed to read records

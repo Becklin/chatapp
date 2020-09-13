@@ -151,7 +151,7 @@ io.on("connection", socket => {
     });
   };
 
-  ss(socket).on("uploadFile", (stream, data, callback) => {
+  ss(socket).on("sendFile", (stream, data, callback) => {
     const user = getUser(socket.id);
     //io.to要查
     // const filename = path.basename(data.name);
@@ -168,13 +168,43 @@ io.on("connection", socket => {
       /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
     右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/ */
       // stream.on("end", () => {
-      const upload = Buffer.concat(fileBuffer).toString("base64");
-      console.log("upload", upload);
+      const sentFile = Buffer.concat(fileBuffer).toString("base64");
+      console.log("sentFile", sentFile);
       io.to(user.room).emit("file", {
         user: user.name,
-        upload: upload,
+        upload: sentFile,
         type: data.type
       });
+    });
+
+    // stream.pipe(fs.createWriteStream(filename));
+
+    // });
+    //來玩玩socket.io-stream
+    // ss(socket).on('sendFile', function(stream, data) {
+    //   console.log('data', data);
+    //   var filename = path.basename(data.name);
+    //   stream.pipe(fs.createWriteStream(filename));
+    // });
+    callback && callback();
+  });
+
+  ss(socket).on("uploadFile", (stream, data, callback) => {
+    const user = getUser(socket.id);
+    //io.to要查
+    // const filename = path.basename(data.name);
+    let size = 0;
+    let fileBuffer = [];
+    stream.on("data", chunk => {
+      size += chunk.length;
+      console.log(Math.floor((size / data.size) * 100) + "%");
+      fileBuffer.push(chunk);
+    });
+    stream.on("end", () => {
+      const BufferData = Buffer.concat(fileBuffer);
+      uploadFileToAws(BufferData, data.name, user.name);
+      /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
+    右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/ */
     });
 
     // stream.pipe(fs.createWriteStream(filename));

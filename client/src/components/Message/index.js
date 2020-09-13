@@ -15,8 +15,8 @@ const Message = ({
   if (trimmedName === user) isSentByCurrentUser = true;
   const role = isSentByCurrentUser ? 'user' : 'friend';
   const title = role === 'user' ? trimmedName : user;
-  console.log('葬載', upload);
-  console.log('type', type);
+  // console.log('葬載', upload);
+  // console.log('type', type);
 
   const renderFile = (address, type) => {
     if (address) return <div dangerouslySetInnerHTML={{ __html: address }} />;

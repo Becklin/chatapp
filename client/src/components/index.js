@@ -4,7 +4,7 @@ import Input from './Input';
 import InfoBar from './InfoBar';
 import Message from './Message';
 import Messages from './Messages';
-import UploadButton from './UploadButton';
+import FileButton from './FileButton';
 
 export {
     Chat,
@@ -13,5 +13,5 @@ export {
     InfoBar,
     Message,
     Messages,
-    UploadButton,
+    FileButton,
 };

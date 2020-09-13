@@ -2,7 +2,7 @@ import React from 'react';
 import './index.scss';
 
 //USER送發訊息的人，name該聊天室使用者名字
-const UploadButton = ({ sendFile }) => {
+const FileButton = ({ type, onHandleFile }) => {
   // const [files, setFiles] = useState();
   // const [uploading, setUploading] = useState(false);
 
@@ -23,7 +23,7 @@ const UploadButton = ({ sendFile }) => {
     // webkitRelativePath: ""
     let formData = new FormData();
     formData.append(0, files[0]);
-    sendFile(formData.get(0));
+    onHandleFile(formData.get(0));
   };
 
   return (
@@ -38,4 +38,4 @@ const UploadButton = ({ sendFile }) => {
   );
 };
 
-export default UploadButton;
+export default FileButton;

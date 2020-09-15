@@ -1,8 +1,13 @@
 require("dotenv").config();
+
+
+
 const express = require("express");
 const socketio = require("socket.io");
 var ss = require("socket.io-stream");
 const http = require("http");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 
@@ -11,6 +16,18 @@ const router = require("./router");
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+console.log(PORT);
+const corsOptions = {
+  origin: `http://localhost:${PORT}`,
+};
+// provides Express middleware to enable CORS
+app.use(cors(corsOptions));
+// parse requests of content-type - application/json
+// body-parser helps to parse the request and create the req.body object
+app.use(bodyParser.json());
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3({
@@ -229,5 +246,6 @@ io.on("connection", socket => {
 
 app.use(router);
 server.listen(PORT, () => {
+  console.log('2=',PORT);
   console.log(`listening ${PORT}`);
 });

@@ -12,13 +12,18 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.747.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "imagemin": "^7.0.1",
     "imagemin-webp": "^6.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.1.0",
     "nodemon": "^2.0.4",
     "path": "^0.12.7",
+    "sequelize": "^6.3.5",
     "socket.io": "^2.3.0",
     "socket.io-stream": "^0.9.1"
   }

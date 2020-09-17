@@ -28,7 +28,29 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const db = require("./app/models");
+const Role = db.role;
 
+db.sequelize.sync({force: true}).then(() => {
+  console.log('Drop and Resync Db');
+  initial();
+});
+const initial = () => {
+  Role.create({
+    id: 1,
+    name: "user"
+  });
+ 
+  Role.create({
+    id: 2,
+    name: "moderator"
+  });
+ 
+  Role.create({
+    id: 3,
+    name: "admin"
+  });
+}
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY,

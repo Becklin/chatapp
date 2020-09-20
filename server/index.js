@@ -1,7 +1,5 @@
 require("dotenv").config();
 
-
-
 const express = require("express");
 const socketio = require("socket.io");
 var ss = require("socket.io-stream");
@@ -10,15 +8,14 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
-
 const PORT = process.env.PORT || 5000;
 const router = require("./router");
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
-console.log(PORT);
+
 const corsOptions = {
-  origin: `http://localhost:${PORT}`,
+  origin: `http://localhost:${PORT}`
 };
 // provides Express middleware to enable CORS
 app.use(cors(corsOptions));
@@ -28,29 +25,72 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const db = require("./app/models");
+const db = require("./models");
 const Role = db.role;
 
-db.sequelize.sync({force: true}).then(() => {
-  console.log('Drop and Resync Db');
-  initial();
-});
+db.mongoose
+  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
+    /**
+     * DeprecationWarning: current URL string parser is deprecated, and will be
+      removed in a future version. To use the new parser, pass option
+      { useNewUrlParser: true } to MongoClient.connect.
+     */
+    useNewUrlParser: true,
+    /**
+     * DeprecationWarning: current Server Discovery and Monitoring engine is
+        deprecated, and will be removed in a future version. To use the new Server
+        Discover and Monitoring engine, pass option { useUnifiedTopology: true } to
+        the MongoClient constructor.
+     */
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log("Successfully connect to MongoDB.");
+    initial();
+  })
+  .catch(err => {
+    console.error("Connection error", err);
+    process.exit();
+  });
+
 const initial = () => {
-  Role.create({
-    id: 1,
-    name: "user"
-  });
- 
-  Role.create({
-    id: 2,
-    name: "moderator"
-  });
- 
-  Role.create({
-    id: 3,
-    name: "admin"
+  /* Returns the count of all documents in a collection or view.
+  The method wraps the count command. */
+  Role.estimatedDocumentCount((err, count) => {
+    if (!err && count === 0) {
+      new Role({
+        name: "user"
+      }).save(err => { // create a new User: object.save()
+        if (err) {
+          console.log("error", err);
+        }
+
+        console.log("added 'user' to roles collection");
+      });
+
+      new Role({
+        name: "moderator"
+      }).save(err => {
+        if (err) {
+          console.log("error", err);
+        }
+
+        console.log("added 'moderator' to roles collection");
+      });
+
+      new Role({
+        name: "admin"
+      }).save(err => {
+        if (err) {
+          console.log("error", err);
+        }
+
+        console.log("added 'admin' to roles collection");
+      });
+    }
   });
 }
+
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -268,6 +308,6 @@ io.on("connection", socket => {
 
 app.use(router);
 server.listen(PORT, () => {
-  console.log('2=',PORT);
+  console.log("2=", PORT);
   console.log(`listening ${PORT}`);
 });

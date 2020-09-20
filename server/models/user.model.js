@@ -1,25 +1,18 @@
-module.exports = (sequelize, Sequelize) => {
-  const User = sequelize.define("users", {
-    username: {
-      type: Sequelize.STRING
-    },
-    email: {
-      type: Sequelize.STRING
-    },
-    password: {
-      type: Sequelize.STRING
-    }
-  });
+const mongoose = require("mongoose");
 
-  return User;
-};
+const User = mongoose.model(
+  "User",
+  new mongoose.Schema({
+    username: String,
+    email: String,
+    password: String,
+    roles: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Role"
+      }
+    ]
+  })
+);
 
-/*
-After initializing Sequelize, we don’t need to write CRUD functions, Sequelize supports all of them:
-
-create a new User: create(object)
-find a User by id: findByPk(id)
-find a User by email: findOne({ where: { email: ... } })
-get all Users: findAll()
-find all Users by username: findAll({ where: { username: ... } })
-*/
+module.exports = User;

@@ -20,10 +20,9 @@
     "imagemin": "^7.0.1",
     "imagemin-webp": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
-    "mysql2": "^2.1.0",
+    "mongoose": "^5.10.6",
     "nodemon": "^2.0.4",
     "path": "^0.12.7",
-    "sequelize": "^6.3.5",
     "socket.io": "^2.3.0",
     "socket.io-stream": "^0.9.1"
   }

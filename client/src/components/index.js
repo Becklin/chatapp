@@ -5,8 +5,12 @@ import InfoBar from './InfoBar';
 import Message from './Message';
 import Messages from './Messages';
 import FileButton from './FileButton';
+import Login from './Login';
+import PrivateRoute from './PrivateRoute';
 
 export {
+    Login,
+    PrivateRoute,
     Chat,
     Join,
     Input,

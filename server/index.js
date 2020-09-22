@@ -1,15 +1,15 @@
-require("dotenv").config();
+require('dotenv').config();
 
-const express = require("express");
-const socketio = require("socket.io");
-var ss = require("socket.io-stream");
-const http = require("http");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const fs = require("fs");
-const path = require("path");
+const express = require('express');
+const socketio = require('socket.io');
+var ss = require('socket.io-stream');
+const http = require('http');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 const PORT = process.env.PORT || 5000;
-const router = require("./router");
+const router = require('./routes/main.routes');
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
@@ -25,9 +25,13 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const db = require("./models");
-const Role = db.role;
+require('./routes/auth.routes')(app);
+require('./routes/user.routes')(app);
+require('./routes/main.routes')(app);
 
+const db = require('./models');
+const Role = db.role;
+const dbConfig = require('./config/db.config');
 db.mongoose
   .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
     /**
@@ -45,11 +49,11 @@ db.mongoose
     useUnifiedTopology: true
   })
   .then(() => {
-    console.log("Successfully connect to MongoDB.");
+    console.log('Successfully connect to MongoDB.');
     initial();
   })
   .catch(err => {
-    console.error("Connection error", err);
+    console.error('Connection error', err);
     process.exit();
   });
 
@@ -59,39 +63,40 @@ const initial = () => {
   Role.estimatedDocumentCount((err, count) => {
     if (!err && count === 0) {
       new Role({
-        name: "user"
-      }).save(err => { // create a new User: object.save()
+        name: 'user'
+      }).save(err => {
+        // create a new User: object.save()
         if (err) {
-          console.log("error", err);
+          console.log('error', err);
         }
 
         console.log("added 'user' to roles collection");
       });
 
       new Role({
-        name: "moderator"
+        name: 'moderator'
       }).save(err => {
         if (err) {
-          console.log("error", err);
+          console.log('error', err);
         }
 
         console.log("added 'moderator' to roles collection");
       });
 
       new Role({
-        name: "admin"
+        name: 'admin'
       }).save(err => {
         if (err) {
-          console.log("error", err);
+          console.log('error', err);
         }
 
         console.log("added 'admin' to roles collection");
       });
     }
   });
-}
+};
 
-const AWS = require("aws-sdk");
+const AWS = require('aws-sdk');
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY,
   accessKeyId: process.env.AWS_ACCESS_KEY
@@ -119,9 +124,9 @@ const {
   getUser,
   removeUser,
   getUsersInRoom
-} = require("../server/users");
-io.on("connection", socket => {
-  console.log("we have connection!!!");
+} = require('../server/users');
+io.on('connection', socket => {
+  console.log('we have connection!!!');
 
   // 方法零 一次整個傳輸
   //   fs.readFile(__dirname + '/images/img1.jpg', function(err, buf) {
@@ -158,38 +163,38 @@ io.on("connection", socket => {
   //   stream.pipe(fs.createWriteStream(filename));
   // });
 
-  socket.on("join", ({ name, room }, errorCallback) => {
+  socket.on('join', ({ name, room }, errorCallback) => {
     const { error, user } = addUser({ id: socket.id, name, room });
     if (error) return errorCallback(error);
     socket.join(user.room);
-    socket.emit("message", {
-      user: "admin",
+    socket.emit('message', {
+      user: 'admin',
       text: `${user.name}, welcome to the room ${user.room}`
     });
 
-    socket.emit("image", {
-      user: "admin",
+    socket.emit('image', {
+      user: 'admin',
       text: `${user.name}, welcome to the room ${user.room}`
     });
 
     // broadcast: send message to everyone besides to that user
     socket.broadcast
       .to(user.room)
-      .emit("message", { user: "admin", text: `${user.name} has joined!` });
+      .emit('message', { user: 'admin', text: `${user.name} has joined!` });
     //要查
-    io.to(user.room).emit("roomData", {
+    io.to(user.room).emit('roomData', {
       room: user.room,
       users: getUsersInRoom(user.room)
     });
     errorCallback();
   });
-  socket.on("sendMessage", (message, callback) => {
+  socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id);
-    const isGoogleTyping = message.includes("@gg=");
+    const isGoogleTyping = message.includes('@gg=');
     if (isGoogleTyping) {
-      const destination = message.split("@gg=").pop();
+      const destination = message.split('@gg=').pop();
       const addressDom = `<a target="blank" href='https://www.google.com.tw/maps/search/${destination}'>${destination}</a>`;
-      io.to(user.room).emit("message", {
+      io.to(user.room).emit('message', {
         user: user.name,
         text: null,
         address: addressDom
@@ -198,7 +203,7 @@ io.on("connection", socket => {
       return;
     }
     //io.to要查
-    io.to(user.room).emit("message", { user: user.name, text: message });
+    io.to(user.room).emit('message', { user: user.name, text: message });
     // io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
     callback(); //奇怪
   });
@@ -220,7 +225,7 @@ io.on("connection", socket => {
 
   const uploadFileToAws = (bufferData, fileName, userName) => {
     const params = {
-      Bucket: "eazychat", // pass your bucket name
+      Bucket: 'eazychat', // pass your bucket name
       Key: fileName, // file will be saved as testBucket/contacts.csv
       Body: bufferData //JSON.stringify(data, null, 2)
     };
@@ -230,23 +235,23 @@ io.on("connection", socket => {
     });
   };
 
-  ss(socket).on("sendFile", (stream, data, callback) => {
+  ss(socket).on('sendFile', (stream, data, callback) => {
     const user = getUser(socket.id);
     //io.to要查
     // const filename = path.basename(data.name);
     let size = 0;
     let fileBuffer = [];
-    stream.on("data", chunk => {
+    stream.on('data', chunk => {
       size += chunk.length;
-      console.log(Math.floor((size / data.size) * 100) + "%");
+      console.log(Math.floor((size / data.size) * 100) + '%');
       fileBuffer.push(chunk);
     });
-    stream.on("end", () => {
+    stream.on('end', () => {
       /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
     右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/ */
       // stream.on("end", () => {
-      const sentFile = Buffer.concat(fileBuffer).toString("base64");
-      io.to(user.room).emit("file", {
+      const sentFile = Buffer.concat(fileBuffer).toString('base64');
+      io.to(user.room).emit('file', {
         user: user.name,
         upload: sentFile,
         type: data.type
@@ -265,18 +270,18 @@ io.on("connection", socket => {
     callback && callback();
   });
 
-  ss(socket).on("uploadFile", (stream, data, callback) => {
+  ss(socket).on('uploadFile', (stream, data, callback) => {
     const user = getUser(socket.id);
     //io.to要查
     // const filename = path.basename(data.name);
     let size = 0;
     let fileBuffer = [];
-    stream.on("data", chunk => {
+    stream.on('data', chunk => {
       size += chunk.length;
-      console.log(Math.floor((size / data.size) * 100) + "%");
+      console.log(Math.floor((size / data.size) * 100) + '%');
       fileBuffer.push(chunk);
     });
-    stream.on("end", () => {
+    stream.on('end', () => {
       const BufferData = Buffer.concat(fileBuffer);
       uploadFileToAws(BufferData, data.name, user.name);
       /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
@@ -294,20 +299,19 @@ io.on("connection", socket => {
     // });
     callback && callback();
   });
-  socket.on("disconnect", () => {
-    console.log("disconnect!!!");
+  socket.on('disconnect', () => {
+    console.log('disconnect!!!');
     const user = removeUser(socket.id);
     if (user) {
-      io.to(user.room).emit("message", {
-        user: "admin",
+      io.to(user.room).emit('message', {
+        user: 'admin',
         text: `${user.name} has left.`
       });
     }
   });
 });
 
-app.use(router);
 server.listen(PORT, () => {
-  console.log("2=", PORT);
+  console.log('2=', PORT);
   console.log(`listening ${PORT}`);
 });

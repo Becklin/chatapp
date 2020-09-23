@@ -6,16 +6,22 @@ import Message from './Message';
 import Messages from './Messages';
 import FileButton from './FileButton';
 import Login from './Login';
+import Home from './Home';
+import Head from './Head';
 import PrivateRoute from './PrivateRoute';
+import AuthButton from './AuthButton';
 
 export {
-    Login,
-    PrivateRoute,
-    Chat,
-    Join,
-    Input,
-    InfoBar,
-    Message,
-    Messages,
-    FileButton,
+  Home,
+  Head,
+  Login,
+  AuthButton,
+  PrivateRoute,
+  Chat,
+  Join,
+  Input,
+  InfoBar,
+  Message,
+  Messages,
+  FileButton
 };

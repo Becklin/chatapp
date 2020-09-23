@@ -10,6 +10,7 @@ import {
   Home,
   Head,
   Login,
+  Signup,
   AuthButton,
   Join,
   Chat,
@@ -24,6 +25,7 @@ const App = () => (
       <AuthButton />
     </Head>
     <Route path="/" exact component={Home} />
+    <Route path="/Signup" component={Signup} />
     <Route path="/login" component={Login} />
     <PrivateRoute path="/protected" component={Join} />
     <PrivateRoute path="/chat" component={Chat} />

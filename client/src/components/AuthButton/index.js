@@ -3,17 +3,17 @@ import { Link, withRouter } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 // import { ArrowLeftCircle, PeopleFill } from 'react-bootstrap-icons';
 import './index.scss';
-import fakeAuth from '../../util/fakeAuth';
+import auth from '../../util/auth';
 
 /**
  * withRouter will pass updated match, location,
  * and history props to the wrapped component whenever it renders.
  */
 const AuthButton = withRouter(({ history }) =>
-  fakeAuth.isAuthenticated ? (
+  auth.isAuthenticated ? (
     <Button
       onClick={() => {
-        fakeAuth.signout(() => history.push('/'));
+        auth.signout(() => history.push('/'));
       }}
     >
       Sign out

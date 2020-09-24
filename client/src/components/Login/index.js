@@ -1,37 +1,61 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
-import fakeAuth from '../../util/fakeAuth';
+import auth from '../../util/auth';
+import axios from 'axios';
 import './index.scss';
 
 const Login = props => {
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
-  const login = () => {
-    fakeAuth.authenticate(() => {
-      setRedirectToReferrer(true);
-    });
-  };
-  console.log(props);
-  const { from } = props.location.state || { from: { pathname: '/' } };
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
+  const login = e => {
+    // auth.authenticate(() => {
+    //   setRedirectToReferrer(true);
+    // });
+    e.preventDefault();
+    axios
+      .post('http://localhost:5000/api/auth/signin', {
+        username,
+        password
+      })
+      .then(response => {
+        console.log(response);
+        auth.authenticate(() => {
+          setRedirectToReferrer(true);
+        });
+      })
+      .catch(error => {
+        console.log('catch', error);
+        setRedirectToReferrer(true);
+      });
+    setRedirectToReferrer(true);
+  };
+  const { from } = props.location.state || { from: { pathname: '/' } };
   if (redirectToReferrer === true) {
-    console.log('from', from);
     return <Redirect to={from} />;
   }
-
+  const handleNameChange = e => {
+    setUsername(e.target.value);
+  };
+  const handlePasswordChange = e => {
+    setPassword(e.target.value);
+  };
   return (
     <Form>
-      <Form.Control type="text" placeholder="Normal text" />
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
+      <Form.Control
+        type="text"
+        placeholder="Username"
+        onChange={handleNameChange}
+      />
       <Form.Group controlId="formBasicPassword">
         <Form.Label>Password</Form.Label>
-        <Form.Control type="password" placeholder="Password" />
+        <Form.Control
+          type="password"
+          placeholder="Password"
+          onChange={handlePasswordChange}
+        />
       </Form.Group>
       <Button onClick={login} variant="primary" type="submit">
         Submit

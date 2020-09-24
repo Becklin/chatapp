@@ -15,7 +15,8 @@ const server = http.createServer(app);
 const io = socketio(server);
 
 const corsOptions = {
-  origin: `http://localhost:${PORT}`
+  // origin: `http://localhost:${PORT}`
+  origin: 'http://localhost:3000'
 };
 // provides Express middleware to enable CORS
 app.use(cors(corsOptions));
@@ -29,33 +30,33 @@ require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
 require('./routes/main.routes')(app);
 
-const db = require('./models');
-const Role = db.role;
-const dbConfig = require('./config/db.config');
-db.mongoose
-  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
-    /**
-     * DeprecationWarning: current URL string parser is deprecated, and will be
-      removed in a future version. To use the new parser, pass option
-      { useNewUrlParser: true } to MongoClient.connect.
-     */
-    useNewUrlParser: true,
-    /**
-     * DeprecationWarning: current Server Discovery and Monitoring engine is
-        deprecated, and will be removed in a future version. To use the new Server
-        Discover and Monitoring engine, pass option { useUnifiedTopology: true } to
-        the MongoClient constructor.
-     */
-    useUnifiedTopology: true
-  })
-  .then(() => {
-    console.log('Successfully connect to MongoDB.');
-    initial();
-  })
-  .catch(err => {
-    console.error('Connection error', err);
-    process.exit();
-  });
+// const db = require('./models');
+// const Role = db.role;
+// const dbConfig = require('./config/db.config');
+// db.mongoose
+//   .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
+//     /**
+//      * DeprecationWarning: current URL string parser is deprecated, and will be
+//       removed in a future version. To use the new parser, pass option
+//       { useNewUrlParser: true } to MongoClient.connect.
+//      */
+//     useNewUrlParser: true,
+//     /**
+//      * DeprecationWarning: current Server Discovery and Monitoring engine is
+//         deprecated, and will be removed in a future version. To use the new Server
+//         Discover and Monitoring engine, pass option { useUnifiedTopology: true } to
+//         the MongoClient constructor.
+//      */
+//     useUnifiedTopology: true
+//   })
+//   .then(() => {
+//     console.log('Successfully connect to MongoDB.');
+//     initial();
+//   })
+//   .catch(err => {
+//     console.error('Connection error', err);
+//     process.exit();
+//   });
 
 const initial = () => {
   /* Returns the count of all documents in a collection or view.

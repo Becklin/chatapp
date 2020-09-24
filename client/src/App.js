@@ -16,7 +16,6 @@ import {
   Chat,
   PrivateRoute
 } from './components';
-import fakeAuth from './util/fakeAuth';
 import './index.scss';
 
 const App = () => (

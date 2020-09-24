@@ -1,13 +1,13 @@
-const fakeAuth = {
+const auth = {
   isAuthenticated: false,
   authenticate(cb) {
     this.isAuthenticated = true;
-    setTimeout(cb, 100); // fake async
+    cb();
   },
   signout(cb) {
     this.isAuthenticated = false;
-    setTimeout(cb, 100); // fake async
+    cb();
   }
 };
 
-export default fakeAuth;
+export default auth;

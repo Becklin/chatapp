@@ -20,7 +20,7 @@ const Signup = props => {
         console.log(response);
       })
       .catch(error => {
-        console.log(error);
+        console.log('catch', error);
       });
   };
   const handleNameChange = e => {
@@ -59,7 +59,6 @@ const Signup = props => {
           placeholder="Password"
           onChange={handlePasswordChange}
           value={password}
-        />
         />
       </Form.Group>
       <Button onClick={signup} variant="primary" type="submit">

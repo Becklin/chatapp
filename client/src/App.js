@@ -26,10 +26,8 @@ const App = () => (
     <Route path="/" exact component={Home} />
     <Route path="/Signup" component={Signup} />
     <Route path="/login" component={Login} />
-    <PrivateRoute path="/protected" component={Join} />
+    <PrivateRoute path="/join" component={Join} />
     <PrivateRoute path="/chat" component={Chat} />
-    {/* <Route path="/" exact component={Join} />
-    <Route path="/chat" component={Chat} /> */}
   </Router>
 );
 

@@ -66,19 +66,18 @@ exports.signin = (req, res) => {
   User.findOne({
     username: req.body.username
   })
-  /**
-   * 在定義Schema的時候，如果設定某個 field 關聯另一個Schema，
-   * 那麼在獲取 document 的時候就可以使用 Population 功能通過關聯Schema的 field 找到關聯的另一個 document，
-   * 並且用被關聯 document 的內容替換掉原來關聯欄位(field)的內容。
-   * https://codertw.com/%E8%B3%87%E6%96%99%E5%BA%AB/18236/
-   */
+    /**
+     * 在定義Schema的時候，如果設定某個 field 關聯另一個Schema，
+     * 那麼在獲取 document 的時候就可以使用 Population 功能通過關聯Schema的 field 找到關聯的另一個 document，
+     * 並且用被關聯 document 的內容替換掉原來關聯欄位(field)的內容。
+     * https://codertw.com/%E8%B3%87%E6%96%99%E5%BA%AB/18236/
+     */
     .populate("roles", "-__v")
     .exec((err, user) => {
       if (err) {
         res.status(500).send({ message: err });
         return;
       }
-
       if (!user) {
         return res.status(404).send({ message: "User Not found." });
       }

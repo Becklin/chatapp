@@ -21,20 +21,18 @@ const Login = props => {
         password
       })
       .then(response => {
-        console.log(response);
         auth.authenticate(() => {
           setRedirectToReferrer(true);
         });
       })
       .catch(error => {
         console.log('catch', error);
-        setRedirectToReferrer(true);
       });
-    setRedirectToReferrer(true);
   };
   const { from } = props.location.state || { from: { pathname: '/' } };
   if (redirectToReferrer === true) {
-    return <Redirect to={from} />;
+    // return <Redirect to={from} />;
+    return <Redirect to="join" />;
   }
   const handleNameChange = e => {
     setUsername(e.target.value);

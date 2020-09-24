@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Link,
   Route,
+  Switch,
   Redirect,
   withRouter
 } from 'react-router-dom';
@@ -23,13 +24,14 @@ const App = () => (
     <Head>
       <AuthButton />
     </Head>
-    <Route path="/" exact component={Home} />
-    <Route path="/Signup" component={Signup} />
-    <Route path="/login" component={Login} />
-    <PrivateRoute path="/protected" component={Join} />
-    <PrivateRoute path="/chat" component={Chat} />
-    {/* <Route path="/" exact component={Join} />
-    <Route path="/chat" component={Chat} /> */}
+    <Switch>
+      <Route path="/" exact component={Home} />
+      <Route path="/Signup" component={Signup} />
+      <Route path="/login" component={Login} />
+      <PrivateRoute path="/join" component={Join} />
+      <PrivateRoute path="/chat" component={Chat} />
+      <Redirect from="*" to="/" />
+    </Switch>
   </Router>
 );
 

@@ -16,14 +16,14 @@ const Login = props => {
     // });
     e.preventDefault();
     axios
-      .post('http://localhost:5000/afeagresgrtgtr', {
+      .post('http://localhost:5000/api/auth/signin', {
         username,
         password
       })
       .then(response => {
-        // auth.authenticate(() => {
-        //   setRedirectToReferrer(true);
-        // });
+        auth.authenticate(() => {
+          setRedirectToReferrer(true);
+        });
       })
       .catch(error => {
         console.log('catch', error);

@@ -311,8 +311,18 @@ io.on('connection', socket => {
 });
 
 app.use((req, res, next) => {
-  console.log();
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+// error handler middleware
+app.use((error, req, res, next) => {
+  console.log('這裏', error, '===', error.status, '===');
+  res.status(error.status || 500).send({
+    error: {
+      status: error.status || 500,
+      message: error.message || 'Internal Server Error'
+    }
+  });
 });
 
 server.listen(PORT, () => {

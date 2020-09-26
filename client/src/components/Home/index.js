@@ -8,7 +8,7 @@ const Home = () => (
   <>
     <h1>Welcome to EazyChat</h1>
     <Link to="/signup">Sign up</Link>
-    <Link to="/protected">Login</Link>
+    <Link to="/login">Login</Link>
   </>
 );
 

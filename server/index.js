@@ -16,7 +16,7 @@ const io = socketio(server);
 
 const corsOptions = {
   // origin: `http://localhost:${PORT}`
-  origin: "http://localhost:3000"
+  origin: "http://localhost:3000",
 };
 // provides Express middleware to enable CORS
 app.use(cors(corsOptions));
@@ -47,13 +47,13 @@ db.mongoose
         Discover and Monitoring engine, pass option { useUnifiedTopology: true } to
         the MongoClient constructor.
      */
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   })
   .then(() => {
     console.log("Successfully connect to MongoDB.");
     initial();
   })
-  .catch(err => {
+  .catch((err) => {
     console.error("Connection error", err);
     process.exit();
   });
@@ -64,8 +64,8 @@ const initial = () => {
   Role.estimatedDocumentCount((err, count) => {
     if (!err && count === 0) {
       new Role({
-        name: "user"
-      }).save(err => {
+        name: "user",
+      }).save((err) => {
         // create a new User: object.save()
         if (err) {
           console.log("error", err);
@@ -75,8 +75,8 @@ const initial = () => {
       });
 
       new Role({
-        name: "moderator"
-      }).save(err => {
+        name: "moderator",
+      }).save((err) => {
         if (err) {
           console.log("error", err);
         }
@@ -85,8 +85,8 @@ const initial = () => {
       });
 
       new Role({
-        name: "admin"
-      }).save(err => {
+        name: "admin",
+      }).save((err) => {
         if (err) {
           console.log("error", err);
         }
@@ -100,7 +100,7 @@ const initial = () => {
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY,
-  accessKeyId: process.env.AWS_ACCESS_KEY
+  accessKeyId: process.env.AWS_ACCESS_KEY,
 });
 // let myBucket = 'eazychat';
 // let myKey = 'test';
@@ -120,13 +120,8 @@ const s3 = new AWS.S3({
 //   }
 // });
 
-const {
-  addUser,
-  getUser,
-  removeUser,
-  getUsersInRoom
-} = require("../server/users");
-io.on("connection", socket => {
+const { addUser, getUser, removeUser, getUsersInRoom } = require("./users");
+io.on("connection", (socket) => {
   console.log("we have connection!!!");
 
   // 方法零 一次整個傳輸
@@ -170,12 +165,12 @@ io.on("connection", socket => {
     socket.join(user.room);
     socket.emit("message", {
       user: "admin",
-      text: `${user.name}, welcome to the room ${user.room}`
+      text: `${user.name}, welcome to the room ${user.room}`,
     });
 
     socket.emit("image", {
       user: "admin",
-      text: `${user.name}, welcome to the room ${user.room}`
+      text: `${user.name}, welcome to the room ${user.room}`,
     });
 
     // broadcast: send message to everyone besides to that user
@@ -185,7 +180,7 @@ io.on("connection", socket => {
     //要查
     io.to(user.room).emit("roomData", {
       room: user.room,
-      users: getUsersInRoom(user.room)
+      users: getUsersInRoom(user.room),
     });
     errorCallback();
   });
@@ -198,7 +193,7 @@ io.on("connection", socket => {
       io.to(user.room).emit("message", {
         user: user.name,
         text: null,
-        address: addressDom
+        address: addressDom,
       });
       callback(); //奇怪
       return;
@@ -228,7 +223,7 @@ io.on("connection", socket => {
     const params = {
       Bucket: "eazychat", // pass your bucket name
       Key: fileName, // file will be saved as testBucket/contacts.csv
-      Body: bufferData //JSON.stringify(data, null, 2)
+      Body: bufferData, //JSON.stringify(data, null, 2)
     };
     s3.upload(params, function (s3Err, data) {
       if (s3Err) throw s3Err;
@@ -242,7 +237,7 @@ io.on("connection", socket => {
     // const filename = path.basename(data.name);
     let size = 0;
     let fileBuffer = [];
-    stream.on("data", chunk => {
+    stream.on("data", (chunk) => {
       size += chunk.length;
       console.log(Math.floor((size / data.size) * 100) + "%");
       fileBuffer.push(chunk);
@@ -255,7 +250,7 @@ io.on("connection", socket => {
       io.to(user.room).emit("file", {
         user: user.name,
         upload: sentFile,
-        type: data.type
+        type: data.type,
       });
     });
 
@@ -277,7 +272,7 @@ io.on("connection", socket => {
     // const filename = path.basename(data.name);
     let size = 0;
     let fileBuffer = [];
-    stream.on("data", chunk => {
+    stream.on("data", (chunk) => {
       size += chunk.length;
       console.log(Math.floor((size / data.size) * 100) + "%");
       fileBuffer.push(chunk);
@@ -306,7 +301,7 @@ io.on("connection", socket => {
     if (user) {
       io.to(user.room).emit("message", {
         user: "admin",
-        text: `${user.name} has left.`
+        text: `${user.name} has left.`,
       });
     }
   });

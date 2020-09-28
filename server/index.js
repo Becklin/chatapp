@@ -25,75 +25,74 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
-
 require('./routes/index.routes')(app);
 
-// const db = require('./models');
-// const Role = db.role;
-// const dbConfig = require('./config/db.config');
-// db.mongoose
-//   .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
-//     /**
-//      * DeprecationWarning: current URL string parser is deprecated, and will be
-//       removed in a future version. To use the new parser, pass option
-//       { useNewUrlParser: true } to MongoClient.connect.
-//      */
-//     useNewUrlParser: true,
-//     /**
-//      * DeprecationWarning: current Server Discovery and Monitoring engine is
-//         deprecated, and will be removed in a future version. To use the new Server
-//         Discover and Monitoring engine, pass option { useUnifiedTopology: true } to
-//         the MongoClient constructor.
-//      */
-//     useUnifiedTopology: true
-//   })
-//   .then(() => {
-//     console.log('Successfully connect to MongoDB.');
-//     initial();
-//   })
-//   .catch(err => {
-//     console.error('Connection error', err);
-//     process.exit();
-//   });
+const db = require('./models');
+const Role = db.role;
+const dbConfig = require('./config/db.config');
+db.mongoose
+  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
+    /**
+     * DeprecationWarning: current URL string parser is deprecated, and will be
+      removed in a future version. To use the new parser, pass option
+      { useNewUrlParser: true } to MongoClient.connect.
+     */
+    useNewUrlParser: true,
+    /**
+     * DeprecationWarning: current Server Discovery and Monitoring engine is
+        deprecated, and will be removed in a future version. To use the new Server
+        Discover and Monitoring engine, pass option { useUnifiedTopology: true } to
+        the MongoClient constructor.
+     */
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log('Successfully connect to MongoDB.');
+    initial();
+  })
+  .catch(err => {
+    console.error('Connection error', err);
+    process.exit();
+  });
 
-// const initial = () => {
-//   /* Returns the count of all documents in a collection or view.
-//   The method wraps the count command. */
-//   Role.estimatedDocumentCount((err, count) => {
-//     if (!err && count === 0) {
-//       new Role({
-//         name: 'user'
-//       }).save(err => {
-//         // create a new User: object.save()
-//         if (err) {
-//           console.log('error', err);
-//         }
+const initial = () => {
+  /* Returns the count of all documents in a collection or view.
+  The method wraps the count command. */
+  Role.estimatedDocumentCount((err, count) => {
+    if (!err && count === 0) {
+      new Role({
+        name: 'user'
+      }).save(err => {
+        // create a new User: object.save()
+        if (err) {
+          console.log('error', err);
+        }
 
-//         console.log("added 'user' to roles collection");
-//       });
+        console.log("added 'user' to roles collection");
+      });
 
-//       new Role({
-//         name: 'moderator'
-//       }).save(err => {
-//         if (err) {
-//           console.log('error', err);
-//         }
+      new Role({
+        name: 'moderator'
+      }).save(err => {
+        if (err) {
+          console.log('error', err);
+        }
 
-//         console.log("added 'moderator' to roles collection");
-//       });
+        console.log("added 'moderator' to roles collection");
+      });
 
-//       new Role({
-//         name: 'admin'
-//       }).save(err => {
-//         if (err) {
-//           console.log('error', err);
-//         }
+      new Role({
+        name: 'admin'
+      }).save(err => {
+        if (err) {
+          console.log('error', err);
+        }
 
-//         console.log("added 'admin' to roles collection");
-//       });
-//     }
-//   });
-// };
+        console.log("added 'admin' to roles collection");
+      });
+    }
+  });
+};
 
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3({
@@ -228,7 +227,7 @@ io.on('connection', socket => {
       Key: fileName, // file will be saved as testBucket/contacts.csv
       Body: bufferData //JSON.stringify(data, null, 2)
     };
-    s3.upload(params, function(s3Err, data) {
+    s3.upload(params, function (s3Err, data) {
       if (s3Err) throw s3Err;
       console.log(`上傳成功位子在 ${data.Location}`);
     });

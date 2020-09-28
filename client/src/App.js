@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Link,
   Route,
-  Switch,
   Redirect,
   Switch,
   withRouter
@@ -27,7 +26,6 @@ const NotFound = () => (
 );
 const App = () => (
   <Router>
-<<<<<<< HEAD
     <Container>
       <Row>
         <Head>
@@ -45,19 +43,6 @@ const App = () => (
         </Switch>
       </Row>
     </Container>
-=======
-    <Head>
-      <AuthButton />
-    </Head>
-    <Switch>
-      <Route path="/" exact component={Home} />
-      <Route path="/Signup" component={Signup} />
-      <Route path="/login" component={Login} />
-      <PrivateRoute path="/join" component={Join} />
-      <PrivateRoute path="/chat" component={Chat} />
-      <Redirect from="*" to="/" />
-    </Switch>
->>>>>>> a1a85b0189a791e8847a5caad7a08cccde5f4e36
   </Router>
 );
 

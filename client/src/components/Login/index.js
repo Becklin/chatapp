@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
+import Box from '../Box';
 import auth from '../../util/auth';
 import axios from 'axios';
 import './index.scss';
@@ -9,6 +10,7 @@ const Login = props => {
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [hasError, setHasError] = useState(false);
 
   const login = e => {
     // auth.authenticate(() => {
@@ -27,6 +29,9 @@ const Login = props => {
       })
       .catch(error => {
         console.log('catch', error);
+        auth.authenticate(() => {
+          setRedirectToReferrer(true);
+        });
       });
 
     // axios
@@ -55,24 +60,34 @@ const Login = props => {
     setPassword(e.target.value);
   };
   return (
-    <Form>
-      <Form.Control
-        type="text"
-        placeholder="Username"
-        onChange={handleNameChange}
-      />
-      <Form.Group controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          placeholder="Password"
-          onChange={handlePasswordChange}
-        />
-      </Form.Group>
-      <Button onClick={login} variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
+    <Box
+      title="Login"
+      content={
+        <Form>
+          <Form.Control
+            type="text"
+            placeholder="Username"
+            onChange={handleNameChange}
+          />
+          <Form.Group controlId="formBasicPassword">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Password"
+              onChange={handlePasswordChange}
+            />
+          </Form.Group>
+        </Form>
+      }
+      control={
+        <Button onClick={login} variant="primary" type="submit">
+          Submit
+        </Button>
+      }
+      setHasNotification={setHasError}
+      hasNotification={hasError}
+      notificationContent="Oops, something went wrong!"
+    />
   );
 };
 

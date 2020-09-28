@@ -11,8 +11,10 @@ import Home from './Home';
 import Head from './Head';
 import PrivateRoute from './PrivateRoute';
 import AuthButton from './AuthButton';
+import Box from './Box';
 
 export {
+  Box,
   Home,
   Head,
   Login,

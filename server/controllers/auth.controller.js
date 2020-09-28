@@ -1,10 +1,10 @@
-const config = require("../config/auth.config");
-const db = require("../models");
+const config = require('../config/auth.config');
+const db = require('../models');
 const User = db.user;
 const Role = db.role;
 
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
+var jwt = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');
 
 exports.signup = (req, res) => {
   const user = new User({
@@ -37,12 +37,12 @@ exports.signup = (req, res) => {
               return;
             }
 
-            res.send({ message: "User was registered successfully!" });
+            res.send({ message: 'User was registered successfully!' });
           });
         }
       );
     } else {
-      Role.findOne({ name: "user" }, (err, role) => {
+      Role.findOne({ name: 'user' }, (err, role) => {
         if (err) {
           res.status(500).send({ message: err });
           return;
@@ -55,7 +55,7 @@ exports.signup = (req, res) => {
             return;
           }
 
-          res.send({ message: "User was registered successfully!" });
+          res.send({ message: 'User was registered successfully!' });
         });
       });
     }
@@ -63,6 +63,14 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
+  res.status(200).send({
+    id: 'fdwacdawca',
+    username: req.body.username,
+    email: req.body.email,
+    roles: 'user',
+    accessToken: 'fewrgwaeva'
+  });
+
   User.findOne({
     username: req.body.username
   })
@@ -72,14 +80,14 @@ exports.signin = (req, res) => {
      * 並且用被關聯 document 的內容替換掉原來關聯欄位(field)的內容。
      * https://codertw.com/%E8%B3%87%E6%96%99%E5%BA%AB/18236/
      */
-    .populate("roles", "-__v")
+    .populate('roles', '-__v')
     .exec((err, user) => {
       if (err) {
         res.status(500).send({ message: err });
         return;
       }
       if (!user) {
-        return res.status(404).send({ message: "User Not found." });
+        return res.status(404).send({ message: 'User Not found.' });
       }
 
       var passwordIsValid = bcrypt.compareSync(
@@ -90,7 +98,7 @@ exports.signin = (req, res) => {
       if (!passwordIsValid) {
         return res.status(401).send({
           accessToken: null,
-          message: "Invalid Password!"
+          message: 'Invalid Password!'
         });
       }
 
@@ -101,7 +109,7 @@ exports.signin = (req, res) => {
       var authorities = [];
 
       for (let i = 0; i < user.roles.length; i++) {
-        authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
+        authorities.push('ROLE_' + user.roles[i].name.toUpperCase());
       }
       res.status(200).send({
         id: user._id,

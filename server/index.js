@@ -14,6 +14,11 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
+
 const corsOptions = {
   // origin: `http://localhost:${PORT}`
   origin: "http://localhost:3000",
@@ -30,11 +35,11 @@ require("./routes/auth.routes")(app);
 require("./routes/user.routes")(app);
 require("./routes/main.routes")(app);
 
+const uri = `mongodb+srv://beckLin:${process.env.MONGO_PW}@cluster1.juqcg.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
 const db = require("./models");
 const Role = db.role;
-const dbConfig = require("./config/db.config");
 db.mongoose
-  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
+  .connect(uri, {
     /**
      * DeprecationWarning: current URL string parser is deprecated, and will be
       removed in a future version. To use the new parser, pass option

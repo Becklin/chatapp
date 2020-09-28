@@ -5,27 +5,28 @@ import auth from '../../util/auth';
 import axios from 'axios';
 import './index.scss';
 
-const Login = props => {
+const Login = (props) => {
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const login = e => {
+  const login = (e) => {
     // auth.authenticate(() => {
     //   setRedirectToReferrer(true);
     // });
     e.preventDefault();
     axios
-      .post('http://localhost:5000/api/auth/signin', {
+      // .post('http://localhost:5000/api/auth/signin', {
+      .post('https://dailyeasychat.herokuapp.com/api/auth/signin', {
         username,
-        password
+        password,
       })
-      .then(response => {
+      .then((response) => {
         auth.authenticate(() => {
           setRedirectToReferrer(true);
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('catch', error);
       });
   };
@@ -34,10 +35,10 @@ const Login = props => {
     // return <Redirect to={from} />;
     return <Redirect to="join" />;
   }
-  const handleNameChange = e => {
+  const handleNameChange = (e) => {
     setUsername(e.target.value);
   };
-  const handlePasswordChange = e => {
+  const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
   return (

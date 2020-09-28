@@ -1,5 +1,11 @@
+// module.exports = {
+//   HOST: "127.0.0.1",
+//   PORT: 27017,
+//   DB: "eazychat"
+// };
+
 module.exports = {
-  HOST: "127.0.0.1",
-  PORT: 27017,
-  DB: "eazychat"
+  DB: "eazychat",
+  DATABASE: "users",
+  PW: "QIfGuAb0PwLxvPXS",
 };

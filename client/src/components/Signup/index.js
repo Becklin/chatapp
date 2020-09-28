@@ -4,37 +4,40 @@ import { Form, Button, Toast } from 'react-bootstrap';
 import axios from 'axios';
 import './index.scss';
 
-const Signup = props => {
+const Signup = (props) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hasSignup, setHasSignup] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  const signup = e => {
+  const signup = (e) => {
     e.preventDefault();
+    const proxyurl = 'https://cors-anywhere.herokuapp.com/';
+    // const ENDPOINT = `${proxyurl}https://dailyeasychat.herokuapp.com`;
     axios
-      .post('http://localhost:5000/api/auth/signup', {
+      // .post('http://localhost:5000/api/auth/signup', {
+      .post(`${proxyurl}https://dailyeasychat.herokuapp.com/api/auth/signup`, {
         username,
         email,
         password,
-        roles: ['user']
+        roles: ['user'],
       })
-      .then(response => {
+      .then((response) => {
         setHasSignup(true);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('catch', error);
         setHasError(true);
       });
   };
-  const handleNameChange = e => {
+  const handleNameChange = (e) => {
     setUsername(e.target.value);
   };
-  const handleEmailChange = e => {
+  const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
-  const handlePasswordChange = e => {
+  const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
   if (hasSignup) return <Redirect to="login" />;

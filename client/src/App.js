@@ -7,6 +7,7 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
+import { Container, Row, Col } from 'react-bootstrap';
 import {
   Home,
   Head,
@@ -25,17 +26,23 @@ const NotFound = () => (
 );
 const App = () => (
   <Router>
-    <Head>
-      <AuthButton />
-    </Head>
-    <Switch>
-      <Route path="/" exact component={Home} />
-      <Route path="/Signup" component={Signup} />
-      <Route path="/login" component={Login} />
-      <PrivateRoute path="/join" component={Join} />
-      <PrivateRoute path="/chat" component={Chat} />
-      <Redirect from="*" to="/" />
-    </Switch>
+    <Container>
+      <Row>
+        <Head>
+          <AuthButton />
+        </Head>
+      </Row>
+      <Row>
+        <Switch>
+          <Route path="/" exact component={Home} />
+          <Route path="/Signup" component={Signup} />
+          <Route path="/login" component={Login} />
+          <PrivateRoute path="/join" component={Join} />
+          <PrivateRoute path="/chat" component={Chat} />
+          <Redirect from="*" to="/" />
+        </Switch>
+      </Row>
+    </Container>
   </Router>
 );
 

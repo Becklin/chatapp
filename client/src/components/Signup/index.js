@@ -13,11 +13,9 @@ const Signup = (props) => {
 
   const signup = (e) => {
     e.preventDefault();
-    const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-    // const ENDPOINT = `${proxyurl}https://dailyeasychat.herokuapp.com`;
     axios
       // .post('http://localhost:5000/api/auth/signup', {
-      .post(`${proxyurl}https://dailyeasychat.herokuapp.com/api/auth/signup`, {
+      .post('https://dailyeasychat.herokuapp.com/api/auth/signup', {
         username,
         email,
         password,

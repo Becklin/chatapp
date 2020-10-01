@@ -18,7 +18,9 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [counts, setCounts] = useState(0);
   // const ENDPOINT = 'localhost:5000';
-  const proxyurl = 'https://cors-anywhere.herokuapp.com/';
+  // const proxyurl = 'https://cors-anywhere.herokuapp.com/';
+  const proxyurl = '';
+
   const ENDPOINT = `${proxyurl}https://dailyeasychat.herokuapp.com`;
 
   useEffect(() => {

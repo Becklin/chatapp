@@ -16,15 +16,31 @@ const io = socketio(server);
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+
+  // Add this
+  if (req.method === "OPTIONS") {
+    res.header(
+      "Access-Control-Allow-Methods",
+      "PUT, POST, PATCH, DELETE, OPTIONS"
+    );
+    res.header("Access-Control-Max-Age", 120);
+    return res.status(200).json({});
+  }
   next();
 });
 
+// provides Express middleware to enable CORS
 const corsOptions = {
   // origin: `http://localhost:${PORT}`
   origin: "http://localhost:3000",
 };
 // provides Express middleware to enable CORS
 app.use(cors(corsOptions));
+
 // parse requests of content-type - application/json
 // body-parser helps to parse the request and create the req.body object
 app.use(bodyParser.json());
@@ -34,24 +50,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 require("./routes/auth.routes")(app);
 require("./routes/user.routes")(app);
 require("./routes/main.routes")(app);
-
-const uri = `mongodb+srv://beckLin:${process.env.MONGO_PW}@cluster1.juqcg.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
+const app_setting = require("./app.json");
+console.log("app_setting", app_setting);
+const uri = `mongodb+srv://beckLin:${app_setting.MONGO_PW}@cluster1.juqcg.mongodb.net/${app_setting.MONGO_DB}?retryWrites=true&w=majority`;
+console.log(" uri", uri);
 const db = require("./models");
 const Role = db.role;
 db.mongoose
   .connect(uri, {
-    /**
-     * DeprecationWarning: current URL string parser is deprecated, and will be
-      removed in a future version. To use the new parser, pass option
-      { useNewUrlParser: true } to MongoClient.connect.
-     */
     useNewUrlParser: true,
-    /**
-     * DeprecationWarning: current Server Discovery and Monitoring engine is
-        deprecated, and will be removed in a future version. To use the new Server
-        Discover and Monitoring engine, pass option { useUnifiedTopology: true } to
-        the MongoClient constructor.
-     */
     useUnifiedTopology: true,
   })
   .then(() => {
@@ -226,7 +233,7 @@ io.on("connection", (socket) => {
 
   const uploadFileToAws = (bufferData, fileName, userName) => {
     const params = {
-      Bucket: "eazychat", // pass your bucket name
+      Bucket: "easychat", // pass your bucket name
       Key: fileName, // file will be saved as testBucket/contacts.csv
       Body: bufferData, //JSON.stringify(data, null, 2)
     };

@@ -9,18 +9,17 @@ import auth from '../../util/auth';
  * withRouter will pass updated match, location,
  * and history props to the wrapped component whenever it renders.
  */
-const AuthButton = withRouter(({ history }) =>
-  auth.isAuthenticated ? (
-    <Button
-      onClick={() => {
-        auth.signout(() => history.push('/'));
-      }}
-    >
-      Sign out
-    </Button>
-  ) : (
-    <p>You are not logged in.</p>
-  )
+const AuthButton = withRouter(
+  ({ history }) =>
+    auth.isAuthenticated && (
+      <Button
+        onClick={() => {
+          auth.signout(() => history.push('/'));
+        }}
+      >
+        Sign out
+      </Button>
+    )
 );
 
 export default AuthButton;

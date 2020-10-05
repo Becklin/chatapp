@@ -9,10 +9,10 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const PORT = process.env.PORT || 5000;
-const router = require('./routes/main.routes');
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+const AppError = require('./utils/AppError');
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -21,15 +21,6 @@ app.use((req, res, next) => {
     'Origin, X-Requested-With, Content-Type, Accept'
   );
 
-  // Add this
-  if (req.method === 'OPTIONS') {
-    res.header(
-      'Access-Control-Allow-Methods',
-      'PUT, POST, PATCH, DELETE, OPTIONS'
-    );
-    res.header('Access-Control-Max-Age', 120);
-    return res.status(200).json({});
-  }
   next();
 });
 
@@ -46,29 +37,27 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
+require('./routes/index.routes')(app);
 
-require('./routes/auth.routes')(app);
-require('./routes/user.routes')(app);
-require('./routes/main.routes')(app);
-const app_setting = require('./app.json') || '';
-console.log('app_setting', app_setting);
-const uri = `mongodb+srv://beckLin:${app_setting.MONGO_PW}@cluster1.juqcg.mongodb.net/${app_setting.MONGO_DB}?retryWrites=true&w=majority`;
-console.log(' uri', uri);
-const db = require('./models');
-const Role = db.role;
-db.mongoose
-  .connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  .then(() => {
-    console.log('Successfully connect to MongoDB.');
-    initial();
-  })
-  .catch(err => {
-    console.error('Connection error', err);
-    process.exit();
-  });
+// const app_setting = require('./app.json');
+// console.log('app_setting', app_setting);
+// const uri = `mongodb+srv://beckLin:${app_setting.MONGO_PW}@cluster1.juqcg.mongodb.net/${app_setting.MONGO_DB}?retryWrites=true&w=majority`;
+// console.log(' uri', uri);
+// const db = require('./models');
+// const Role = db.role;
+// db.mongoose
+//   .connect(uri, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+//   })
+//   .then(() => {
+//     console.log('Successfully connect to MongoDB.');
+//     initial();
+//   })
+//   .catch(err => {
+//     console.error('Connection error', err);
+//     process.exit();
+//   });
 
 const initial = () => {
   /* Returns the count of all documents in a collection or view.
@@ -132,7 +121,12 @@ const s3 = new AWS.S3({
 //   }
 // });
 
-const { addUser, getUser, removeUser, getUsersInRoom } = require('./users');
+const {
+  addUser,
+  getUser,
+  removeUser,
+  getUsersInRoom
+} = require('../server/users');
 io.on('connection', socket => {
   console.log('we have connection!!!');
 
@@ -315,6 +309,21 @@ io.on('connection', socket => {
         user: 'admin',
         text: `${user.name} has left.`
       });
+    }
+  });
+});
+
+app.use((req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+// error handler middleware
+app.use((error, req, res, next) => {
+  console.log('這裏', error, '===', error.status, '===');
+  res.status(error.status || 500).send({
+    error: {
+      status: error.status || 500,
+      message: error.message || 'Internal Server Error'
     }
   });
 });

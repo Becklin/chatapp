@@ -1,35 +1,27 @@
 .chat-message {
-  img {
-    width: 100%;
-  }
+
   &__wrapper {
     padding: 12px;
   }
   &__content {
-    width: 70vw;
-    border: 0.4px solid gray;
-    border-radius: 5px;
-    padding: 0 8px;
-    &--user {
-      margin-left: auto;
+     width: 70vw;
+    margin-top: 8px;
+    &--text {
+      border: 0.4px solid gray;
+      border-radius: 5px;
+      padding: 8px;
     }
   }
   &__userInfo {
     display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
     img,
     .chat-message__avatar {
       margin: 0px 8px;
     }
     &--user {
-      h6,
-      img,
-      .chat-message__avatar {
-        margin-left: auto;
-      }
-      img,
-      .chat-message__avatar {
-        order: 1;
-      }
+      flex-direction: row-reverse;
     }
   }
 }

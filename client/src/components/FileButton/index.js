@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
-import { Upload } from 'react-bootstrap-icons';
+import React from 'react';
 import './index.scss';
 
 //USER送發訊息的人，name該聊天室使用者名字
-const UploadButton = ({ sendFile }) => {
+const FileButton = ({ type, onHandleFile }) => {
   // const [files, setFiles] = useState();
   // const [uploading, setUploading] = useState(false);
 
   const onChange = e => {
-    console.log(e.target.files);
     const files = Array.from(e.target.files);
     // lastModified: 1598938657151
     // lastModifiedDate: Tue Sep 01 2020 13:37:37 GMT+0800 (Taipei Standard Time) {}
@@ -25,8 +23,7 @@ const UploadButton = ({ sendFile }) => {
     // webkitRelativePath: ""
     let formData = new FormData();
     formData.append(0, files[0]);
-    console.log(formData.get(0));
-    sendFile(formData.get(0));
+    onHandleFile(formData.get(0));
   };
 
   return (
@@ -41,4 +38,4 @@ const UploadButton = ({ sendFile }) => {
   );
 };
 
-export default UploadButton;
+export default FileButton;

@@ -1,13 +1,37 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { Join } from './components';
-import { Chat } from './components';
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+  Switch,
+  Redirect,
+  withRouter
+} from 'react-router-dom';
+import {
+  Home,
+  Head,
+  Login,
+  Signup,
+  AuthButton,
+  Join,
+  Chat,
+  PrivateRoute
+} from './components';
 import './index.scss';
 
 const App = () => (
   <Router>
-    <Route path="/" exact component={Join} />
-    <Route path="/chat" component={Chat} />
+    <Head>
+      <AuthButton />
+    </Head>
+    <Switch>
+      <Route path="/" exact component={Home} />
+      <Route path="/Signup" component={Signup} />
+      <Route path="/login" component={Login} />
+      <PrivateRoute path="/join" component={Join} />
+      <PrivateRoute path="/chat" component={Chat} />
+      <Redirect from="*" to="/" />
+    </Switch>
   </Router>
 );
 

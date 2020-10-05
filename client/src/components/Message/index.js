@@ -15,13 +15,17 @@ const Message = ({
   if (trimmedName === user) isSentByCurrentUser = true;
   const role = isSentByCurrentUser ? 'user' : 'friend';
   const title = role === 'user' ? trimmedName : user;
+  // console.log('葬載', upload);
+  // console.log('type', type);
+
   const renderFile = (address, type) => {
     if (address) return <div dangerouslySetInnerHTML={{ __html: address }} />;
     if (type) {
       switch (type) {
         case 'video/mp4':
+        case 'video/quicktime':
           return (
-            <video width="320" height="240" controls>
+            <video controls>
               <source
                 src={`data:image/png;base64, ${upload}`}
                 type="video/mp4"
@@ -33,7 +37,7 @@ const Message = ({
               Your browser does not support the video tag.
             </video>
           );
-        case 'image/jpeg':
+        case 'image/*':
           return (
             <img
               className="img-thumbnail img-fluid"
@@ -41,10 +45,15 @@ const Message = ({
             />
           );
         default:
-          return;
+          return (
+            <img
+              className="img-thumbnail img-fluid"
+              src={`data:image/png;base64, ${upload}`}
+            />
+          );
       }
     }
-    return ReactEmoji.emojify(text);
+    return (<p className="chat-message__content--text">{ReactEmoji.emojify(text)}</p>);
   };
   return (
     <div className="chat-message__wrapper">
@@ -56,10 +65,10 @@ const Message = ({
             <PersonCircle size={24} />
           )}
         </span>
-        <h6>{title}</h6>
-      </div>
-      <div className={`chat-message__content chat-message__content--${role}`}>
-        {renderFile(address, type)}
+        <span>{title}</span>
+        <div className={`chat-message__content chat-message__content--${role}`}>
+          {renderFile(address, type)}
+        </div>
       </div>
     </div>
   );

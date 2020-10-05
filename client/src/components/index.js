@@ -4,14 +4,26 @@ import Input from './Input';
 import InfoBar from './InfoBar';
 import Message from './Message';
 import Messages from './Messages';
-import UploadButton from './UploadButton';
+import FileButton from './FileButton';
+import Login from './Login';
+import Signup from './Signup';
+import Home from './Home';
+import Head from './Head';
+import PrivateRoute from './PrivateRoute';
+import AuthButton from './AuthButton';
 
 export {
-    Chat,
-    Join,
-    Input,
-    InfoBar,
-    Message,
-    Messages,
-    UploadButton,
+  Home,
+  Head,
+  Login,
+  Signup,
+  AuthButton,
+  PrivateRoute,
+  Chat,
+  Join,
+  Input,
+  InfoBar,
+  Message,
+  Messages,
+  FileButton
 };

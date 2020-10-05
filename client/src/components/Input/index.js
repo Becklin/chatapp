@@ -1,9 +1,15 @@
 import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
-import UploadButton from '../UploadButton';
+import FileButton from '../FileButton';
 import './index.scss';
 
-const Input = ({ message, setMessage, sendMessage, sendFile }) => (
+const Input = ({
+  message,
+  setMessage,
+  sendMessage,
+  sendFile,
+  uploadFile,
+}) => (
   <form className="chat__form">
     <Row>
       <Col xs={8}>
@@ -24,9 +30,12 @@ const Input = ({ message, setMessage, sendMessage, sendFile }) => (
         >
           send
         </Button>
-        <UploadButton size="sm" sendFile={sendFile}>
+        <FileButton size="sm" type="sendFile" onHandleFile={sendFile}>
           Files
-        </UploadButton>
+        </FileButton>
+        <FileButton size="sm" type="upload" onHandleFile={uploadFile}>
+          Files
+        </FileButton>
       </Col>
     </Row>
   </form>

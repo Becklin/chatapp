@@ -1,0 +1,81 @@
+Arguments: 
+  /Users/beck.lin/.nvm/versions/node/v12.16.1/bin/node /Users/beck.lin/.yarn/bin/yarn.js start
+
+PATH: 
+  /var/folders/z8/z7rgrdnj02vfrjz_wx9yf9tsx3wz1z/T/yarn--1601884765125-0.4115093778264658:/Users/beck.lin/chatapp/easychatapp/node_modules/.bin:/Users/beck.lin/.config/yarn/link/node_modules/.bin:/Users/beck.lin/.nvm/versions/node/v12.16.1/libexec/lib/node_modules/npm/bin/node-gyp-bin:/Users/beck.lin/.nvm/versions/node/v12.16.1/lib/node_modules/npm/bin/node-gyp-bin:/Users/beck.lin/.nvm/versions/node/v12.16.1/bin/node_modules/npm/bin/node-gyp-bin:/var/folders/z8/z7rgrdnj02vfrjz_wx9yf9tsx3wz1z/T/yarn--1601884764413-0.5752844499855767:/Users/beck.lin/chatapp/easychatapp/node_modules/.bin:/Users/beck.lin/.config/yarn/link/node_modules/.bin:/Users/beck.lin/.nvm/versions/node/v12.16.1/libexec/lib/node_modules/npm/bin/node-gyp-bin:/Users/beck.lin/.nvm/versions/node/v12.16.1/lib/node_modules/npm/bin/node-gyp-bin:/Users/beck.lin/.nvm/versions/node/v12.16.1/bin/node_modules/npm/bin/node-gyp-bin:/Users/beck.lin/.nvm/versions/node/v12.16.1/bin:/Users/beck.lin/.yarn/bin:/Users/beck.lin/.config/yarn/global/node_modules/.bin:/Users/beck.lin/Downloads/node-v10.16.3-darwin-x64/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/beck.lin/.nvm/versions/node/v12.16.1/bin:/Users/beck.lin/.yarn/bin:/Users/beck.lin/.config/yarn/global/node_modules/.bin:/Users/beck.lin/Downloads/node-v10.16.3-darwin-x64/bin
+
+Yarn version: 
+  1.22.4
+
+Node version: 
+  12.16.1
+
+Platform: 
+  darwin x64
+
+Trace: 
+  SyntaxError: /Users/beck.lin/chatapp/easychatapp/client/package.json: Unexpected token / in JSON at position 928
+      at JSON.parse (<anonymous>)
+      at /Users/beck.lin/.yarn/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/Users/beck.lin/.yarn/lib/cli.js:310:30)
+      at /Users/beck.lin/.yarn/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "client",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+      "@testing-library/jest-dom": "^4.2.4",
+      "@testing-library/react": "^9.5.0",
+      "@testing-library/user-event": "^7.2.1",
+      "bootstrap": "^4.5.2",
+      "grommet-icons": "^4.4.0",
+      "node-sass": "^4.14.1",
+      "query-string": "^6.13.1",
+      "react": "^16.13.1",
+      "react-bootstrap": "^1.3.0",
+      "react-bootstrap-icons": "^1.0.3-alpha5",
+      "react-dom": "^16.13.1",
+      "react-emoji": "^0.5.0",
+      "react-responsive": "^8.1.0",
+      "react-router": "^5.2.0",
+      "react-router-dom": "^5.2.0",
+      "react-scripts": "3.4.3",
+      "react-scroll-to-bottom": "^3.0.0",
+      "socket.io-client": "^2.3.0",
+      "socket.io-stream": "^0.9.1",
+      "styled-components": "^5.1.1"
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject"
+    },
+    // "proxy": "http://localhost:5000/",
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    },
+    "devDependencies": {
+      "axios": "^0.20.0",
+      "customize-cra": "^1.0.0",
+      "react-app-rewired": "^2.1.6"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

@@ -1,0 +1,27 @@
+.chat-message {
+
+  &__wrapper {
+    padding: 12px;
+  }
+  &__content {
+     width: 70vw;
+    margin-top: 8px;
+    &--text {
+      border: 0.4px solid gray;
+      border-radius: 5px;
+      padding: 8px;
+    }
+  }
+  &__userInfo {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    img,
+    .chat-message__avatar {
+      margin: 0px 8px;
+    }
+    &--user {
+      flex-direction: row-reverse;
+    }
+  }
+}

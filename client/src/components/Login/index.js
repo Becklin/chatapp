@@ -18,7 +18,7 @@ const Login = props => {
     // });
     e.preventDefault();
     axios
-      .post('http://localhost:5000/api/auth/signin', {
+      .post('/api/auth/signin', {
         username,
         password
       })

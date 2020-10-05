@@ -30,6 +30,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy": "http://localhost:5000/",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -46,6 +47,5 @@
     "axios": "^0.20.0",
     "customize-cra": "^1.0.0",
     "react-app-rewired": "^2.1.6"
-  },
-  "proxy": "http://localhost:5000"
+  }
 }

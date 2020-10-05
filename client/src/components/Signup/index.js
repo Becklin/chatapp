@@ -14,7 +14,7 @@ const Signup = props => {
   const signup = e => {
     e.preventDefault();
     axios
-      .post('http://localhost:5000/api/auth/signup', {
+      .post('/api/auth/signup', {
         username,
         email,
         password,

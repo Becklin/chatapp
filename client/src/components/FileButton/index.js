@@ -6,7 +6,7 @@ const FileButton = ({ type, onHandleFile }) => {
   // const [files, setFiles] = useState();
   // const [uploading, setUploading] = useState(false);
 
-  const onChange = e => {
+  const onChange = (e) => {
     const files = Array.from(e.target.files);
     // lastModified: 1598938657151
     // lastModifiedDate: Tue Sep 01 2020 13:37:37 GMT+0800 (Taipei Standard Time) {}
@@ -27,14 +27,14 @@ const FileButton = ({ type, onHandleFile }) => {
   };
 
   return (
-    <div className="button">
+    <span className="chat__button">
       <input
         type="file"
         id="single"
         accept="image/*,video/*,audio/*"
         onChange={onChange}
       />
-    </div>
+    </span>
   );
 };
 

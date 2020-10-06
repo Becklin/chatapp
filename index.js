@@ -30,24 +30,26 @@ const corsOptions = {
   origin: "http://localhost:3000",
 };
 // provides Express middleware to enable CORS
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
 // body-parser helps to parse the request and create the req.body object
 app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
-require("./routes/index.routes")(app);
 
-// if (process.env.NODE_ENV === "production") {
-// Serve any static files
-app.use(express.static(path.join(__dirname, "client/build")));
-// Handle React routing, return all requests to React app
-app.get("*", function (req, res) {
-  consoel.log("全部__dirname", __dirname);
-  res.sendFile(path.join(__dirname, "client/build", "index.html"));
-});
-// }
+if (process.env.NODE_ENV === "production") {
+  // Serve any static files
+  console.log("__dirname", __dirname);
+  app.use(express.static(path.join(__dirname, "client/build")));
+  // Handle React routing, return all requests to React app
+  app.get("*", function (req, res) {
+    consoel.log("全部__dirname", __dirname);
+    res.sendFile(path.join(__dirname, "client/build", "index.html"));
+  });
+}
+
+require("./routes/index.routes")(app);
 
 // const app_setting = require('./app.json');
 // console.log('app_setting', app_setting);

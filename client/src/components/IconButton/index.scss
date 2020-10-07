@@ -3,17 +3,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
     input {
       width: 100px;
     }
   }
 }
+
 .chat__label {
   cursor: pointer;
   margin: 0px;
   font-size: 0.8rem;
   font-weight: bold;
   margin-right: 6px;
+
   svg {
     width: 24px;
     height: 24px;

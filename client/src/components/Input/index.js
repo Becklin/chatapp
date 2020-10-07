@@ -9,11 +9,15 @@ import IconButton from '../IconButton';
 import './index.scss';
 
 const Input = ({ message, setMessage, sendMessage, sendFile, uploadFile }) => {
-  const handleSendMessage = (event) => sendMessage(event);
+  const handleSendMessage = (event) => {
+    console.log('dddd', event.target.value);
+    sendMessage(event);
+  };
   return (
     <form className="chat__form">
       <textarea
         className="chat__message"
+        placeholder="write some message..."
         value={message}
         onChange={(event) => setMessage(event.target.value)}
         onKeyPress={(event) =>
@@ -39,7 +43,7 @@ const Input = ({ message, setMessage, sendMessage, sendFile, uploadFile }) => {
           className="chat__flex"
           size="32"
           onClick={message ? handleSendMessage : null}
-          color={message ? 'white' : 'gray'}
+          color={message ? 'darkslategray' : '#e3e3e3'}
         />
       </div>
     </form>

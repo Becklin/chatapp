@@ -1,32 +1,47 @@
 import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
-import { ChatLeftTextFill } from 'react-bootstrap-icons';
-import FileButton from '../FileButton';
+import {
+  ChatRightTextFill,
+  CloudUploadFill,
+  Image,
+} from 'react-bootstrap-icons';
+import IconButton from '../IconButton';
 import './index.scss';
 
 const Input = ({ message, setMessage, sendMessage, sendFile, uploadFile }) => {
   const handleSendMessage = (event) => sendMessage(event);
   return (
     <form className="chat__form">
-      <input
-        className="chat__input"
+      <textarea
+        className="chat__message"
         value={message}
         onChange={(event) => setMessage(event.target.value)}
         onKeyPress={(event) =>
           event.key === 'Enter' ? setMessage(event.target.value) : null
         }
       />
-      <FileButton size="sm" type="sendFile" onHandleFile={sendFile}>
-        Files
-      </FileButton>
-      <FileButton size="sm" type="upload" onHandleFile={uploadFile}>
-        Files
-      </FileButton>
-      <ChatLeftTextFill
-        size="32"
-        onClick={message ? handleSendMessage : null}
-        color={message ? 'white' : 'gray'}
-      />
+      <div className="chat__controls">
+        <IconButton
+          className="chat__flex"
+          type="file"
+          onHandleClick={sendFile}
+          icon={<Image />}
+          text="files"
+        />
+        <IconButton
+          className="chat__flex"
+          type="file"
+          onHandleClick={uploadFile}
+          icon={<CloudUploadFill />}
+          text="upload"
+        />
+        <ChatRightTextFill
+          className="chat__flex"
+          size="32"
+          onClick={message ? handleSendMessage : null}
+          color={message ? 'white' : 'gray'}
+        />
+      </div>
     </form>
   );
 };

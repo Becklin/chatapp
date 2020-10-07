@@ -1,6 +1,9 @@
+@import '../../variables.scss';
+
 .chat {
-    &__messages {
-        background: #ffffff;
-        height: 80vh;
-    }
+  &__messages {
+    background: #ffffff;
+    color: $fontColor;
+    height: 80vh;
+  }
 }

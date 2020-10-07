@@ -79,7 +79,7 @@ const Chat = () => {
   };
 
   return (
-    <Container fluid>
+    <>
       <InfoBar room={room} counts={counts} />
       <Messages messages={messages} name={name} />
       <Input
@@ -89,7 +89,7 @@ const Chat = () => {
         sendFile={sendFile}
         uploadFile={uploadFile}
       />
-    </Container>
+    </>
   );
 };
 

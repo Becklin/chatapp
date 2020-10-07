@@ -5,7 +5,7 @@ import {
   Route,
   Redirect,
   Switch,
-  withRouter
+  withRouter,
 } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import {
@@ -16,7 +16,7 @@ import {
   AuthButton,
   Join,
   Chat,
-  PrivateRoute
+  PrivateRoute,
 } from './components';
 import './index.scss';
 const NotFound = () => (
@@ -26,23 +26,17 @@ const NotFound = () => (
 );
 const App = () => (
   <Router>
-    <Container>
-      <Row>
-        <Head>
-          <AuthButton />
-        </Head>
-      </Row>
-      <Row>
-        <Switch>
-          <Route path="/" exact component={Home} />
-          <Route path="/Signup" component={Signup} />
-          <Route path="/login" component={Login} />
-          <PrivateRoute path="/join" component={Join} />
-          <PrivateRoute path="/chat" component={Chat} />
-          <Redirect from="*" to="/" />
-        </Switch>
-      </Row>
-    </Container>
+    <Head>
+      <AuthButton />
+    </Head>
+    <Switch>
+      <Route path="/" exact component={Home} />
+      <Route path="/Signup" component={Signup} />
+      <Route path="/login" component={Login} />
+      <PrivateRoute path="/join" component={Join} />
+      <PrivateRoute path="/chat" component={Chat} />
+      <Redirect from="*" to="/" />
+    </Switch>
   </Router>
 );
 

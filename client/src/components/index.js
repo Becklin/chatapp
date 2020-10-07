@@ -4,7 +4,7 @@ import Input from './Input';
 import InfoBar from './InfoBar';
 import Message from './Message';
 import Messages from './Messages';
-import FileButton from './FileButton';
+import ChatButton from './ChatButton';
 import Login from './Login';
 import Signup from './Signup';
 import Home from './Home';
@@ -12,6 +12,7 @@ import Head from './Head';
 import PrivateRoute from './PrivateRoute';
 import AuthButton from './AuthButton';
 import Box from './Box';
+import IconButton from './IconButton';
 
 export {
   Box,
@@ -27,5 +28,6 @@ export {
   InfoBar,
   Message,
   Messages,
-  FileButton
+  ChatButton,
+  IconButton,
 };

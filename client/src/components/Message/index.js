@@ -8,7 +8,7 @@ import './index.scss';
 const Message = ({
   message: { user, text, upload, type, address },
   name,
-  avatarSrc
+  avatarSrc,
 }) => {
   let isSentByCurrentUser = false;
   const trimmedName = name.trim().toLowerCase();
@@ -53,22 +53,23 @@ const Message = ({
           );
       }
     }
-    return (<p className="chat-message__content--text">{ReactEmoji.emojify(text)}</p>);
+    return (
+      <p className="chat-message__content--text">{ReactEmoji.emojify(text)}</p>
+    );
   };
   return (
-    <div className="chat-message__wrapper">
-      <div className={`chat-message__userInfo chat-message__userInfo--${role}`}>
-        <span className="chat-message__avatar">
-          {avatarSrc ? (
-            <Image src={avatarSrc} roundedCircle />
-          ) : (
-            <PersonCircle size={24} />
-          )}
-        </span>
+    <div className={`chat-message__userInfo chat-message__userInfo--${role}`}>
+      <h4 className="chat-message__info">
+        {avatarSrc ? (
+          <Image src={avatarSrc} roundedCircle />
+        ) : (
+          <PersonCircle size={24} />
+        )}
         <span>{title}</span>
-        <div className={`chat-message__content chat-message__content--${role}`}>
-          {renderFile(address, type)}
-        </div>
+      </h4>
+
+      <div className={`chat-message__content chat-message__content--${role}`}>
+        {renderFile(address, type)}
       </div>
     </div>
   );

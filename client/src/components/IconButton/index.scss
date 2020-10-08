@@ -1,12 +1,6 @@
 .chat {
-  &__button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    input {
-      width: 100px;
-    }
+  &__icon.disabled {
+    color: #e3e3e3;
   }
 }
 
@@ -23,7 +17,7 @@
   }
 }
 
-#upload-photo {
+.hidden-input {
   opacity: 0;
   position: absolute;
   z-index: -1;

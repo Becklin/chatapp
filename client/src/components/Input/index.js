@@ -26,18 +26,20 @@ const Input = ({ message, setMessage, sendMessage, sendFile, uploadFile }) => {
       />
       <div className="chat__controls">
         <IconButton
+          disabled={message}
           className="chat__flex"
           type="file"
           onHandleClick={sendFile}
           icon={<Image />}
-          text="files"
+          name="files"
         />
         <IconButton
+          disabled={message}
           className="chat__flex"
           type="file"
           onHandleClick={uploadFile}
           icon={<CloudUploadFill />}
-          text="upload"
+          name="upload"
         />
         <ChatRightTextFill
           className="chat__flex"

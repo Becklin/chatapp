@@ -51,25 +51,23 @@ if (process.env.NODE_ENV === "production") {
 
 require("./routes/index.routes")(app);
 
-// const app_setting = require('./app.json');
-// console.log('app_setting', app_setting);
-// const uri = `mongodb+srv://beckLin:${app_setting.MONGO_PW}@cluster1.juqcg.mongodb.net/${app_setting.MONGO_DB}?retryWrites=true&w=majority`;
-// console.log(' uri', uri);
-// const db = require('./models');
-// const Role = db.role;
-// db.mongoose
-//   .connect(uri, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true
-//   })
-//   .then(() => {
-//     console.log('Successfully connect to MongoDB.');
-//     initial();
-//   })
-//   .catch(err => {
-//     console.error('Connection error', err);
-//     process.exit();
-//   });
+const uri = `mongodb+srv://beckLin:${process.env.MONGO_PW}@cluster1.juqcg.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
+console.log(" uri", uri);
+const db = require("./models");
+const Role = db.role;
+db.mongoose
+  .connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Successfully connect to MongoDB.");
+    initial();
+  })
+  .catch((err) => {
+    console.error("Connection error", err);
+    process.exit();
+  });
 
 const initial = () => {
   /* Returns the count of all documents in a collection or view.

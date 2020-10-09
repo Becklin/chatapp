@@ -15,7 +15,7 @@
 
   &__body {
     max-width: 70vw;
-    margin-top: 8px;
+    margin: 8px 4px 0px 12px;
 
     &--text {
       border: 1px solid gray;
@@ -24,8 +24,8 @@
       padding: 16px;
       margin: 0px;
       box-shadow: 1px 1px 2px 1px rgba(191, 191, 191, 1);
-      background: #007bff;
-      color: #fff;
+      background: #F2FFF5;
+      color: #696969;
     }
   }
 

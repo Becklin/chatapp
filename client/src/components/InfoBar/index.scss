@@ -1,20 +1,20 @@
 .chat {
     &__infoBar {
         display: flex;
-        padding-top: 12px;
         align-items: center;
+        padding: 0 50px 0 12px;
     }
 
     &__room {
         width: 100px;
         flex: 5;
-
+        color: #ffffff;
     }
 
     &__count {
         width: 100px;
         flex: 1;
-
+        color: #ffffff;
     }
 
     &__back {

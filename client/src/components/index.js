@@ -13,6 +13,7 @@ import PrivateRoute from './PrivateRoute';
 import AuthButton from './AuthButton';
 import Box from './Box';
 import IconButton from './IconButton';
+import Menu from './Menu';
 
 export {
   Box,
@@ -30,4 +31,5 @@ export {
   Messages,
   ChatButton,
   IconButton,
+  Menu,
 };

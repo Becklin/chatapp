@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-// import { ArrowLeftCircle, PeopleFill } from 'react-bootstrap-icons';
+import {
+  ArrowLeftCircle,
+  PeopleFill,
+  BoxArrowLeft,
+} from 'react-bootstrap-icons';
 import './index.scss';
 import auth from '../../util/auth';
 
@@ -12,13 +16,15 @@ import auth from '../../util/auth';
 const AuthButton = withRouter(
   ({ history }) =>
     auth.isAuthenticated && (
-      <Button
+      <BoxArrowLeft
+        size="30"
+        color="#fff"
         onClick={() => {
           auth.signout(() => history.push('/'));
         }}
       >
         Sign out
-      </Button>
+      </BoxArrowLeft>
     )
 );
 

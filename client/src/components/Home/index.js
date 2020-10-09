@@ -6,7 +6,7 @@ import './index.scss';
 
 const Home = () => (
   <>
-    <h1>Welcome to EazyChat</h1>
+    <h1>EazyChat</h1>
     <Link to="/signup">Sign up</Link>
     <Link to="/login">Login</Link>
   </>

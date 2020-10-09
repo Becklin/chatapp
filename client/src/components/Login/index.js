@@ -6,13 +6,13 @@ import auth from '../../util/auth';
 import axios from 'axios';
 import './index.scss';
 
-const Login = props => {
+const Login = (props) => {
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [hasError, setHasError] = useState(false);
 
-  const login = e => {
+  const login = (e) => {
     // auth.authenticate(() => {
     //   setRedirectToReferrer(true);
     // });
@@ -20,43 +20,26 @@ const Login = props => {
     axios
       .post('/api/auth/signin', {
         username,
-        password
+        password,
       })
-      .then(response => {
+      .then((response) => {
         auth.authenticate(() => {
           setRedirectToReferrer(true);
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('catch', error);
-        auth.authenticate(() => {
-          setRedirectToReferrer(true);
-        });
+        setHasError(true);
       });
-
-    // axios
-    //   .post('http://localhost:5000/api/auth/signin', {
-    //     username,
-    //     password
-    //   })
-    //   .then(response => {
-    //     auth.authenticate(() => {
-    //       setRedirectToReferrer(true);
-    //     });
-    //   })
-    //   .catch(error => {
-    //     console.log('catch', error);
-    //   });
   };
   const { from } = props.location.state || { from: { pathname: '/' } };
   if (redirectToReferrer === true) {
-    // return <Redirect to={from} />;
     return <Redirect to="join" />;
   }
-  const handleNameChange = e => {
+  const handleNameChange = (e) => {
     setUsername(e.target.value);
   };
-  const handlePasswordChange = e => {
+  const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
   return (

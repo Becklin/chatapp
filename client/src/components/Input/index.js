@@ -1,10 +1,6 @@
 import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
-import {
-  ChatRightTextFill,
-  CloudUploadFill,
-  Image,
-} from 'react-bootstrap-icons';
+import { ChatTextFill, CloudUploadFill, Image } from 'react-bootstrap-icons';
 import IconButton from '../IconButton';
 import './index.scss';
 
@@ -41,7 +37,7 @@ const Input = ({ message, setMessage, sendMessage, sendFile, uploadFile }) => {
           icon={<CloudUploadFill />}
           name="upload"
         />
-        <ChatRightTextFill
+        <ChatTextFill
           className="chat__flex"
           size="32"
           onClick={message ? handleSendMessage : null}

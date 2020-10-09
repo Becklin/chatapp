@@ -54,23 +54,22 @@ const Message = ({
       }
     }
     return (
-      <p className="chat-message__content--text">{ReactEmoji.emojify(text)}</p>
+      <p className="chat-message__body--text">{ReactEmoji.emojify(text)}</p>
     );
   };
   return (
-    <div className={`chat-message__userInfo chat-message__userInfo--${role}`}>
-      <h4 className="chat-message__info">
-        {avatarSrc ? (
-          <Image src={avatarSrc} roundedCircle />
-        ) : (
-          <PersonCircle size={24} />
-        )}
-        <span>{title}</span>
-      </h4>
-
-      <div className={`chat-message__content chat-message__content--${role}`}>
-        {renderFile(address, type)}
-      </div>
+    <div className={`chat-message chat-message--${role}`}>
+      {role === 'friend' && (
+        <h4>
+          {avatarSrc ? (
+            <Image src={avatarSrc} roundedCircle />
+          ) : (
+            <PersonCircle size={24} />
+          )}
+          <span>{title}</span>
+        </h4>
+      )}
+      <div className="chat-message__body">{renderFile(address, type)}</div>
     </div>
   );
 };

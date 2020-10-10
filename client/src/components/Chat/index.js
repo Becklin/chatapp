@@ -19,7 +19,7 @@ const Chat = () => {
   const [counts, setCounts] = useState(0);
   // const ENDPOINT = 'localhost:5000';
 
-  const ENDPOINT = 'https://dailyeasychat.herokuapp.com';
+  const ENDPOINT = 'https://freshtalk.herokuapp.com';
 
   useEffect(() => {
     const { name, room } = qs.parse(search);

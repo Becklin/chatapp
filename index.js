@@ -50,7 +50,6 @@ if (process.env.NODE_ENV === "production") {
 }
 
 require("./routes/index.routes")(app);
-// const app_json = require("./app.json");
 
 const uri = `mongodb+srv://beckLin:${process.env.MONGO_PW}@cluster1.juqcg.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
 console.log(" uri", uri);

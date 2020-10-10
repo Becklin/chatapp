@@ -5,11 +5,13 @@ import { ArrowLeftCircle, PeopleFill } from 'react-bootstrap-icons';
 import './index.scss';
 
 const Home = () => (
-  <>
-    <h1>EazyChat</h1>
-    <Link to="/signup">Sign up</Link>
-    <Link to="/login">Login</Link>
-  </>
+  <div className="chat-home">
+    <h1>Fresh Talk</h1>
+    <div className="chat-home__controls">
+      <Link to="/signup">Sign up</Link>
+      <Link to="/login">Login</Link>
+    </div>
+  </div>
 );
 
 export default Home;

@@ -17,20 +17,20 @@ const Join = () => {
             <Form.Control
               type="text"
               placeholder="Username"
-              onChange={e => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
             />
             <Form.Label>Room</Form.Label>
             <Form.Control
               type="text"
               placeholder="Room"
-              onChange={e => setRoom(e.target.value)}
+              onChange={(e) => setRoom(e.target.value)}
             />
           </Form.Group>
         </Form>
       }
       control={
         <Link
-          onClick={event => (!name || !room ? event.preventDefault() : null)}
+          onClick={(event) => (!name || !room ? event.preventDefault() : null)}
           to={`/chat?name=${name}&room=${room}`}
         >
           <Button block type="submit">

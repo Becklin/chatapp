@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
-import { ArrowLeftCircle, PeopleFill } from 'react-bootstrap-icons';
+import AuthService from '../../util/auth';
 import './index.scss';
 
 const Home = () => (
@@ -9,7 +8,11 @@ const Home = () => (
     <h1>Fresh Talk</h1>
     <div className="chat-home__controls">
       <Link to="/signup">Sign up</Link>
-      <Link to="/login">Login</Link>
+      {AuthService.getCurrentUser ? (
+        <Link to="/join">Join</Link>
+      ) : (
+        <Link to="/login">Login</Link>
+      )}
     </div>
   </div>
 );

@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import Box from '../Box';
-import auth from '../../util/auth';
-import axios from 'axios';
+import AuthService from '../../util/auth';
 import './index.scss';
 
 const Login = (props) => {
@@ -13,19 +12,12 @@ const Login = (props) => {
   const [hasError, setHasError] = useState(false);
 
   const login = (e) => {
-    // auth.authenticate(() => {
-    //   setRedirectToReferrer(true);
-    // });
     e.preventDefault();
-    axios
-      .post('/api/auth/signin', {
-        username,
-        password,
-      })
+    AuthService.login(username, password)
       .then((response) => {
-        auth.authenticate(() => {
-          setRedirectToReferrer(true);
-        });
+        // 以驗證mongodb data以及設定localstorage
+        console.log('資料', response);
+        setRedirectToReferrer(true);
       })
       .catch((error) => {
         console.log('catch', error);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, Redirect } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import {
   ArrowLeftCircle,
@@ -7,7 +7,7 @@ import {
   BoxArrowLeft,
 } from 'react-bootstrap-icons';
 import './index.scss';
-import auth from '../../util/auth';
+import AuthService from '../../util/auth';
 
 /**
  * withRouter will pass updated match, location,
@@ -15,12 +15,13 @@ import auth from '../../util/auth';
  */
 const AuthButton = withRouter(
   ({ history }) =>
-    auth.isAuthenticated && (
+    AuthService.getCurrentUser() && (
       <BoxArrowLeft
         size="30"
         color="#fff"
         onClick={() => {
-          auth.signout(() => history.push('/'));
+          AuthService.logout();
+          history.push('/');
         }}
       >
         Sign out

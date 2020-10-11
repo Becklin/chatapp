@@ -10,10 +10,12 @@ const Box = ({
   control,
   setHasNotification,
   hasNotification,
-  notificationContent
+  notificationContent,
 }) => {
   const mediaQuery = useMediaQuery();
-
+  /**
+   * Toast 可以用portal
+   */
   return (
     <div className="chat__box">
       <h1>{title}</h1>
@@ -23,6 +25,11 @@ const Box = ({
         onClose={() => setHasNotification(false)}
         show={hasNotification}
         delay={3000}
+        style={{
+          position: 'fixed',
+          top: 0,
+          right: 0,
+        }}
         autohide
       >
         <Toast.Header>
@@ -38,7 +45,7 @@ const Box = ({
 
 Box.defaultProps = {
   setHasNotification: () => {},
-  hasNotification: false
+  hasNotification: false,
 };
 
 export default Box;

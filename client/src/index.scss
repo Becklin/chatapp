@@ -6,7 +6,11 @@
   height: 100vh;
   // display: flex;
 }
-
+#portal {
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+}
 .chat {
   &__message {
     flex: 4;

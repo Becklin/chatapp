@@ -1,4 +1,6 @@
 import React from 'react';
+import { Toast } from 'react-bootstrap';
+
 import {
   BrowserRouter as Router,
   Link,
@@ -37,6 +39,7 @@ const App = () => (
       <PrivateRoute path="/chat" component={Chat} />
       <Redirect from="*" to="/" />
     </Switch>
+    <div id="portal"></div>
   </Router>
 );
 

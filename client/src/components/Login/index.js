@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
+
 import Box from '../Box';
 import AuthService from '../../util/auth';
 import './index.scss';
@@ -35,34 +36,36 @@ const Login = (props) => {
     setPassword(e.target.value);
   };
   return (
-    <Box
-      title="Login"
-      content={
-        <Form>
-          <Form.Control
-            type="text"
-            placeholder="Username"
-            onChange={handleNameChange}
-          />
-          <Form.Group controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
+    <>
+      <Box
+        title="Login"
+        content={
+          <Form>
             <Form.Control
-              type="password"
-              placeholder="Password"
-              onChange={handlePasswordChange}
+              type="text"
+              placeholder="Username"
+              onChange={handleNameChange}
             />
-          </Form.Group>
-        </Form>
-      }
-      control={
-        <Button onClick={login} variant="primary" type="submit">
-          Submit
-        </Button>
-      }
-      setHasNotification={setHasError}
-      hasNotification={hasError}
-      notificationContent="Oops, something went wrong!"
-    />
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                onChange={handlePasswordChange}
+              />
+            </Form.Group>
+          </Form>
+        }
+        control={
+          <Button onClick={login} variant="primary" type="submit">
+            Submit
+          </Button>
+        }
+        // setHasNotification={setHasError}
+        hasNotification={hasError}
+        notificationContent="Oops, something went wrong!"
+      />
+    </>
   );
 };
 

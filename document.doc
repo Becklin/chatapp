@@ -38,3 +38,8 @@ https://larrylu.blog/nodejs-pm2-cluster-455ffbd7671
 https://stackoverflow.com/questions/18310635/scaling-socket-io-to-multiple-node-js-processes-using-cluster
 
 
+https://recoiljs.org/
+
+https://socket.io/docs/using-multiple-nodes/
+https://github.com/indutny/sticky-session
+https://github.com/elad/node-cluster-socket.io

@@ -9,14 +9,16 @@ const Box = ({
   title,
   content,
   control,
+  setHasNotification,
   hasNotification,
   notificationContent,
 }) => {
   const mediaQuery = useMediaQuery();
   const portalDom = (
     <Portal node={document && document.getElementById('portal')}>
-      <Toast delay={3000} autohide animation>
+      <Toast delay={3000} autohide>
         <Toast.Header>
+          <img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
           <strong className="mr-auto">FAILURE</strong>
         </Toast.Header>
         <Toast.Body>{notificationContent}</Toast.Body>

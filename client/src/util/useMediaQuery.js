@@ -8,22 +8,22 @@ const useMediaQuery = () => {
   const isTabletOrMobileDevice = useReactResponsive({ maxDeviceWidth: 1224 });
   const isPortrait = useReactResponsive({ orientation: 'portrait' });
   const isRetina = useReactResponsive({ minResolution: '2dppx' });
-  console.log(
-    'fff',
-    isDesktopOrLaptop,
-    isBigScreen,
-    isTabletOrMobile,
-    isTabletOrMobileDevice,
-    isPortrait,
-    isRetina
-  );
+  // console.log(
+  //   'fff',
+  //   isDesktopOrLaptop,
+  //   isBigScreen,
+  //   isTabletOrMobile,
+  //   isTabletOrMobileDevice,
+  //   isPortrait,
+  //   isRetina
+  // );
   return {
     isDesktopOrLaptop,
     isBigScreen,
     isTabletOrMobile,
     isTabletOrMobileDevice,
     isPortrait,
-    isRetina
+    isRetina,
   };
 };
 

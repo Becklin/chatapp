@@ -1,41 +1,41 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Form, Button, Toast } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import Box from '../Box';
 import axios from 'axios';
 import './index.scss';
 
-const Signup = props => {
+const Signup = (props) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hasSignup, setHasSignup] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  const signup = e => {
+  const signup = (e) => {
     e.preventDefault();
     axios
       .post('/api/auth/signup', {
         username,
         email,
         password,
-        roles: ['user']
+        roles: ['user'],
       })
-      .then(response => {
+      .then((response) => {
         setHasSignup(true);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('catch', error);
         setHasError(true);
       });
   };
-  const handleNameChange = e => {
+  const handleNameChange = (e) => {
     setUsername(e.target.value);
   };
-  const handleEmailChange = e => {
+  const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
-  const handlePasswordChange = e => {
+  const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
   if (hasSignup) return <Redirect to="login" />;

@@ -1,11 +1,7 @@
 import React from 'react';
-import { Link, withRouter, Redirect } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
-import {
-  ArrowLeftCircle,
-  PeopleFill,
-  BoxArrowLeft,
-} from 'react-bootstrap-icons';
+import { withRouter } from 'react-router-dom';
+// import { Button } from 'react-bootstrap';
+import { BoxArrowLeft } from 'react-bootstrap-icons';
 import './index.scss';
 import AuthService from '../../util/auth';
 

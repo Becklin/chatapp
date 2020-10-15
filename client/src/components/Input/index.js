@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Button } from 'react-bootstrap';
+// import { Row, Col, Button } from 'react-bootstrap';
 import { ChatTextFill, CloudUploadFill, Image } from 'react-bootstrap-icons';
 import IconButton from '../IconButton';
 import './index.scss';

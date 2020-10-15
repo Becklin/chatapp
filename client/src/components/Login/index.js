@@ -25,7 +25,7 @@ const Login = (props) => {
         setHasError(true);
       });
   };
-  const { from } = props.location.state || { from: { pathname: '/' } };
+  // const { from } = props.location.state || { from: { pathname: '/' } };
   if (redirectToReferrer === true) {
     return <Redirect to="join" />;
   }

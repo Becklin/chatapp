@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import qs from 'query-string';
 import io from 'socket.io-client';
-import { Container } from 'react-bootstrap';
+// import { Container } from 'react-bootstrap';
 import Input from '../Input';
 import InfoBar from '../InfoBar';
 import Messages from '../Messages';

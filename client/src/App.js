@@ -1,13 +1,13 @@
 import React from 'react';
-import { Toast } from 'react-bootstrap';
+// import { Toast } from 'react-bootstrap';
 
 import {
   BrowserRouter as Router,
-  Link,
+  // Link,
   Route,
   Redirect,
   Switch,
-  withRouter,
+  // withRouter,
 } from 'react-router-dom';
 
 import {
@@ -21,11 +21,11 @@ import {
   PrivateRoute,
 } from './components';
 import './index.scss';
-const NotFound = () => (
-  <div>
-    <p>The page does not exist</p>
-  </div>
-);
+// const NotFound = () => (
+//   <div>
+//     <p>The page does not exist</p>
+//   </div>
+// );
 const App = () => (
   <Router>
     <Head>

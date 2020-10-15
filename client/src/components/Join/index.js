@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Box from '../Box';
-import { Button, Container, Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import './index.scss';
 
 const Join = () => {

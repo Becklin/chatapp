@@ -1,4 +1,3 @@
-import react from 'react';
 import { useMediaQuery as useReactResponsive } from 'react-responsive';
 
 const useMediaQuery = () => {

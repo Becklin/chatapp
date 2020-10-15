@@ -23,7 +23,11 @@ const Chat = () => {
 
   useEffect(() => {
     const { name, room } = qs.parse(search);
-    socket = io(ENDPOINT);
+    socket = io(ENDPOINT, {
+      path: '/socket.io',
+      transports: ['websocket'],
+      secure: true,
+    });
     setName(name);
     setRoom(room);
 

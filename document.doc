@@ -43,3 +43,7 @@ https://recoiljs.org/
 https://socket.io/docs/using-multiple-nodes/
 https://github.com/indutny/sticky-session
 https://github.com/elad/node-cluster-socket.io
+
+
+
+https://medium.com/@fermads/node-js-process-load-balancing-comparing-cluster-iptables-and-nginx-6746aaf38272

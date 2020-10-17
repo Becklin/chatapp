@@ -41,11 +41,14 @@ const Login = (props) => {
         title="Login"
         content={
           <Form>
-            <Form.Control
-              type="text"
-              placeholder="Username"
-              onChange={handleNameChange}
-            />
+            <Form.Group controlId="formBasicName">
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Username"
+                onChange={handleNameChange}
+              />
+            </Form.Group>
             <Form.Group controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control

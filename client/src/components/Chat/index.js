@@ -17,9 +17,12 @@ const Chat = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [counts, setCounts] = useState(0);
-  const ENDPOINT = 'localhost:5000';
 
-  // const ENDPOINT = 'https://freshtalk.herokuapp.com';
+  let ENDPOINT = 'localhost:5000';
+  console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+  if (process.env.NODE_ENV === 'production') {
+    ENDPOINT = 'https://freshtalk.herokuapp.com';
+  }
 
   useEffect(() => {
     const { name, room } = qs.parse(search);
@@ -50,6 +53,7 @@ const Chat = () => {
       setMessages((messages) => [...messages, message]);
     });
     socket.on('file', ({ user, upload, type }) => {
+      console.log(user, upload, type);
       if (upload) {
         setMessages((messages) => [...messages, { user, upload, type }]);
       }
@@ -64,14 +68,18 @@ const Chat = () => {
   }, [counts]);
 
   const sendMessage = (event) => {
+    console.log();
+
     event.preventDefault();
     if (message) {
+      console.log('message', message);
       socket.emit('sendMessage', message, () => setMessage(''));
     }
   };
 
   const sendFile = (file) => {
     /* build => 非同步promise處裡檔案 */
+    console.log('sendFile', file);
     FileProcessor.process(file, socket).then((minifiedFileProcessor) => {
       minifiedFileProcessor.send();
     });

@@ -19,15 +19,25 @@ class FileProcessor {
     const config = {
       name: file.name,
       quality: 0.6,
+      type: file.type,
     };
     return convertToDataUrl(file, config)
-      .then(({ readerData, config, callback }) => {
-        this.base64 = readerData;
-        return minifiedDataURL(readerData, config, callback);
-      })
-      .then(({ base64, config, callback }) => {
-        this.minifiedBase64 = base64;
-        return dataURLtoFile(base64, config, callback);
+      .then(({ readerDataUrl, config, callback }) => {
+        this.base64 = readerDataUrl;
+        switch (config.type) {
+          case 'image/jpeg': {
+            return minifiedDataURL(readerDataUrl, config, callback);
+          }
+          case 'video/mp4': {
+            return new Promise((resolve) => {
+              const newFile = dataURLtoFile(readerDataUrl, config, callback);
+              resolve(newFile);
+            });
+          }
+          default: {
+            alert('the type is not supprted');
+          }
+        }
       })
       .then((minifiedFile) => {
         this.minifiedFile = minifiedFile;
@@ -43,9 +53,9 @@ class FileProcessor {
     });
     const blobStream = ss.createBlobReadStream(this.file); //for browser use, 本來寫法是什麼
     // let size = 0;
-    // blobStream.on('data', function(chunk) {
+    // blobStream.on('data', function (chunk) {
     //   size += chunk.length;
-    //   console.log(Math.floor((size / file.size) * 100) + '%');
+    //   console.log(Math.floor((size / this.file.size) * 100) + '%');
     // });
     blobStream.pipe(stream);
   }
@@ -67,7 +77,6 @@ class FileProcessor {
 }
 
 const convertToDataUrl = (file, config, callback) => {
-  console.log('開始', file); //注意必包
   return new Promise((resolve) => {
     // 王牌文件 https://kknews.cc/zh-tw/code/e6p2ygq.html
     // 神文 https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/227679/
@@ -89,8 +98,8 @@ const convertToDataUrl = (file, config, callback) => {
     // };
     /** 設置回調函數，這裡以讀取成功的回調函數為例： */
     reader.onload = function () {
-      const readerData = this.result;
-      resolve({ readerData, config, callback });
+      const readerDataUrl = this.result;
+      resolve({ readerDataUrl, config, callback });
     };
     reader.onloadend = function () {
       console.log('加載已經結束');
@@ -98,10 +107,13 @@ const convertToDataUrl = (file, config, callback) => {
   });
 };
 
-const minifiedDataURL = (readerData, config, callback) => {
+const minifiedDataURL = (readerDataUrl, config, callback) => {
   return new Promise((resolve) => {
+    // let video = document.createElement('video');
+    // video.setAttribute('src', readerDataUrl);
     let img = new Image();
-    img.src = readerData;
+    // 要從這裡讀取到type
+    img.src = readerDataUrl;
     img.onload = () => {
       // var that = this;
       // 預設按比例壓縮
@@ -128,11 +140,12 @@ const minifiedDataURL = (readerData, config, callback) => {
         quality = config.quality;
       }
       /*
-    我們只需要把<img>獲取到的圖片放到<canvas>裡再通過.toDataURL()方法轉化下，
-    就可以得到以 base64 編碼的 dataURL。來看這個方法的語法： 
-    */
+        我們只需要把<img>獲取到的圖片放到<canvas>裡再通過.toDataURL()方法轉化下，
+        就可以得到以 base64 編碼的 dataURL。來看這個方法的語法： 
+        */
       var base64 = canvas.toDataURL('image/jpeg', 'image/webp', quality);
-      resolve({ base64, config, callback });
+      const newFile = dataURLtoFile(base64, config, callback);
+      resolve(newFile);
       // const resizedFile = dataURLtoFile(base64);
       // console.log('resizedFile', resizedFile);
       // // 回撥函式返回base64的值
@@ -141,15 +154,12 @@ const minifiedDataURL = (readerData, config, callback) => {
   });
 };
 
-const dataURLtoFile = (base64, config) => {
-  //return dataURLtoFile(base64, config, callback);
-
+const dataURLtoFile = (base64, config, callback) => {
   var arr = base64.split(','),
     mime = arr[0].match(/:(.*?);/)[1],
     bstr = atob(arr[1]),
     n = bstr.length,
     u8arr = new Uint8Array(n);
-
   while (n--) {
     u8arr[n] = bstr.charCodeAt(n);
   }

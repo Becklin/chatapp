@@ -20,12 +20,14 @@ const Message = ({
 
   const renderFile = (address, type) => {
     if (address) return <div dangerouslySetInnerHTML={{ __html: address }} />;
+    console.log('type', type);
     if (type) {
       switch (type) {
         case 'video/mp4':
-        case 'video/quicktime':
+        case 'video/quicktime': {
+          console.log('haha');
           return (
-            <video controls>
+            <video width="100%" controls>
               <source
                 src={`data:image/png;base64, ${upload}`}
                 type="video/mp4"
@@ -37,6 +39,7 @@ const Message = ({
               Your browser does not support the video tag.
             </video>
           );
+        }
         case 'image/*':
           return (
             <img

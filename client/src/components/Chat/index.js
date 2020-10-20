@@ -50,11 +50,13 @@ const Chat = () => {
     // message 包含user, text
     socket.on('message', (message) => {
       console.log(message);
-
       setMessages((messages) => [...messages, message]);
     });
+    socket.on('percent', (amount) => {
+      console.log('百分之', amount);
+    });
     socket.on('file', ({ user, upload, type }) => {
-      console.log(user, upload, type);
+      console.log(user, type);
       if (upload) {
         setMessages((messages) => [...messages, { user, upload, type }]);
       }
@@ -81,15 +83,15 @@ const Chat = () => {
   const sendFile = (file) => {
     /* build => 非同步promise處裡檔案 */
     console.log('sendFile', file);
-    FileProcessor.process(file, socket).then((minifiedFileProcessor) => {
-      minifiedFileProcessor.send();
-    });
+    FileProcessor.process(file, socket).then((minifiedFileProcessor) =>
+      minifiedFileProcessor.send()
+    );
   };
 
   const uploadFile = (file) => {
-    FileProcessor.process(file, socket).then((originalFileProcessor) => {
-      originalFileProcessor.upload();
-    });
+    FileProcessor.process(file, socket).then((originalFileProcessor) =>
+      originalFileProcessor.upload()
+    );
   };
 
   return (

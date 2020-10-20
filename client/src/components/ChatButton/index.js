@@ -18,7 +18,7 @@ const ChatButton = ({ onHandleClick, className, text, icon }) => {
   return (
     <span className={`chat__button ${className}`}>
       <label className="chat__label" htmlFor="upload-photo">
-        {text.toUpperCase()}
+        {text}
       </label>
       <input
         type="file"

@@ -6,7 +6,6 @@ import './index.scss';
 
 const Input = ({ message, setMessage, sendMessage, sendFile, uploadFile }) => {
   const handleSendMessage = (event) => {
-    console.log('dddd', event.target.value);
     sendMessage(event);
   };
   return (

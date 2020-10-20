@@ -17,9 +17,9 @@ const Chat = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [counts, setCounts] = useState(0);
-  // const ENDPOINT = 'localhost:5000';
+  const ENDPOINT = 'localhost:5000';
 
-  const ENDPOINT = 'https://freshtalk.herokuapp.com';
+  // const ENDPOINT = 'https://freshtalk.herokuapp.com';
 
   useEffect(() => {
     const { name, room } = qs.parse(search);
@@ -46,6 +46,7 @@ const Chat = () => {
   useEffect(() => {
     // message 包含user, text
     socket.on('message', (message) => {
+      console.log('接收信息', message);
       setMessages((messages) => [...messages, message]);
     });
     socket.on('file', ({ user, upload, type }) => {

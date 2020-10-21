@@ -1,14 +1,5 @@
 import ss from 'socket.io-stream';
 
-/*
-  以下縮小檔案
-  三個引數
-  file：一個是檔案(型別是圖片格式)，
-  w：一個是檔案壓縮的後寬度，寬度越小，位元組越小
-  objDiv：一個是容器或者回調函式
-  photoCompress()
-*/
-
 class FileProcessor {
   constructor(file, socket, callback) {
     this.socket = socket;
@@ -39,26 +30,33 @@ class FileProcessor {
           }
         }
       })
-      .then((minifiedFile) => {
-        this.minifiedFile = minifiedFile;
-        return new FileProcessor(this.minifiedFile, socket);
+      .then((data) => {
+        this.data = data;
+        console.log('跑到這裡', this.data);
+        return new FileProcessor(this.data, socket);
       });
   }
   send() {
     const stream = ss.createStream();
+    const blobStream = ss.createBlobReadStream(this.file); //for browser use, 本來寫法是什麼
+    blobStream.pipe(stream);
+
     ss(this.socket).emit('sendFile', stream, {
       name: this.file.name,
       type: this.file.type,
       size: this.file.size,
     });
-    const blobStream = ss.createBlobReadStream(this.file); //for browser use, 本來寫法是什麼
+    console.log('this.file', this.file);
+    // const totalSize = this.file.size;
     // let size = 0;
     // blobStream.on('data', function (chunk) {
     //   size += chunk.length;
-    //   console.log(Math.floor((size / this.file.size) * 100) + '%');
+    //   console.log('totalSize', totalSize);
+    //   console.log(Math.floor((size / totalSize) * 100) + '%');
     // });
-    blobStream.pipe(stream);
+    // console.log('完成Blob', Date());
   }
+
   upload() {
     const stream = ss.createStream();
     ss(this.socket).emit('uploadFile', stream, {

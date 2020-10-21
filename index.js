@@ -267,6 +267,7 @@ const childProcess = () => {
     };
 
     ss(socket).on('sendFile', (stream, data, callback) => {
+      console.log('server', Date());
       const user = getUser(socket.id);
       //io.to要查
       // const filename = path.basename(data.name);
@@ -275,9 +276,12 @@ const childProcess = () => {
       stream.on('data', chunk => {
         size += chunk.length;
         console.log(Math.floor((size / data.size) * 100) + '%');
+        socket.emit('percent', size / data.size);
+        //TODO要再寄通知到前端 > 注意NODE EVENTLOOP 優先權 !!!
         fileBuffer.push(chunk);
       });
       stream.on('end', () => {
+        console.log('結束');
         /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
     右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/ */
         // stream.on("end", () => {

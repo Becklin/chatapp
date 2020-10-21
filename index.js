@@ -85,7 +85,7 @@ const childProcess = () => {
       initial();
     })
     .catch((err) => {
-      console.error("Connection error", err);
+      console.error("Connection error");
       // process.exit();
     });
 
@@ -152,7 +152,7 @@ const childProcess = () => {
 
   const { addUser, getUser, removeUser, getUsersInRoom } = require("./users");
   io.on("connection", (socket) => {
-    console.log("we have connection!!!");
+    console.log("we have connection!!!", socket);
 
     // 方法零 一次整個傳輸
     //   fs.readFile(__dirname + '/images/img1.jpg', function(err, buf) {
@@ -204,10 +204,10 @@ const childProcess = () => {
       });
 
       // broadcast: send message to everyone besides to that user
+      // socket跟io都可以to https://socket.io/docs/rooms/, 但是socket發出不會傳個自己
       socket.broadcast
         .to(user.room)
         .emit("message", { user: "admin", text: `${user.name} has joined!` });
-      //要查
       io.to(user.room).emit("roomData", {
         room: user.room,
         users: getUsersInRoom(user.room),
@@ -230,6 +230,7 @@ const childProcess = () => {
       }
       //io.to要查
       io.to(user.room).emit("message", { user: user.name, text: message });
+
       // io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
       callback(); //奇怪
     });
@@ -270,26 +271,24 @@ const childProcess = () => {
       let fileBuffer = [];
       stream.on("data", (chunk) => {
         size += chunk.length;
-        // console.log(Math.floor((size / data.size) * 100) + "%");
-        process.nextTick(() => {
-          socket.emit("percent", size / data.size, Date());
-        });
-        // stream.pause();
+        console.log(Math.floor((size / data.size) * 100) + "%");
+        socket.emit("percent", size / data.size);
         //TODO要再寄通知到前端 > 注意NODE EVENTLOOP 優先權 !!!
         fileBuffer.push(chunk);
       });
-      stream.on("end", () => {
-        console.log("結束");
-        /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
-    右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/ */
-        // stream.on("end", () => {
-        const sentFile = Buffer.concat(fileBuffer).toString("base64");
-        io.to(user.room).emit("file", {
-          user: user.name,
-          upload: sentFile,
-          type: data.type,
-        });
-      });
+      //   stream.on('end', () => {
+      //     console.log('結束');
+      //     /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
+      // 右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/ */
+      //     const sentFile = Buffer.concat(fileBuffer).toString('base64');
+      //   console.log('松出去', Date());
+
+      //     io.to(user.room).emit('file', {
+      //       user: user.name,
+      //       upload: sentFile,
+      //       type: data.type
+      //     });
+      //   });
 
       // stream.pipe(fs.createWriteStream(filename));
 

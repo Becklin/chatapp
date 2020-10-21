@@ -49,11 +49,13 @@ const Chat = () => {
   useEffect(() => {
     // message 包含user, text
     socket.on('message', (message) => {
-      console.log(message);
       setMessages((messages) => [...messages, message]);
     });
     socket.on('percent', (amount, when) => {
       console.log('client百分之', amount, when);
+    });
+    socket.on('data', (chunk) => {
+      console.log('chunk', chunk);
     });
     socket.on('file', ({ user, upload, type }) => {
       console.log(user, type);

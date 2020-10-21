@@ -17,7 +17,7 @@ const Message = ({
   const title = role === 'user' ? trimmedName : user;
   const renderFile = (address, type) => {
     if (address) return <div dangerouslySetInnerHTML={{ __html: address }} />;
-    console.log('type', type);
+    console.log('type 要繪圖了', type);
     if (type) {
       switch (type) {
         case 'video/mp4':
@@ -37,20 +37,20 @@ const Message = ({
             </video>
           );
         }
-        case 'image/*':
+        case 'image/jpeg':
           return (
             <img
               className="img-thumbnail img-fluid"
               src={`data:image/png;base64, ${upload}`}
             />
           );
-        default:
-          return (
-            <img
-              className="img-thumbnail img-fluid"
-              src={`data:image/png;base64, ${upload}`}
-            />
-          );
+        // default:
+        //   return (
+        //     <img
+        //       className="img-thumbnail img-fluid"
+        //       src={`data:image/png;base64, ${upload}`}
+        //     />
+        //   );
       }
     }
     return (

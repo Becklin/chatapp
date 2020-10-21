@@ -63,11 +63,9 @@ const childProcess = () => {
 
   if (process.env.NODE_ENV === "production") {
     // Serve any static files
-    console.log("__dirname", __dirname);
     app.use(express.static(path.join(__dirname, "client/build")));
     // Handle React routing, return all requests to React app
     app.get("*", function (req, res) {
-      console.log("全部__dirname", __dirname);
       res.sendFile(path.join(__dirname, "client/build", "index.html"));
     });
   }
@@ -75,7 +73,6 @@ const childProcess = () => {
   require("./routes/index.routes")(app);
 
   const uri = `mongodb+srv://beckLin:${process.env.MONGO_PW}@cluster1.juqcg.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
-  console.log(" uri", uri);
   const db = require("./models");
   const Role = db.role;
   db.mongoose
@@ -104,7 +101,6 @@ const childProcess = () => {
           if (err) {
             console.log("error", err);
           }
-
           console.log("added 'user' to roles collection");
         });
 
@@ -274,8 +270,11 @@ const childProcess = () => {
       let fileBuffer = [];
       stream.on("data", (chunk) => {
         size += chunk.length;
-        console.log(Math.floor((size / data.size) * 100) + "%");
-        socket.emit("percent", size / data.size);
+        // console.log(Math.floor((size / data.size) * 100) + "%");
+        process.nextTick(() => {
+          socket.emit("percent", size / data.size, Date());
+        });
+        // stream.pause();
         //TODO要再寄通知到前端 > 注意NODE EVENTLOOP 優先權 !!!
         fileBuffer.push(chunk);
       });

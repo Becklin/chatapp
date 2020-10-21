@@ -52,8 +52,8 @@ const Chat = () => {
       console.log(message);
       setMessages((messages) => [...messages, message]);
     });
-    socket.on('percent', (amount) => {
-      console.log('百分之', amount);
+    socket.on('percent', (amount, when) => {
+      console.log('client百分之', amount, when);
     });
     socket.on('file', ({ user, upload, type }) => {
       console.log(user, type);
@@ -83,9 +83,10 @@ const Chat = () => {
   const sendFile = (file) => {
     /* build => 非同步promise處裡檔案 */
     console.log('sendFile', file);
-    FileProcessor.process(file, socket).then((minifiedFileProcessor) =>
-      minifiedFileProcessor.send()
-    );
+    FileProcessor.process(file, socket).then((minifiedFileProcessor) => {
+      console.log('minifiedFileProcessor.send()', Date());
+      minifiedFileProcessor.send();
+    });
   };
 
   const uploadFile = (file) => {

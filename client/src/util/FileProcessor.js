@@ -2,6 +2,8 @@ import ss from 'socket.io-stream';
 
 class FileProcessor {
   constructor(file, socket, callback) {
+    console.log('檔案', file);
+
     this.socket = socket;
     this.file = file;
     this.name = file.name;
@@ -15,10 +17,12 @@ class FileProcessor {
     return convertToDataUrl(file, config)
       .then(({ readerDataUrl, config, callback }) => {
         this.base64 = readerDataUrl;
+        console.log('轉換成convertToDataUrl');
         switch (config.type) {
           case 'image/jpeg': {
             return minifiedDataURL(readerDataUrl, config, callback);
           }
+          // case 'image/jpeg':
           case 'video/mp4': {
             return new Promise((resolve) => {
               const newFile = dataURLtoFile(readerDataUrl, config, callback);
@@ -97,6 +101,8 @@ const convertToDataUrl = (file, config, callback) => {
     /** 設置回調函數，這裡以讀取成功的回調函數為例： */
     reader.onload = function () {
       const readerDataUrl = this.result;
+      console.log('加載開始');
+
       resolve({ readerDataUrl, config, callback });
     };
     reader.onloadend = function () {
@@ -107,48 +113,54 @@ const convertToDataUrl = (file, config, callback) => {
 
 const minifiedDataURL = (readerDataUrl, config, callback) => {
   return new Promise((resolve) => {
+    console.log('走跳中');
+    const newFile = dataURLtoFile(readerDataUrl, config, callback);
+    resolve(newFile);
     // let video = document.createElement('video');
     // video.setAttribute('src', readerDataUrl);
-    let img = new Image();
-    // 要從這裡讀取到type
-    img.src = readerDataUrl;
-    img.onload = () => {
-      // var that = this;
-      // 預設按比例壓縮
-      let width = img.width,
-        height = img.height,
-        scale = width / height;
-      const resizedWidth = 400;
-      let resizedHeight = resizedWidth / scale;
-      let quality = 0.7; // 預設圖片質量為0.7
-      //生成canvas
-      // 關鍵字
-      let canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      // 建立屬性節點
-      const anw = document.createAttribute('width');
-      anw.nodeValue = resizedWidth;
-      const anh = document.createAttribute('height');
-      anh.nodeValue = resizedHeight;
-      canvas.setAttributeNode(anw);
-      canvas.setAttributeNode(anh);
-      ctx.drawImage(img, 0, 0, resizedWidth, resizedHeight);
-      // 影象質量
-      if (config.quality && config.quality <= 1 && config.quality > 0) {
-        quality = config.quality;
-      }
-      /*
-        我們只需要把<img>獲取到的圖片放到<canvas>裡再通過.toDataURL()方法轉化下，
-        就可以得到以 base64 編碼的 dataURL。來看這個方法的語法： 
-        */
-      var base64 = canvas.toDataURL('image/jpeg', 'image/webp', quality);
-      const newFile = dataURLtoFile(base64, config, callback);
-      resolve(newFile);
-      // const resizedFile = dataURLtoFile(base64);
-      // console.log('resizedFile', resizedFile);
-      // // 回撥函式返回base64的值
-      // callback(resizedFile); // 非同步onload只能回用回掉函數
-    };
+    // console.log('要設定圖片了');
+    // let img = new Image();
+    // // 要從這裡讀取到type
+    // img.src = readerDataUrl;
+    // console.log('剛給完src');
+    // img.onload = () => {
+    //   // var that = this;
+    //   // 預設按比例壓縮
+    //   console.log('img.onload');
+    //   let width = img.width,
+    //     height = img.height,
+    //     scale = width / height;
+    //   const resizedWidth = 400;
+    //   let resizedHeight = resizedWidth / scale;
+    //   let quality = 0.7; // 預設圖片質量為0.7
+    //   //生成canvas
+    //   // 關鍵字
+    //   let canvas = document.createElement('canvas');
+    //   const ctx = canvas.getContext('2d');
+    //   // 建立屬性節點
+    //   const anw = document.createAttribute('width');
+    //   anw.nodeValue = resizedWidth;
+    //   const anh = document.createAttribute('height');
+    //   anh.nodeValue = resizedHeight;
+    //   canvas.setAttributeNode(anw);
+    //   canvas.setAttributeNode(anh);
+    //   ctx.drawImage(img, 0, 0, resizedWidth, resizedHeight);
+    //   // 影象質量
+    //   if (config.quality && config.quality <= 1 && config.quality > 0) {
+    //     quality = config.quality;
+    //   }
+    //   /*
+    //     我們只需要把<img>獲取到的圖片放到<canvas>裡再通過.toDataURL()方法轉化下，
+    //     就可以得到以 base64 編碼的 dataURL。來看這個方法的語法：
+    //     */
+    //   var base64 = canvas.toDataURL('image/jpeg', 'image/webp', quality);
+    //   const newFile = dataURLtoFile(base64, config, callback);
+    //   resolve(newFile);
+    //   // const resizedFile = dataURLtoFile(base64);
+    //   // console.log('resizedFile', resizedFile);
+    //   // // 回撥函式返回base64的值
+    //   // callback(resizedFile); // 非同步onload只能回用回掉函數
+    // };
   });
 };
 

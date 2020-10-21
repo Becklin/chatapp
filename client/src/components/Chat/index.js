@@ -54,6 +54,9 @@ const Chat = () => {
     socket.on('percent', (amount) => {
       console.log('百分之', amount);
     });
+    socket.on('data', (chunk) => {
+      console.log('chunk', chunk);
+    });
     socket.on('file', ({ user, upload, type }) => {
       console.log(user, type);
       if (upload) {

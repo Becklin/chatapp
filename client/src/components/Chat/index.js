@@ -18,7 +18,6 @@ const Chat = () => {
   const [message, setMessage] = useState(null);
   const [messages, setMessages] = useState([]);
   const [counts, setCounts] = useState(0);
-  const [percent, setPercent] = useState(null);
 
   let ENDPOINT = 'localhost:5000';
   if (process.env.NODE_ENV === 'production') {
@@ -52,11 +51,28 @@ const Chat = () => {
     socket.on('message', (message) => {
       setMessages((messages) => [...messages, message]);
     });
+    let firstProgress = true;
     socket.on('percent', (amount) => {
-      setPercent(amount);
-      const hasUploaded = false;
-      const id = uuid();
-      setMessages((messages) => [...messages, { id, hasUploaded }]);
+      if (firstProgress) {
+        console.log('第一次');
+        setMessages((messages) => [
+          ...messages,
+          {
+            id: uuid(),
+            hasUploaded: false,
+            percent: amount,
+          },
+        ]);
+        firstProgress = false;
+      } else {
+        let lastMessage = [...messages].slice(1);
+        if (lastMessage) {
+          lastMessage.percent = amount;
+          console.log(lastMessage);
+          setMessages([...messages, lastMessage]);
+        }
+      }
+      console.log('NOT fiest');
     });
     socket.on('file', ({ user, upload, type }) => {
       if (upload) {
@@ -99,7 +115,7 @@ const Chat = () => {
   return (
     <>
       <InfoBar room={room} counts={counts} />
-      <Messages messages={messages} name={name} percent={percent} />
+      <Messages messages={messages} name={name} />
       <Input
         message={message}
         setMessage={setMessage}

@@ -5,10 +5,10 @@ import './index.scss';
 
 const Messages = ({ messages, name, ...rest }) => (
   <ScrollToBottom className="chat__messages">
-    {messages.map((message, index) => {
+    {messages.map((message) => {
       return (
         <Message
-          key={`name-${index}`}
+          key={`name-${message.id}`}
           message={message}
           name={name}
           {...rest}

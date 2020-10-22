@@ -6,10 +6,9 @@ import './index.scss';
 
 //USER送發訊息的人，name該聊天室使用者名字
 const Message = ({
-  message: { user, text, upload, type, address },
+  message: { user, text, upload, type, address, percent },
   name,
   avatarSrc,
-  percent,
 }) => {
   console.log('最後', user, text, upload, type, address);
   let isSentByCurrentUser = false;

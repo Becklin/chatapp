@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image } from 'react-bootstrap';
+import { Image, ProgressBar } from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
 import ReactEmoji from 'react-emoji';
 import './index.scss';
@@ -9,20 +9,21 @@ const Message = ({
   message: { user, text, upload, type, address },
   name,
   avatarSrc,
+  percent,
 }) => {
+  console.log('最後', user, text, upload, type, address);
   let isSentByCurrentUser = false;
   const trimmedName = name.trim().toLowerCase();
   if (trimmedName === user) isSentByCurrentUser = true;
   const role = isSentByCurrentUser ? 'user' : 'friend';
   const title = role === 'user' ? trimmedName : user;
-  const renderFile = (address, type) => {
+  const renderFile = ({ address, percent, type }) => {
     if (address) return <div dangerouslySetInnerHTML={{ __html: address }} />;
-    console.log('type', type);
+    if (percent && percent !== 100) return <ProgressBar now={percent} />;
+
     if (type) {
       switch (type) {
-        case 'video/mp4':
-        case 'video/quicktime': {
-          console.log('haha');
+        case 'video/*': {
           return (
             <video width="100%" controls>
               <source
@@ -36,6 +37,7 @@ const Message = ({
               Your browser does not support the video tag.
             </video>
           );
+          break;
         }
         case 'image/*':
           return (
@@ -44,6 +46,7 @@ const Message = ({
               src={`data:image/png;base64, ${upload}`}
             />
           );
+          break;
         default:
           return (
             <img
@@ -53,9 +56,6 @@ const Message = ({
           );
       }
     }
-    return (
-      <p className="chat-message__body--text">{ReactEmoji.emojify(text)}</p>
-    );
   };
   return (
     <div className={`chat-message chat-message--${role}`}>
@@ -69,7 +69,12 @@ const Message = ({
           <span>{title}</span>
         </h4>
       )}
-      <div className="chat-message__body">{renderFile(address, type)}</div>
+      <div className="chat-message__body">
+        {renderFile({ address, percent, type })}
+        {text && (
+          <p className="chat-message__body--text">{ReactEmoji.emojify(text)}</p>
+        )}
+      </div>
     </div>
   );
 };

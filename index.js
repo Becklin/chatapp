@@ -37,6 +37,7 @@ const childProcess = () => {
   const server = http.createServer(app);
   const io = socketio(server);
   const AppError = require('./utils/AppError');
+  const { v4: uuid } = require('uuid');
 
   app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -63,11 +64,9 @@ const childProcess = () => {
 
   if (process.env.NODE_ENV === 'production') {
     // Serve any static files
-    console.log('__dirname', __dirname);
     app.use(express.static(path.join(__dirname, 'client/build')));
     // Handle React routing, return all requests to React app
     app.get('*', function (req, res) {
-      console.log('全部__dirname', __dirname);
       res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
     });
   }
@@ -75,7 +74,6 @@ const childProcess = () => {
   require('./routes/index.routes')(app);
 
   const uri = `mongodb+srv://beckLin:${process.env.MONGO_PW}@cluster1.juqcg.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
-  console.log(' uri', uri);
   const db = require('./models');
   const Role = db.role;
   db.mongoose
@@ -104,7 +102,6 @@ const childProcess = () => {
           if (err) {
             console.log('error', err);
           }
-
           console.log("added 'user' to roles collection");
         });
 
@@ -114,7 +111,6 @@ const childProcess = () => {
           if (err) {
             console.log('error', err);
           }
-
           console.log("added 'moderator' to roles collection");
         });
 
@@ -124,7 +120,6 @@ const childProcess = () => {
           if (err) {
             console.log('error', err);
           }
-
           console.log("added 'admin' to roles collection");
         });
       }
@@ -156,7 +151,7 @@ const childProcess = () => {
 
   const { addUser, getUser, removeUser, getUsersInRoom } = require('./users');
   io.on('connection', socket => {
-    console.log('we have connection!!!', socket);
+    console.log('we have connection!!!');
 
     // 方法零 一次整個傳輸
     //   fs.readFile(__dirname + '/images/img1.jpg', function(err, buf) {
@@ -199,41 +194,40 @@ const childProcess = () => {
       socket.join(user.room);
       socket.emit('message', {
         user: 'admin',
-        text: `${user.name}, welcome to the room ${user.room}`
-      });
-
-      socket.emit('image', {
-        user: 'admin',
-        text: `${user.name}, welcome to the room ${user.room}`
+        text: `${user.name}, welcome to the room ${user.room}`,
+        id: uuid()
       });
 
       // broadcast: send message to everyone besides to that user
       // socket跟io都可以to https://socket.io/docs/rooms/, 但是socket發出不會傳個自己
-      socket.broadcast
-        .to(user.room)
-        .emit('message', { user: 'admin', text: `${user.name} has joined!` });
+      socket.broadcast.to(user.room).emit('message', {
+        user: 'admin',
+        text: `${user.name} has joined!`,
+        id: uuid()
+      });
       io.to(user.room).emit('roomData', {
         room: user.room,
         users: getUsersInRoom(user.room)
       });
       errorCallback();
     });
-    socket.on('sendMessage', (message, callback) => {
+    socket.on('sendMessage', (text, callback) => {
       const user = getUser(socket.id);
-      const isGoogleTyping = message.includes('@gg=');
+      console.log('使用者', user);
+      const isGoogleTyping = text.includes('@gg=');
+      const addressDom = '';
+
       if (isGoogleTyping) {
-        const destination = message.split('@gg=').pop();
-        const addressDom = `<a target="blank" href='https://www.google.com.tw/maps/search/${destination}'>${destination}</a>`;
-        io.to(user.room).emit('message', {
-          user: user.name,
-          text: null,
-          address: addressDom
-        });
-        callback(); //奇怪
-        return;
+        const destination = text.split('@gg=').pop();
+        addressDom = `<a target="blank" href='https://www.google.com.tw/maps/search/${destination}'>${destination}</a>`;
       }
       //io.to要查
-      io.to(user.room).emit('message', { user: user.name, text: message });
+      io.to(user.room).emit('message', {
+        user: user.name,
+        text: text,
+        address: addressDom,
+        id: uuid()
+      });
 
       // io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
       callback(); //奇怪
@@ -267,7 +261,6 @@ const childProcess = () => {
     };
 
     ss(socket).on('sendFile', (stream, data, callback) => {
-      console.log('server', Date());
       const user = getUser(socket.id);
       //io.to要查
       // const filename = path.basename(data.name);
@@ -275,24 +268,21 @@ const childProcess = () => {
       let fileBuffer = [];
       stream.on('data', chunk => {
         size += chunk.length;
-        console.log(Math.floor((size / data.size) * 100) + '%');
-        socket.emit('percent', size / data.size);
+        // console.log(Math.floor((size / data.size) * 100) + '%');
+        socket.emit('percent', (size / data.size) * 100);
         //TODO要再寄通知到前端 > 注意NODE EVENTLOOP 優先權 !!!
         fileBuffer.push(chunk);
       });
-      //   stream.on('end', () => {
-      //     console.log('結束');
-      //     /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
-      // 右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/ */
-      //     const sentFile = Buffer.concat(fileBuffer).toString('base64');
-      //   console.log('松出去', Date());
-
-      //     io.to(user.room).emit('file', {
-      //       user: user.name,
-      //       upload: sentFile,
-      //       type: data.type
-      //     });
-      //   });
+      stream.on('end', () => {
+        /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
+      右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/ */
+        const sentFile = Buffer.concat(fileBuffer).toString('base64');
+        io.to(user.room).emit('file', {
+          user: user.name,
+          upload: sentFile,
+          type: data.type
+        });
+      });
 
       // stream.pipe(fs.createWriteStream(filename));
 
@@ -341,7 +331,8 @@ const childProcess = () => {
       if (user) {
         io.to(user.room).emit('message', {
           user: 'admin',
-          text: `${user.name} has left.`
+          text: `${user.name} has left.`,
+          id: uuid()
         });
       }
     });
@@ -353,7 +344,6 @@ const childProcess = () => {
 
   // error handler middleware
   app.use((error, req, res, next) => {
-    // console.log('這裏', error, '===', error.status, '===');
     res.status(error.status || 500).send({
       error: {
         status: error.status || 500,

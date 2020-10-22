@@ -16,9 +16,10 @@ class FileProcessor {
       .then(({ readerDataUrl, config, callback }) => {
         this.base64 = readerDataUrl;
         switch (config.type) {
-          case 'image/jpeg': {
-            return minifiedDataURL(readerDataUrl, config, callback);
-          }
+          // case 'image/jpeg': {
+          //   return minifiedDataURL(readerDataUrl, config, callback);
+          // }
+          case 'image/jpeg':
           case 'video/mp4': {
             return new Promise((resolve) => {
               const newFile = dataURLtoFile(readerDataUrl, config, callback);
@@ -32,7 +33,6 @@ class FileProcessor {
       })
       .then((data) => {
         this.data = data;
-        console.log('跑到這裡', this.data);
         return new FileProcessor(this.data, socket);
       });
   }

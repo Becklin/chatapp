@@ -14,12 +14,12 @@ const Chat = () => {
   let { search } = useLocation();
   const [name, setName] = useState('');
   const [room, setRoom] = useState('');
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(null);
   const [messages, setMessages] = useState([]);
   const [counts, setCounts] = useState(0);
+  const [percent, setPercent] = useState(null);
 
   let ENDPOINT = 'localhost:5000';
-  console.log('process.env.NODE_ENV', process.env.NODE_ENV);
   if (process.env.NODE_ENV === 'production') {
     ENDPOINT = 'https://freshtalk.herokuapp.com';
   }
@@ -52,15 +52,19 @@ const Chat = () => {
       setMessages((messages) => [...messages, message]);
     });
     socket.on('percent', (amount) => {
-      console.log('百分之', amount);
-    });
-    socket.on('data', (chunk) => {
-      console.log('chunk', chunk);
+      setPercent(amount);
+      const hasUploaded = false;
+      const id = new Date().getMilliseconds.toString();
+
+      setMessages((messages) => [...messages, { id, hasUploaded }]);
     });
     socket.on('file', ({ user, upload, type }) => {
-      console.log(user, type);
       if (upload) {
-        setMessages((messages) => [...messages, { user, upload, type }]);
+        const id = new Date().getMilliseconds.toString();
+        setMessages((messages) => [
+          ...messages,
+          { id, user, upload, type, hasUploaded: true },
+        ]);
       }
     });
   }, []);
@@ -73,12 +77,9 @@ const Chat = () => {
   }, [counts]);
 
   const sendMessage = (event) => {
-    console.log();
-
     event.preventDefault();
     if (message) {
-      console.log('message', message);
-      socket.emit('sendMessage', message, () => setMessage(''));
+      socket.emit('sendMessage', message, () => setMessage(null));
     }
   };
 
@@ -95,11 +96,10 @@ const Chat = () => {
       originalFileProcessor.upload()
     );
   };
-
   return (
     <>
       <InfoBar room={room} counts={counts} />
-      <Messages messages={messages} name={name} />
+      <Messages messages={messages} name={name} percent={percent} />
       <Input
         message={message}
         setMessage={setMessage}

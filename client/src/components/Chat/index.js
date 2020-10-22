@@ -7,6 +7,7 @@ import Input from '../Input';
 import InfoBar from '../InfoBar';
 import Messages from '../Messages';
 import FileProcessor from '../../util/FileProcessor';
+import { v4 as uuid } from 'uuid';
 
 let socket;
 
@@ -54,8 +55,7 @@ const Chat = () => {
     socket.on('percent', (amount) => {
       setPercent(amount);
       const hasUploaded = false;
-      const id = new Date().getMilliseconds.toString();
-
+      const id = uuid();
       setMessages((messages) => [...messages, { id, hasUploaded }]);
     });
     socket.on('file', ({ user, upload, type }) => {

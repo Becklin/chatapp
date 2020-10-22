@@ -7,6 +7,7 @@ import Input from '../Input';
 import InfoBar from '../InfoBar';
 import Messages from '../Messages';
 import FileProcessor from '../../util/FileProcessor';
+import { v4 as uuid } from 'uuid';
 
 let socket;
 
@@ -14,12 +15,11 @@ const Chat = () => {
   let { search } = useLocation();
   const [name, setName] = useState('');
   const [room, setRoom] = useState('');
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(null);
   const [messages, setMessages] = useState([]);
   const [counts, setCounts] = useState(0);
 
   let ENDPOINT = 'localhost:5000';
-  console.log('process.env.NODE_ENV', process.env.NODE_ENV);
   if (process.env.NODE_ENV === 'production') {
     ENDPOINT = 'https://freshtalk.herokuapp.com';
   }
@@ -51,16 +51,36 @@ const Chat = () => {
     socket.on('message', (message) => {
       setMessages((messages) => [...messages, message]);
     });
-    socket.on('percent', (amount, when) => {
-      console.log('client百分之', amount, when);
-    });
-    socket.on('data', (chunk) => {
-      console.log('chunk', chunk);
+    let firstProgress = true;
+    socket.on('percent', (amount) => {
+      if (firstProgress) {
+        console.log('第一次');
+        setMessages((messages) => [
+          ...messages,
+          {
+            id: uuid(),
+            hasUploaded: false,
+            percent: amount,
+          },
+        ]);
+        firstProgress = false;
+      } else {
+        let lastMessage = [...messages].slice(1);
+        if (lastMessage) {
+          lastMessage.percent = amount;
+          console.log(lastMessage);
+          setMessages([...messages, lastMessage]);
+        }
+      }
+      console.log('NOT fiest');
     });
     socket.on('file', ({ user, upload, type }) => {
-      console.log(user, type);
       if (upload) {
-        setMessages((messages) => [...messages, { user, upload, type }]);
+        const id = new Date().getMilliseconds.toString();
+        setMessages((messages) => [
+          ...messages,
+          { id, user, upload, type, hasUploaded: true },
+        ]);
       }
     });
   }, []);
@@ -73,12 +93,9 @@ const Chat = () => {
   }, [counts]);
 
   const sendMessage = (event) => {
-    console.log();
-
     event.preventDefault();
     if (message) {
-      console.log('message', message);
-      socket.emit('sendMessage', message, () => setMessage(''));
+      socket.emit('sendMessage', message, () => setMessage(null));
     }
   };
 
@@ -96,7 +113,6 @@ const Chat = () => {
       originalFileProcessor.upload()
     );
   };
-
   return (
     <>
       <InfoBar room={room} counts={counts} />

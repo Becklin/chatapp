@@ -4,7 +4,13 @@ import { ChatTextFill, CloudUploadFill, Image } from 'react-bootstrap-icons';
 import IconButton from '../IconButton';
 import './index.scss';
 
-const Input = ({ message, setMessage, sendMessage, sendFile, uploadFile }) => {
+const Input = ({
+  message = '',
+  setMessage,
+  sendMessage,
+  sendFile,
+  uploadFile,
+}) => {
   const handleSendMessage = (event) => {
     sendMessage(event);
   };

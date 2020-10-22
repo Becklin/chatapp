@@ -49,12 +49,17 @@ const Chat = () => {
   useEffect(() => {
     // message 包含user, text
     socket.on('message', (message) => {
-      setMessages((messages) => [...messages, message]);
+      console.log(messages);
+      setMessages((messages) => {
+        console.log('messages', messages);
+
+        return [...messages, message];
+      });
     });
     let firstProgress = true;
     socket.on('percent', (amount) => {
       if (firstProgress) {
-        console.log('第一次');
+        // console.log('第一次');
         setMessages((messages) => [
           ...messages,
           {
@@ -65,18 +70,17 @@ const Chat = () => {
         ]);
         firstProgress = false;
       } else {
-        let lastMessage = [...messages].slice(1);
-        if (lastMessage) {
+        setMessages((messages) => {
+          let lastMessage = [...messages].pop();
           lastMessage.percent = amount;
-          console.log(lastMessage);
-          setMessages([...messages, lastMessage]);
-        }
+          return [...messages, lastMessage];
+        });
       }
       console.log('NOT fiest');
     });
     socket.on('file', ({ user, upload, type }) => {
       if (upload) {
-        const id = new Date().getMilliseconds.toString();
+        const id = uuid();
         setMessages((messages) => [
           ...messages,
           { id, user, upload, type, hasUploaded: true },
@@ -101,9 +105,9 @@ const Chat = () => {
 
   const sendFile = (file) => {
     /* build => 非同步promise處裡檔案 */
-    console.log('sendFile', file);
+    // console.log('sendFile', file);
     FileProcessor.process(file, socket).then((minifiedFileProcessor) => {
-      console.log('minifiedFileProcessor.send()', Date());
+      // console.log('minifiedFileProcessor.send()', Date());
       minifiedFileProcessor.send();
     });
   };
@@ -113,6 +117,7 @@ const Chat = () => {
       originalFileProcessor.upload()
     );
   };
+  console.log('單向', messages);
   return (
     <>
       <InfoBar room={room} counts={counts} />

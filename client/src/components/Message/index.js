@@ -10,7 +10,7 @@ const Message = ({
   name,
   avatarSrc,
 }) => {
-  // console.log('最後', user, text, upload, type, address);
+  console.log('最後', user, text, upload, type, address);
   let isSentByCurrentUser = false;
   const trimmedName = name.trim().toLowerCase();
   if (trimmedName === user) isSentByCurrentUser = true;
@@ -18,7 +18,7 @@ const Message = ({
   const title = role === 'user' ? trimmedName : user;
   const renderFile = ({ address, percent, type }) => {
     if (address) return <div dangerouslySetInnerHTML={{ __html: address }} />;
-    if (percent && percent !== 100)
+    if (percent)
       return (
         <>
           loading...
@@ -27,7 +27,7 @@ const Message = ({
       );
     if (type) {
       switch (type) {
-        case 'video/*': {
+        case 'video/mp4': {
           return (
             <video width="100%" controls>
               <source
@@ -61,6 +61,7 @@ const Message = ({
       }
     }
   };
+
   return (
     <div className={`chat-message chat-message--${role}`}>
       {role === 'friend' && (

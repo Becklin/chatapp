@@ -7,7 +7,6 @@ import Input from '../Input';
 import InfoBar from '../InfoBar';
 import Messages from '../Messages';
 import FileProcessor from '../../util/FileProcessor';
-import { v4 as uuid } from 'uuid';
 
 let socket;
 
@@ -70,7 +69,7 @@ const Chat = () => {
             },
           ];
         } else {
-          messages[messages.length - 1].percent = amount;
+          messages[messageIndex].percent = amount;
           return [...messages];
         }
       });

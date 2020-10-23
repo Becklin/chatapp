@@ -47,44 +47,50 @@ const Chat = () => {
   }, [ENDPOINT, search]);
 
   useEffect(() => {
-    // message 包含user, text
+    const getMessage = (element, id) => element.id === id;
     socket.on('message', (message) => {
-      console.log(messages);
       setMessages((messages) => {
-        console.log('messages', messages);
-
         return [...messages, message];
       });
     });
-    let firstProgress = true;
-    socket.on('percent', (amount) => {
-      if (firstProgress) {
-        // console.log('第一次');
-        setMessages((messages) => [
-          ...messages,
-          {
-            id: uuid(),
-            hasUploaded: false,
-            percent: amount,
-          },
-        ]);
-        firstProgress = false;
-      } else {
-        setMessages((messages) => {
-          let lastMessage = [...messages].pop();
-          lastMessage.percent = amount;
-          return [...messages, lastMessage];
-        });
-      }
-      console.log('NOT fiest');
+    socket.on('percent', (amount, { id, user, type }) => {
+      setMessages((messages) => {
+        const messageIndex = messages.findIndex((message) =>
+          getMessage(message, id)
+        );
+        if (messageIndex < 0) {
+          return [
+            ...messages,
+            {
+              id,
+              hasUploaded: false,
+              percent: amount,
+              user,
+              type,
+            },
+          ];
+        } else {
+          messages[messages.length - 1].percent = amount;
+          return [...messages];
+        }
+      });
     });
-    socket.on('file', ({ user, upload, type }) => {
+    socket.on('file', ({ user, upload, type, id }) => {
       if (upload) {
-        const id = uuid();
-        setMessages((messages) => [
-          ...messages,
-          { id, user, upload, type, hasUploaded: true },
-        ]);
+        setMessages((messages) => {
+          const messageIndex = messages.findIndex((message) =>
+            getMessage(message, id)
+          );
+          messages[messageIndex] = {
+            id,
+            user,
+            upload,
+            type,
+            hasUploaded: true,
+            haha: true,
+          };
+          return [...messages];
+        });
       }
     });
   }, []);
@@ -117,7 +123,7 @@ const Chat = () => {
       originalFileProcessor.upload()
     );
   };
-  console.log('單向', messages);
+
   return (
     <>
       <InfoBar room={room} counts={counts} />

@@ -10,7 +10,7 @@ const Message = ({
   name,
   avatarSrc,
 }) => {
-  console.log('最後', user, text, upload, type, address);
+  // console.log('最後', user, text, upload, type, address);
   let isSentByCurrentUser = false;
   const trimmedName = name.trim().toLowerCase();
   if (trimmedName === user) isSentByCurrentUser = true;
@@ -18,7 +18,13 @@ const Message = ({
   const title = role === 'user' ? trimmedName : user;
   const renderFile = ({ address, percent, type }) => {
     if (address) return <div dangerouslySetInnerHTML={{ __html: address }} />;
-    if (percent && percent !== 100) return <ProgressBar now={percent} />;
+    if (percent && percent !== 100)
+      return (
+        <>
+          loading...
+          <ProgressBar now={percent} animated />
+        </>
+      );
     if (type) {
       switch (type) {
         case 'video/*': {

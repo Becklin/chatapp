@@ -7,11 +7,17 @@ import './index.scss';
 const Join = () => {
   const [name, setName] = useState('');
   const [room, setRoom] = useState('');
+  const [avatar, setAvatar] = useState();
+  const handleChange = (event) => {
+    setAvatar(URL.createObjectURL(event.target.files[0]));
+  };
   return (
     <Box
       title="Join"
       content={
         <Form>
+          <input type="file" onChange={handleChange} />
+          <img width="50px" src={avatar} />
           <Form.Group controlId="formBasicPassword">
             <Form.Label>Username</Form.Label>
             <Form.Control

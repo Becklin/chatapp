@@ -1,16 +1,24 @@
 @import './variables.scss';
 @import '~bootstrap/scss/bootstrap';
 
+html,
+body {
+  //prevent pull-down-to-refresh of mobile chrome
+  overscroll-behavior-y: contain;
+}
+
 #root {
   background-color: $main;
   height: 100vh;
   // display: flex;
 }
+
 #portal {
   display: flex;
   justify-content: center;
   padding-top: 12px;
 }
+
 .chat {
   &__message {
     flex: 4;

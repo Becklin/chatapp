@@ -47,27 +47,44 @@ const Chat = () => {
 
   useEffect(() => {
     const getMessage = (element, id) => element.id === id;
-    socket.on('message', (message) => {
+    const addMessage = ({ messages, id, upload = '', user, type, percent }) => {
+      return [
+        ...messages,
+        {
+          id,
+          upload,
+          user,
+          type,
+          percent,
+        },
+      ];
+    };
+    const updateMessage = (index, messages, payload) => {
+      messages[index] = {
+        ...messages[index],
+        ...payload,
+      };
+      return [...messages];
+    };
+    socket.on('message', (message) =>
       setMessages((messages) => {
         return [...messages, message];
-      });
-    });
+      })
+    );
     socket.on('percent', (amount, { id, user, type }) => {
       setMessages((messages) => {
         const messageIndex = messages.findIndex((message) =>
           getMessage(message, id)
         );
         if (messageIndex < 0) {
-          return [
-            ...messages,
-            {
-              id,
-              hasUploaded: false,
-              percent: amount,
-              user,
-              type,
-            },
-          ];
+          const config = {
+            messages,
+            id,
+            percent: amount,
+            user,
+            type,
+          };
+          return addMessage(config);
         } else {
           messages[messageIndex].percent = amount;
           return [...messages];
@@ -80,22 +97,19 @@ const Chat = () => {
           const messageIndex = messages.findIndex((message) =>
             getMessage(message, id)
           );
-          messages[messageIndex] = {
+          const payload = {
             id,
             user,
             upload,
             type,
-            hasUploaded: true,
-            haha: true,
           };
-          return [...messages];
+          return updateMessage(messageIndex, messages, payload);
         });
       }
     });
   }, []);
 
   useEffect(() => {
-    // message 包含user, text
     socket.on('roomData', ({ users }) => {
       setCounts(users.length);
     });
@@ -104,15 +118,13 @@ const Chat = () => {
   const sendMessage = (event) => {
     event.preventDefault();
     if (message) {
-      socket.emit('sendMessage', message, () => setMessage(null));
+      socket.emit('sendMessage', message, () => setMessage(''));
     }
   };
 
   const sendFile = (file) => {
     /* build => 非同步promise處裡檔案 */
-    // console.log('sendFile', file);
     FileProcessor.process(file, socket).then((minifiedFileProcessor) => {
-      // console.log('minifiedFileProcessor.send()', Date());
       minifiedFileProcessor.send();
     });
   };

@@ -10,22 +10,25 @@ const Message = ({
   name,
   avatarSrc,
 }) => {
-  console.log('最後', user, text, upload, type, address);
+  console.log('最後', user, text);
   let isSentByCurrentUser = false;
   const trimmedName = name.trim().toLowerCase();
   if (trimmedName === user) isSentByCurrentUser = true;
   const role = isSentByCurrentUser ? 'user' : 'friend';
   const title = role === 'user' ? trimmedName : user;
-  const renderFile = ({ address, percent, type }) => {
-    if (address) return <div dangerouslySetInnerHTML={{ __html: address }} />;
-    if (percent)
+  const renderProgress = (percent) => {
+    if (percent > 0 && percent < 100)
       return (
         <>
           loading...
           <ProgressBar now={percent} animated />
         </>
       );
-    if (type) {
+  };
+
+  const renderFile = ({ address, type, upload }) => {
+    if (address) return <div dangerouslySetInnerHTML={{ __html: address }} />;
+    if (type && upload) {
       switch (type) {
         case 'video/mp4': {
           return (
@@ -75,7 +78,8 @@ const Message = ({
         </h4>
       )}
       <div className="chat-message__body">
-        {renderFile({ address, percent, type })}
+        {renderProgress(percent)}
+        {renderFile({ address, percent, type, upload })}
         {text && (
           <p className="chat-message__body--text">{ReactEmoji.emojify(text)}</p>
         )}

@@ -14,6 +14,7 @@ const Input = ({
   const handleSendMessage = (event) => {
     sendMessage(event);
   };
+  console.log('信息', message);
   return (
     <form className="chat__form">
       <textarea

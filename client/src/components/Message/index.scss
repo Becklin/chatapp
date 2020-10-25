@@ -13,6 +13,13 @@
     margin: 0px;
   }
 
+  &__date {
+    font-size: .2em;
+    // display: block;
+    margin: 0px 8px;
+    color: #c3c3c3;
+  }
+
   &__body {
     max-width: 70vw;
     margin: 8px 4px 0px 12px;
@@ -36,6 +43,7 @@
     .chat-message__body {
       text-align: right;
       width: 70vw;
+
       .progress {
         width: 100%;
         height: 8px;

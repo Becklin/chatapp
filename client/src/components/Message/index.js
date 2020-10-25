@@ -2,15 +2,17 @@ import React from 'react';
 import { Image, ProgressBar } from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
 import ReactEmoji from 'react-emoji';
+import moment from 'moment';
 import './index.scss';
 
 //USER送發訊息的人，name該聊天室使用者名字
 const Message = ({
-  message: { user, text, upload, type, address, percent },
+  message,
+  message: { user, content, upload, type, address, percent, date },
   name,
   avatarSrc,
 }) => {
-  console.log('最後', user, text);
+  console.log('最後', user, content, message);
   let isSentByCurrentUser = false;
   const trimmedName = name.trim().toLowerCase();
   if (trimmedName === user) isSentByCurrentUser = true;
@@ -79,9 +81,12 @@ const Message = ({
       )}
       <div className="chat-message__body">
         {renderProgress(percent)}
+        <span className="chat-message__date">{moment(date).format('LTS')}</span>
         {renderFile({ address, percent, type, upload })}
-        {text && (
-          <p className="chat-message__body--text">{ReactEmoji.emojify(text)}</p>
+        {content && (
+          <p className="chat-message__body--text">
+            {ReactEmoji.emojify(content)}
+          </p>
         )}
       </div>
     </div>

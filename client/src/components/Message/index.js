@@ -12,7 +12,7 @@ const Message = ({
   name,
   avatarSrc,
 }) => {
-  console.log('最後', user, content, message);
+  // console.log('最後', user, content, message);
   let isSentByCurrentUser = false;
   const trimmedName = name.trim().toLowerCase();
   if (trimmedName === user) isSentByCurrentUser = true;

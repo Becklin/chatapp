@@ -153,8 +153,12 @@ const childProcess = () => {
 
   const { addUser, getUser, removeUser, getUsersInRoom } = require("./users");
   io.on("connection", (socket) => {
-    console.log("we have connection!!!");
-
+    console.log("we have connection!!!", cluster.worker.id, process.pid);
+    socket.emit(
+      "data",
+      "connected to worker: " + cluster.worker.id,
+      process.pid
+    );
     // 方法零 一次整個傳輸
     //   fs.readFile(__dirname + '/images/img1.jpg', function(err, buf) {
     //     console.log(buf);
@@ -229,7 +233,7 @@ const childProcess = () => {
     });
     socket.on("sendMessage", (text, callback) => {
       const user = getUser(socket.id);
-      console.log("使用者", user);
+      console.log("使用者", user, text);
       const isGoogleTyping = text.includes("@gg=");
       const addressDom = "";
 
@@ -266,14 +270,13 @@ const childProcess = () => {
 
     ss(socket).on("sendFile", (stream, data, callback) => {
       const user = getUser(socket.id);
-      //io.to要查
       // const filename = path.basename(data.name);
       let size = 0;
       let fileBuffer = [];
       const id = "hoho-" + uuid();
       stream.on("data", (chunk) => {
         size += chunk.length;
-        socket.emit("percent", (size / data.size) * 100, {
+        io.to(user.room).emit("percent", (size / data.size) * 100, {
           user: user.name,
           type: data.type,
           id: id,
@@ -292,16 +295,6 @@ const childProcess = () => {
           id,
         });
       });
-
-      // stream.pipe(fs.createWriteStream(filename));
-
-      // });
-      //來玩玩socket.io-stream
-      // ss(socket).on('sendFile', function(stream, data) {
-      //   console.log('data', data);
-      //   var filename = path.basename(data.name);
-      //   stream.pipe(fs.createWriteStream(filename));
-      // });
       callback && callback();
     });
 

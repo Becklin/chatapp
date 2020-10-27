@@ -125,23 +125,29 @@ const childProcess = () => {
   };
 
   const AWS = require('aws-sdk');
+  console.log(
+    '這裏',
+    process.env.AWS_ACCESS_KEY_ID,
+    process.env.AWS_SECRET_ACCESS_KEY
+  );
   const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    accessKeyId: process.env.AWS_ACCESS_KEY
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    accessKeyId: process.env.AWS_SECRET_ACCESS_KEY
   });
   // let myBucket = 'eazychat';
   // let myKey = 'test';
-  // s3.createBucket({ Bucket: myBucket }, function(err, data) {
+  // s3.createBucket({ Bucket: myBucket }, function (err, data) {
+  //   console.log('上傳');
   //   if (err) {
   //     console.log(err);
   //   } else {
-  //     params = { Bucket: myBucket, Key: myKey, Body: "Hello!" };
+  //     params = { Bucket: myBucket, Key: myKey, Body: 'Hello!' };
 
-  //     s3.putObject(params, function(err, data) {
+  //     s3.putObject(params, function (err, data) {
   //       if (err) {
   //         console.log(err);
   //       } else {
-  //         console.log("Successfully uploaded data to myBucket/myKey");
+  //         console.log('Successfully uploaded data to myBucket/myKey');
   //       }
   //     });
   //   }
@@ -306,6 +312,8 @@ const childProcess = () => {
       });
       stream.on('end', () => {
         const BufferData = Buffer.concat(fileBuffer);
+        console.log('要上傳了!!!!!!!!!!!!!!!!!!!!!!!!!!!!', BufferData);
+        console.log(data, user);
         uploadFileToAws(BufferData, data.name, user.name);
         /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
     右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/ */

@@ -1,46 +1,38 @@
 require('dotenv').config();
-const Message = require('./utils/Message');
-
 const cluster = require('cluster');
 const os = require('os');
-const masterProcess = () => {
-  // this is for the master process that is started by calling
-  // this script with node from the command line
-  // Calling the os.cpus method will give an array of objects
-  // with some basic info on the numder of cpus
-  // on the system
-  let cpus = os.cpus();
-  console.log('master: I am the master process.', cpus.length);
-  console.log('Master started process ID', process.pid);
-  // for each cpu
-  cpus.forEach(function (cpu, i) {
-    console.log('master: forking a child process for cpu ' + i);
-    // fork this script to a new worker by calling cluster.fork
-    // this will return an instance of Worker
-    let worker = cluster.fork();
-  });
 
-  // process.exit();
+const masterProcess = () => {
+  let cpus = os.cpus();
+  console.log(
+    'Master started process ID',
+    process.pid,
+    'cpus.length',
+    cpus.length
+  );
+  cpus.forEach(function (cpu, i) {
+    let worker = cluster.fork();
+    console.log('worker', worker.id, worker.process.pid);
+  });
 };
 
 const childProcess = () => {
-  // Im a child, Im going to act like a server and do nothing else
   const express = require('express');
-  const socketio = require('socket.io');
-
-  const redisAdapter = require('socket.io-redis');
-  socketio.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
 
   var ss = require('socket.io-stream');
   const http = require('http');
   const bodyParser = require('body-parser');
   const cors = require('cors');
-  const fs = require('fs');
   const path = require('path');
   const PORT = process.env.PORT || 5000;
   const app = express();
-  const server = http.createServer(app);
-  const io = socketio(server);
+  console.log('BEFORE listen  child', process.pid);
+  const server = http.createServer(app).listen(PORT);
+
+  const io = require('socket.io').listen(server);
+  const redis = require('socket.io-redis');
+  io.adapter(redis({ host: 'localhost', port: 6379 }));
+
   const AppError = require('./utils/AppError');
   const { v4: uuid } = require('uuid');
   const Message = require('./utils/Message');
@@ -158,8 +150,8 @@ const childProcess = () => {
   const { addUser, getUser, removeUser, getUsersInRoom } = require('./users');
   io.on('connection', socket => {
     console.log('we have connection!!!');
-    console.log('socketio', socket.id);
-    console.log('rrrrr', process.pid);
+    console.log('socketio', socket.id, 'process.pid', process.pid);
+
     // 方法零 一次整個傳輸
     //   fs.readFile(__dirname + '/images/img1.jpg', function(err, buf) {
     //     console.log(buf);
@@ -186,13 +178,6 @@ const childProcess = () => {
     //   sinkStream.write(chunk);
     // }).on('end', function () {
     //   sinkStream.end();
-    // });
-
-    //來玩玩socket.io-stream
-    // ss(socket).on('sendFile', function(stream, data) {
-    //   console.log('data', data);
-    //   var filename = path.basename(data.name);
-    //   stream.pipe(fs.createWriteStream(filename));
     // });
 
     socket.on('join', ({ name, room }, errorCallback) => {
@@ -234,7 +219,6 @@ const childProcess = () => {
     });
     socket.on('sendMessage', (text, callback) => {
       const user = getUser(socket.id);
-      console.log('使用者', user);
       const isGoogleTyping = text.includes('@gg=');
       const addressDom = '';
 
@@ -370,14 +354,19 @@ const childProcess = () => {
     });
   });
 
-  server.listen(PORT, () => {
-    console.log(`listening ${PORT}`);
-  });
+  // server.listen(PORT, () => {
+  //   console.log(`listening ${PORT}`);
+  // });
   // process.exit();
 };
 
 // is the file being executed in mster mode?
 if (cluster.isMaster) {
+  const server = require('http').createServer();
+  console.log('BEFORE listen  master', process.pid);
+  const io = require('socket.io').listen(server);
+  const redis = require('socket.io-redis');
+  io.adapter(redis({ host: 'localhost', port: 6379 }));
   masterProcess();
 } else {
   childProcess();

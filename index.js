@@ -1,42 +1,38 @@
 require("dotenv").config();
-const Message = require("./utils/Message");
-
 const cluster = require("cluster");
 const os = require("os");
-const masterProcess = () => {
-  // this is for the master process that is started by calling
-  // this script with node from the command line
-  // Calling the os.cpus method will give an array of objects
-  // with some basic info on the numder of cpus
-  // on the system
-  let cpus = os.cpus();
-  console.log("master: I am the master process.", cpus.length);
-  console.log("Master started process ID", process.pid);
-  // for each cpu
-  cpus.forEach(function (cpu, i) {
-    console.log("master: forking a child process for cpu " + i);
-    // fork this script to a new worker by calling cluster.fork
-    // this will return an instance of Worker
-    let worker = cluster.fork();
-  });
 
-  // process.exit();
+const masterProcess = () => {
+  let cpus = os.cpus();
+  console.log(
+    "Master started process ID",
+    process.pid,
+    "cpus.length",
+    cpus.length
+  );
+  cpus.forEach(function (cpu, i) {
+    let worker = cluster.fork();
+    console.log("worker", worker.id, worker.process.pid);
+  });
 };
 
 const childProcess = () => {
-  // Im a child, Im going to act like a server and do nothing else
   const express = require("express");
-  const socketio = require("socket.io");
+
   var ss = require("socket.io-stream");
   const http = require("http");
   const bodyParser = require("body-parser");
   const cors = require("cors");
-  const fs = require("fs");
   const path = require("path");
   const PORT = process.env.PORT || 5000;
   const app = express();
-  const server = http.createServer(app);
-  const io = socketio(server);
+  console.log("BEFORE listen  child", process.pid);
+  const server = http.createServer(app).listen(PORT);
+
+  const io = require("socket.io").listen(server);
+  const redis = require("socket.io-redis");
+  io.adapter(redis({ host: "localhost", port: 6379 }));
+
   const AppError = require("./utils/AppError");
   const { v4: uuid } = require("uuid");
   const Message = require("./utils/Message");
@@ -128,37 +124,10 @@ const childProcess = () => {
     });
   };
 
-  const AWS = require("aws-sdk");
-  const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-  });
-  // let myBucket = 'eazychat';
-  // let myKey = 'test';
-  // s3.createBucket({ Bucket: myBucket }, function(err, data) {
-  //   if (err) {
-  //     console.log(err);
-  //   } else {
-  //     params = { Bucket: myBucket, Key: myKey, Body: "Hello!" };
-
-  //     s3.putObject(params, function(err, data) {
-  //       if (err) {
-  //         console.log(err);
-  //       } else {
-  //         console.log("Successfully uploaded data to myBucket/myKey");
-  //       }
-  //     });
-  //   }
-  // });
-
   const { addUser, getUser, removeUser, getUsersInRoom } = require("./users");
   io.on("connection", (socket) => {
-    console.log("we have connection!!!", cluster.worker.id, process.pid);
-    socket.emit(
-      "data",
-      "connected to worker: " + cluster.worker.id,
-      process.pid
-    );
+    console.log("we have connection!!!");
+    console.log("socketio", socket.id, "process.pid", process.pid);
     // 方法零 一次整個傳輸
     //   fs.readFile(__dirname + '/images/img1.jpg', function(err, buf) {
     //     console.log(buf);
@@ -187,13 +156,6 @@ const childProcess = () => {
     //   sinkStream.end();
     // });
 
-    //來玩玩socket.io-stream
-    // ss(socket).on('sendFile', function(stream, data) {
-    //   console.log('data', data);
-    //   var filename = path.basename(data.name);
-    //   stream.pipe(fs.createWriteStream(filename));
-    // });
-
     socket.on("join", ({ name, room }, errorCallback) => {
       const { error, user } = addUser({ id: socket.id, name, room });
       if (error) return errorCallback(error);
@@ -214,7 +176,7 @@ const childProcess = () => {
 
       // broadcast: send message to everyone besides to that user
       // socket跟io都可以to https://socket.io/docs/rooms/, 但是socket發出不會傳個自己
-
+      console.log("房間", user.room, user.name);
       socket.broadcast.to(user.room).emit(
         "message",
         Message({
@@ -233,7 +195,6 @@ const childProcess = () => {
     });
     socket.on("sendMessage", (text, callback) => {
       const user = getUser(socket.id);
-      console.log("使用者", user, text);
       const isGoogleTyping = text.includes("@gg=");
       const addressDom = "";
 
@@ -256,14 +217,30 @@ const childProcess = () => {
       callback(); //奇怪
     });
 
+    const AWS = require("aws-sdk");
+    console.log(
+      "這裏",
+      process.env.AWS_ACCESS_KEY_ID,
+      process.env.AWS_SECRET_ACCESS_KEY
+    );
+
     const uploadFileToAws = (bufferData, fileName, userName) => {
+      const s3 = new AWS.S3({
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        accessKeyId: process.env.AWS_SECRET_ACCESS_KEY,
+        apiVersion: "test-1027",
+      });
+      const pathFileName = path.basename(fileName);
+      console.log("pathFileName", pathFileName);
       const params = {
         Bucket: "easychat", // pass your bucket name
-        Key: fileName, // file will be saved as testBucket/contacts.csv
+        Key: pathFileName, // file will be saved as testBucket/contacts.csv
         Body: bufferData, //JSON.stringify(data, null, 2)
       };
-      s3.upload(params, function (s3Err, data) {
-        if (s3Err) throw s3Err;
+
+      s3.upload(params, function (err, data) {
+        if (err) throw err;
+        console.log("資料", data);
         console.log(`上傳成功位子在 ${data.Location}`);
       });
     };
@@ -273,7 +250,7 @@ const childProcess = () => {
       // const filename = path.basename(data.name);
       let size = 0;
       let fileBuffer = [];
-      const id = "hoho-" + uuid();
+      const id = uuid();
       stream.on("data", (chunk) => {
         size += chunk.length;
         io.to(user.room).emit("percent", (size / data.size) * 100, {
@@ -311,6 +288,8 @@ const childProcess = () => {
       });
       stream.on("end", () => {
         const BufferData = Buffer.concat(fileBuffer);
+        console.log("要上傳了!!!!!!!!!!!!!!!!!!!!!!!!!!!!", BufferData);
+        console.log(data, user);
         uploadFileToAws(BufferData, data.name, user.name);
         /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
     右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/ */
@@ -359,14 +338,19 @@ const childProcess = () => {
     });
   });
 
-  server.listen(PORT, () => {
-    console.log(`listening ${PORT}`);
-  });
+  // server.listen(PORT, () => {
+  //   console.log(`listening ${PORT}`);
+  // });
   // process.exit();
 };
 
 // is the file being executed in mster mode?
 if (cluster.isMaster) {
+  const server = require("http").createServer();
+  console.log("BEFORE listen  master", process.pid);
+  const io = require("socket.io").listen(server);
+  const redis = require("socket.io-redis");
+  io.adapter(redis({ host: "localhost", port: 6379 }));
   masterProcess();
 } else {
   childProcess();

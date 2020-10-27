@@ -41,6 +41,8 @@ class FileProcessor {
       });
   }
   send() {
+    console.log('送出', this, this.file.size);
+
     const stream = ss.createStream();
     const blobStream = ss.createBlobReadStream(this.file); //for browser use, 本來寫法是什麼
     blobStream.pipe(stream);

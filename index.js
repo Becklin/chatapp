@@ -125,15 +125,15 @@ const childProcess = () => {
   };
 
   const AWS = require('aws-sdk');
-  console.log(
-    '這裏',
-    process.env.AWS_ACCESS_KEY_ID,
-    process.env.AWS_SECRET_ACCESS_KEY
-  );
-  const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    accessKeyId: process.env.AWS_SECRET_ACCESS_KEY
-  });
+  // console.log(
+  //   '這裏',
+  //   process.env.AWS_ACCESS_KEY_ID,
+  //   process.env.AWS_SECRET_ACCESS_KEY
+  // );
+  // const s3 = new AWS.S3({
+  //   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  //   accessKeyId: process.env.AWS_SECRET_ACCESS_KEY
+  // });
   // let myBucket = 'eazychat';
   // let myKey = 'test';
   // s3.createBucket({ Bucket: myBucket }, function (err, data) {
@@ -268,7 +268,7 @@ const childProcess = () => {
       const id = uuid();
       stream.on('data', chunk => {
         size += chunk.length;
-        socket.emit('percent', (size / data.size) * 100, {
+        io.to(user.room).emit('percent', (size / data.size) * 100, {
           user: user.name,
           type: data.type,
           id: id

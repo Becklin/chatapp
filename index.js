@@ -17,7 +17,7 @@ const masterProcess = () => {
 };
 const redis_config = {
   host: process.env.REDIS_URL,
-  // port: process.env.REDIS_PORT,
+  port: 7699,
 };
 
 const childProcess = () => {

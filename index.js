@@ -33,7 +33,9 @@ const childProcess = () => {
   const redis = require('socket.io-redis');
 
   if (process.env.NODE_ENV === 'production') {
-    io.adapter(redis({ host: process.env.REDIS_URL, port: 14199 }));
+    io.adapter(
+      redis({ host: process.env.HEROKU_REDIS_BLACK_URL, port: 14009 })
+    );
   } else {
     io.adapter(redis({ host: 'localhost', port: 6379 }));
   }
@@ -350,7 +352,9 @@ if (cluster.isMaster) {
   const io = require('socket.io').listen(server);
   const redis = require('socket.io-redis');
   if (process.env.NODE_ENV === 'production') {
-    io.adapter(redis({ host: process.env.REDIS_URL, port: 14199 }));
+    io.adapter(
+      redis({ host: process.env.HEROKU_REDIS_BLACK_URL, port: 14009 })
+    );
   } else {
     io.adapter(redis({ host: 'localhost', port: 6379 }));
   }

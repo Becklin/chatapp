@@ -16,8 +16,8 @@ const masterProcess = () => {
   });
 };
 const redis_config = {
-  host: process.env.HEROKU_REDIS_URL,
-  port: process.env.REDIS_PORT,
+  host: process.env.REDIS_URL,
+  // port: process.env.REDIS_PORT,
 };
 
 const childProcess = () => {

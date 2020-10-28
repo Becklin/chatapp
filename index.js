@@ -34,10 +34,10 @@ const childProcess = () => {
   const server = http.createServer(app).listen(PORT);
 
   const io = require("socket.io").listen(server);
-  const redis = require("socket.io-redis");
+  // const redis = require("socket.io-redis");
 
   // if (process.env.NODE_ENV === 'production') {
-  io.adapter(redis(redis_config));
+  // io.adapter(redis(redis_config));
   // } else {
   //   io.adapter(redis({ host: 'localhost', port: 6379 }));
   // }
@@ -352,9 +352,9 @@ if (cluster.isMaster) {
   const server = require("http").createServer();
   console.log("BEFORE listen  master", process.pid);
   const io = require("socket.io").listen(server);
-  const redis = require("socket.io-redis");
+  // const redis = require("socket.io-redis");
   // if (process.env.NODE_ENV === 'production') {
-  io.adapter(redis(redis_config));
+  // io.adapter(redis(redis_config));
   // } else {
   //   io.adapter(redis({ host: 'localhost', port: 6379 }));
   // }

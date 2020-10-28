@@ -186,7 +186,7 @@ const childProcess = () => {
         Message({
           id: uuid(),
           type: 'text',
-          content: `${user.name} has joined!`,
+          content: `${user.name} has joined !`,
           user: 'admin',
           date: new Date()
         })

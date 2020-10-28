@@ -347,6 +347,7 @@ const childProcess = () => {
 if (cluster.isMaster) {
   const server = require('http').createServer();
   console.log('BEFORE listen  master', process.pid);
+  console.log('process.env.NODE_ENV');
   const io = require('socket.io').listen(server);
   const redis = require('socket.io-redis');
   if (process.env.NODE_ENV === 'production') {

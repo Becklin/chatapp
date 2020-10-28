@@ -33,7 +33,7 @@ const childProcess = () => {
   const redis = require('socket.io-redis');
 
   if (process.env.NODE_ENV === 'production') {
-    io.adapter(redis({ host: process.env.REDISTOGO_URL }));
+    io.adapter(redis({ host: process.env.REDISTOGO_URL, port: 10526 }));
   } else {
     io.adapter(redis({ host: 'localhost', port: 6379 }));
   }
@@ -186,7 +186,7 @@ const childProcess = () => {
         Message({
           id: uuid(),
           type: 'text',
-          content: `${user.name} has joined !`,
+          content: `${user.name} has joined!`,
           user: 'admin',
           date: new Date()
         })
@@ -347,11 +347,10 @@ const childProcess = () => {
 if (cluster.isMaster) {
   const server = require('http').createServer();
   console.log('BEFORE listen  master', process.pid);
-  console.log('process.env.NODE_ENV');
   const io = require('socket.io').listen(server);
   const redis = require('socket.io-redis');
   if (process.env.NODE_ENV === 'production') {
-    io.adapter(redis({ host: process.env.REDISTOGO_URL }));
+    io.adapter(redis({ host: process.env.REDISTOGO_URL, port: 10526 }));
   } else {
     io.adapter(redis({ host: 'localhost', port: 6379 }));
   }

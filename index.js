@@ -33,7 +33,7 @@ const childProcess = () => {
   const redis = require('socket.io-redis');
 
   if (process.env.NODE_ENV === 'production') {
-    io.adapter(redis({ host: REDISTOGO_URL, port: 6379 }));
+    io.adapter(redis({ host: process.env.REDISTOGO_URL, port: 6379 }));
   } else {
     io.adapter(redis({ host: 'localhost', port: 6379 }));
   }
@@ -222,11 +222,6 @@ const childProcess = () => {
     });
 
     const AWS = require('aws-sdk');
-    console.log(
-      '這裏',
-      process.env.AWS_ACCESS_KEY_ID,
-      process.env.AWS_SECRET_ACCESS_KEY
-    );
 
     const uploadFileToAws = (bufferData, fileName, userName) => {
       const s3 = new AWS.S3({
@@ -355,7 +350,7 @@ if (cluster.isMaster) {
   const io = require('socket.io').listen(server);
   const redis = require('socket.io-redis');
   if (process.env.NODE_ENV === 'production') {
-    io.adapter(redis({ host: REDISTOGO_URL, port: 6379 }));
+    io.adapter(redis({ host: process.env.REDISTOGO_URL, port: 6379 }));
   } else {
     io.adapter(redis({ host: 'localhost', port: 6379 }));
   }

@@ -1,6 +1,6 @@
 require('dotenv').config();
 const cluster = require('cluster'); // Only required if you want the worker id
-const sticky = require('sticky-session');
+// const sticky = require('sticky-session');
 const server = require('http').createServer(function (req, res) {
   console.log('worker: ' + cluster.worker.id);
 });
@@ -315,16 +315,22 @@ const childProcess = () => {
 };
 
 const PORT = process.env.PORT || 5000;
+server.listen(PORT);
+
 // const os = require('os');
 //sticky.listen() will return false if Master
 
-if (!sticky.listen(server, PORT)) {
-  // Master code
-  server.once('listening', function () {
-    console.log(`server started on ${PORT} port`);
-  });
-} else {
-  // Worker code
-  console.log('i am worker', cluster.worker.id);
-  childProcess();
-}
+// if (!sticky.listen(server, PORT)) {
+//   // Master code
+//   server.once('listening', function () {
+//     console.log(`server started on ${PORT} port`);
+//   });
+// } else {
+//   // Worker code
+//   console.log('i am worker', cluster.worker.id);
+/**
+ *  For multiple processes service, Heroku may have extra charge in production; otherewiese,
+ *  we may get this https://devcenter.heroku.com/articles/error-codes#h22-connection-limit-reached due to free dyno
+ */
+childProcess();
+// }

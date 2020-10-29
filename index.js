@@ -1,5 +1,5 @@
 require('dotenv').config();
-const cluster = require('cluster'); // Only required if you want the worker id
+// const cluster = require('cluster'); // Only required if you want the worker id
 // const sticky = require('sticky-session');
 const server = require('http').createServer(function (req, res) {
   console.log('server: ', server);

@@ -216,7 +216,7 @@ const childProcess = () => {
       s3.upload(params, function (err, data) {
         if (err) throw err;
         console.log('資料', data);
-        console.log(`上傳成功位子在 ${data.Location}`);
+        console.log(`上傳成功位子在  ${data.Location}`);
       });
     };
 

@@ -32,11 +32,13 @@ const childProcess = () => {
   const io = require('socket.io').listen(server);
   const redis = require('socket.io-redis');
 
-  // if (process.env.NODE_ENV === 'production') {
-  io.adapter(redis({ host: process.env.HEROKU_REDIS_BRONZE_URL, port: 21959 }));
-  // } else {
-  //   io.adapter(redis({ host: 'localhost', port: 6379 }));
-  // }
+  if (process.env.NODE_ENV === 'production') {
+    io.adapter(
+      redis({ host: process.env.HEROKU_REDIS_BLACK_URL, port: 14009 })
+    );
+  } else {
+    io.adapter(redis({ host: 'localhost', port: 6379 }));
+  }
   const AppError = require('./utils/AppError');
   const { v4: uuid } = require('uuid');
   const Message = require('./utils/Message');
@@ -349,11 +351,13 @@ if (cluster.isMaster) {
   console.log('BEFORE listen  master', process.pid);
   const io = require('socket.io').listen(server);
   const redis = require('socket.io-redis');
-  // if (process.env.NODE_ENV === 'production') {
-  io.adapter(redis({ host: process.env.HEROKU_REDIS_BRONZE_URL, port: 21959 }));
-  // } else {
-  //   io.adapter(redis({ host: 'localhost', port: 6379 }));
-  // }
+  if (process.env.NODE_ENV === 'production') {
+    io.adapter(
+      redis({ host: process.env.HEROKU_REDIS_BRONZE_URL, port: 21959 })
+    );
+  } else {
+    io.adapter(redis({ host: 'localhost', port: 6379 }));
+  }
   masterProcess();
 } else {
   childProcess();

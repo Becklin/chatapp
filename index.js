@@ -2,7 +2,7 @@ require('dotenv').config();
 const cluster = require('cluster'); // Only required if you want the worker id
 const sticky = require('sticky-session');
 const server = require('http').createServer(function (req, res) {
-  res.end('worker: ' + cluster.worker.id);
+  console.log('worker: ' + cluster.worker.id);
 });
 
 const childProcess = () => {

@@ -314,10 +314,10 @@ const childProcess = () => {
   });
 };
 
-const PORT = process.env.PORT || 5000;
-server.listen(PORT);
+// const PORT = process.env.PORT || 5000;
+// server.listen(PORT);
 
-const os = require('os');
+// const os = require('os');
 //sticky.listen() will return false if Master
 
 // if (!sticky.listen(server, PORT)) {
@@ -332,5 +332,5 @@ const os = require('os');
  *  For multiple processes service, Heroku may have extra charge in production; otherewiese,
  *  we may get this https://devcenter.heroku.com/articles/error-codes#h22-connection-limit-reached due to free dyno
  */
-childProcess();
+// childProcess();
 // }

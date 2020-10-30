@@ -318,7 +318,7 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT);
 
 const os = require('os');
-sticky.listen() will return false if Master
+//sticky.listen() will return false if Master
 
 if (!sticky.listen(server, PORT)) {
   // Master code
@@ -328,9 +328,9 @@ if (!sticky.listen(server, PORT)) {
 } else {
   // Worker code
   console.log('i am worker', cluster.worker.id);
-/**
- *  For multiple processes service, Heroku may have extra charge in production; otherewiese,
- *  we may get this https://devcenter.heroku.com/articles/error-codes#h22-connection-limit-reached due to free dyno
- */
-childProcess();
+  /**
+   *  For multiple processes service, Heroku may have extra charge in production; otherewiese,
+   *  we may get this https://devcenter.heroku.com/articles/error-codes#h22-connection-limit-reached due to free dyno
+   */
+  childProcess();
 }

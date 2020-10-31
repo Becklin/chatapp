@@ -4,6 +4,7 @@ import { Form, Button } from 'react-bootstrap';
 import Box from '../Box';
 import axios from 'axios';
 import './index.scss';
+import AuthService from '../../util/auth';
 
 const Signup = (props) => {
   const [username, setUsername] = useState('');
@@ -14,13 +15,7 @@ const Signup = (props) => {
 
   const signup = (e) => {
     e.preventDefault();
-    axios
-      .post('/api/auth/signup', {
-        username,
-        email,
-        password,
-        roles: ['user'],
-      })
+    AuthService.signup(username, email, password, ['user'])
       .then((response) => {
         setHasSignup(true);
       })

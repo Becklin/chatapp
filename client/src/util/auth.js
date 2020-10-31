@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-let API_URL = 'https://localhost:5000/api/auth/';
-if (process.env.NODE_ENV === 'production') {
-  API_URL = 'https://dailytalk.herokuapp.com/api/auth/';
-}
+let API_URL = '/api/auth/';
+
 class AuthService {
   login(username, password) {
     return axios
@@ -24,11 +22,12 @@ class AuthService {
     localStorage.removeItem('user');
   }
 
-  signup(username, email, password) {
+  signup(username, email, password, roles) {
     return axios.post(API_URL + 'signup', {
       username,
       email,
       password,
+      roles,
     });
   }
 

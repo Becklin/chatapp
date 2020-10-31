@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_URL = 'https://freshtalk.herokuapp.com/api/auth/';
+let API_URL = 'https://localhost:5000/api/auth/';
+if (process.env.NODE_ENV === 'production') {
+  API_URL = 'https://freshtalk.herokuapp.com/api/auth/';
+}
 class AuthService {
   login(username, password) {
     return axios

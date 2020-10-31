@@ -1,9 +1,9 @@
 require("dotenv").config();
 // const cluster = require("cluster"); // Only required if you want the worker id
 // const sticky = require("sticky-session");
-const server = require("http").createServer(function (req, res) {
-  console.log("server: ", server);
-});
+// const server = require("http").createServer(function (req, res) {
+//   console.log("server: ", server);
+// });
 
 const childProcess = () => {
   const express = require("express");
@@ -13,6 +13,8 @@ const childProcess = () => {
   const cors = require("cors");
   const path = require("path");
   const app = express();
+  const server = require("http").createServer(app);
+  server.listen(PORT);
   const io = require("socket.io")(server);
   const AppError = require("./utils/AppError");
   const { v4: uuid } = require("uuid");
@@ -315,7 +317,6 @@ const childProcess = () => {
 };
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT);
 
 const os = require("os");
 //sticky.listen() will return false if Master

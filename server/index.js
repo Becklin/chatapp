@@ -17,6 +17,7 @@ const childProcess = () => {
   server.listen(PORT);
   const io = require("socket.io")(server);
   const AppError = require("./utils/AppError");
+
   const { v4: uuid } = require("uuid");
   const Message = require("./utils/Message");
 
@@ -53,7 +54,7 @@ const childProcess = () => {
   }
 
   require("./routes/index.routes")(app);
-
+  console.log("process.env.MONGO_PW", process.env.MONGO_PW);
   const uri = `mongodb+srv://beckLin:${process.env.MONGO_PW}@cluster1.juqcg.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
   const db = require("./models");
   const Role = db.role;
@@ -67,7 +68,7 @@ const childProcess = () => {
       initial();
     })
     .catch((err) => {
-      console.error("Connection error");
+      console.error("Connection error", err);
       // process.exit();
     });
 

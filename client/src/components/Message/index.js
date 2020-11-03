@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, ProgressBar } from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
 import ReactEmoji from 'react-emoji';
-import moment from 'moment';
+import { moment } from 'moment';
 import './index.scss';
 
 //USER送發訊息的人，name該聊天室使用者名字

@@ -71,9 +71,6 @@ const Login = (props) => {
             Submit
           </Button>
         }
-        // setHasNotification={setHasError}
-        // hasNotification={hasError}
-        // notificationContent="Oops, something went wrong!"
       />
     </>
   );

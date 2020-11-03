@@ -1,17 +1,17 @@
 import axios from 'axios';
 
 let API_URL = 'https://localhost:5000/api/auth/';
-if (process.env.NODE_ENV === 'production') {
-  API_URL = 'https://freshtalk.herokuapp.com/api/auth/';
-}
+// if (process.env.NODE_ENV === 'production') {
+API_URL = 'https://dailytalk.herokuapp.com/api/auth/';
+// }
 class AuthService {
   login(username, password) {
     return axios
       .post(API_URL + 'signin', {
         username,
-        password,
+        password
       })
-      .then((response) => {
+      .then(response => {
         if (response.data.accessToken) {
           localStorage.setItem('user', JSON.stringify(response.data));
         }
@@ -28,7 +28,7 @@ class AuthService {
     return axios.post(API_URL + 'signup', {
       username,
       email,
-      password,
+      password
     });
   }
 

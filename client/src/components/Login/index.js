@@ -3,39 +3,43 @@ import { Redirect } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 
 import Box from '../Box';
-import { StatusContext } from '../../context/status-context';
+import { NotificationContext } from '../../context/notification-context';
 import AuthService from '../../util/auth';
 import './index.scss';
 
-const Login = props => {
-  const [status, setStatus] = useContext(StatusContext);
+const Login = (props) => {
+  const [notification, setNotification] = useContext(NotificationContext);
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  // const [hasError, setHasError] = useState(false);
-
-  const login = e => {
+  const login = (e) => {
     e.preventDefault();
     AuthService.login(username, password)
-      .then(response => {
+      .then((response) => {
         // 以驗證mongodb data以及設定localstorage
-        console.log('資料', response);
         setRedirectToReferrer(true);
       })
-      .catch(error => {
-        console.log('catch', error);
-        setStatus('Oops, something went wrong!');
-        // setHasError(true);
+      .catch((error) => {
+        setNotification({
+          status: error.name,
+          content: error.message,
+        });
+        setTimeout(() => {
+          setNotification({
+            status: null,
+            content: null,
+          });
+        }, 3000);
       });
   };
   // const { from } = props.location.state || { from: { pathname: '/' } };
   if (redirectToReferrer === true) {
     return <Redirect to="join" />;
   }
-  const handleNameChange = e => {
+  const handleNameChange = (e) => {
     setUsername(e.target.value);
   };
-  const handlePasswordChange = e => {
+  const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
   return (

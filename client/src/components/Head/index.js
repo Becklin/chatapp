@@ -1,16 +1,20 @@
-import React, { useState, useContext } from 'react';
-// import { Link } from 'react-router-dom';
-// import { Jumbotron } from 'react-bootstrap';
-// import { ArrowLeftCircle, PeopleFill } from 'react-bootstrap-icons';
-import { StatusContext } from '../../context/status-context';
+import React, { useContext } from 'react';
+import { NotificationContext } from '../../context/notification-context';
 import './index.scss';
 
 const Head = ({ children }) => {
-  const [status] = useContext(StatusContext);
+  const [notification] = useContext(NotificationContext);
+  console.log('提示', notification);
   return (
     <section className="chat__head">
-      {children}
-      {status}
+      <div
+        className={`chat__notification chat__notification${
+          notification.status === 'Error' ? '--active' : ''
+        }`}
+      >
+        {notification.content}
+      </div>
+      <div className="chat__head-burgur">{children}</div>
     </section>
   );
 };

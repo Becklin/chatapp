@@ -6,10 +6,10 @@ import {
   // Link,
   Route,
   Redirect,
-  Switch
+  Switch,
   // withRouter,
 } from 'react-router-dom';
-import { StatusContextProvider } from '../src/context/status-context';
+import { NotificationContextProvider } from '../src/context/notification-context';
 import {
   Home,
   Head,
@@ -18,7 +18,7 @@ import {
   AuthButton,
   Join,
   Chat,
-  PrivateRoute
+  PrivateRoute,
 } from './components';
 import './index.scss';
 // const NotFound = () => (
@@ -28,7 +28,7 @@ import './index.scss';
 // );
 const App = () => (
   <Router>
-    <StatusContextProvider>
+    <NotificationContextProvider>
       <Head>
         <AuthButton />
       </Head>
@@ -40,7 +40,7 @@ const App = () => (
         <PrivateRoute path="/chat" component={Chat} />
         <Redirect from="*" to="/" />
       </Switch>
-    </StatusContextProvider>
+    </NotificationContextProvider>
   </Router>
 );
 

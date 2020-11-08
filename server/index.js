@@ -1,40 +1,46 @@
-require('dotenv').config();
 // const cluster = require("cluster"); // Only required if you want the worker id
 // const sticky = require("sticky-session");
 // const server = require("http").createServer(function (req, res) {
 //   console.log("server: ", server);
 // });
+const {
+  MONGO_PW,
+  MONGO_DB,
+  AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY,
+  NODE_ENV,
+} = process.env;
 
 const childProcess = () => {
-  const express = require('express');
-  const ss = require('socket.io-stream');
+  const express = require("express");
+  const ss = require("socket.io-stream");
 
-  const bodyParser = require('body-parser');
-  const cors = require('cors');
-  const path = require('path');
+  const bodyParser = require("body-parser");
+  const cors = require("cors");
+  const path = require("path");
   const app = express();
-  const server = require('http').createServer(app);
+  const server = require("http").createServer(app);
   server.listen(PORT, () => {
     console.log(`Running on ${PORT}`);
   });
-  const io = require('socket.io')(server);
-  const AppError = require('./utils/AppError');
+  const io = require("socket.io")(server);
+  const AppError = require("./utils/AppError");
 
-  const { v4: uuid } = require('uuid');
-  const Message = require('./utils/Message');
+  const { v4: uuid } = require("uuid");
+  const Message = require("./utils/Message");
 
   app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
+    res.header("Access-Control-Allow-Origin", "*");
     res.header(
-      'Access-Control-Allow-Headers',
-      'Origin, X-Requested-With, Content-Type, Accept'
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
     );
     next();
   });
 
   // provides Express middleware to enable CORS
   const corsOptions = {
-    origin: `http://localhost:${PORT}`
+    origin: `http://localhost:${PORT}`,
     // origin: 'http://localhost:3000'
   };
   // provides Express middleware to enable CORS
@@ -45,18 +51,20 @@ const childProcess = () => {
   app.use(bodyParser.json());
   // parse requests of content-type - application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({ extended: true }));
+  console.log("產品", NODE_ENV);
 
-  if (process.env.NODE_ENV === 'production') {
+  if (NODE_ENV === "production") {
     // Serve any static files
-    console.log('產品');
-    app.use(express.static(path.join(__dirname, '../client/build')));
+    console.log("產品");
+    app.use(express.static(path.join(__dirname, "../client/build")));
     // Handle React routing, return all requests to React app
-    app.get('*', function (req, res) {
-      console.log('產品到了');
-      res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+    app.get("*", function (req, res) {
+      console.log("產品到了");
+      res.send("就是我的");
+      // res.sendFile(path.join(__dirname, "../client/build", "index.html"));
     });
   }
-  // if (process.env.NODE_ENV === 'production') {
+  // if (NODE_ENV === 'production') {
   //   // Serve any static files
   //   console.log('產品', __dirname);
   //   app.use(express.static(path.join(__dirname, '../client')));
@@ -66,22 +74,22 @@ const childProcess = () => {
   //     res.sendFile(path.join(__dirname, '../client/public', 'index.html'));
   //   });
   // }
-  require('./routes/index.routes')(app);
-  console.log('process.env.MONGO_PW', process.env.MONGO_PW);
-  const uri = `mongodb+srv://beckLin:${process.env.MONGO_PW}@cluster1.juqcg.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
-  const db = require('./models');
+  require("./routes/index.routes")(app);
+  console.log("process.env.MONGO_PW", MONGO_PW);
+  const dev_uri = `mongodb+srv://beckLin:${MONGO_PW}@cluster1.juqcg.mongodb.net/${MONGO_DB}?retryWrites=true&w=majority`;
+  const db = require("./models");
   const Role = db.role;
   db.mongoose
-    .connect(uri, {
+    .connect(dev_uri, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
     })
     .then(() => {
-      console.log('Successfully connect to MongoDB.');
+      console.log("Successfully connect to MongoDB.");
       initial();
     })
-    .catch(err => {
-      console.error('Connection error', err);
+    .catch((err) => {
+      console.error("Connection error", err);
       // process.exit();
     });
 
@@ -91,29 +99,29 @@ const childProcess = () => {
     Role.estimatedDocumentCount((err, count) => {
       if (!err && count === 0) {
         new Role({
-          name: 'user'
-        }).save(err => {
+          name: "user",
+        }).save((err) => {
           // create a new User: object.save()
           if (err) {
-            console.log('error', err);
+            console.log("error", err);
           }
           console.log("added 'user' to roles collection");
         });
 
         new Role({
-          name: 'moderator'
-        }).save(err => {
+          name: "moderator",
+        }).save((err) => {
           if (err) {
-            console.log('error', err);
+            console.log("error", err);
           }
           console.log("added 'moderator' to roles collection");
         });
 
         new Role({
-          name: 'admin'
-        }).save(err => {
+          name: "admin",
+        }).save((err) => {
           if (err) {
-            console.log('error', err);
+            console.log("error", err);
           }
           console.log("added 'admin' to roles collection");
         });
@@ -121,10 +129,10 @@ const childProcess = () => {
     });
   };
 
-  const { addUser, getUser, removeUser, getUsersInRoom } = require('./users');
-  io.on('connection', socket => {
-    console.log('we have connection!!!');
-    console.log('socketio', socket.id, 'process.pid', process.pid);
+  const { addUser, getUser, removeUser, getUsersInRoom } = require("./users");
+  io.on("connection", (socket) => {
+    console.log("we have connection!!!");
+    console.log("socketio", socket.id, "process.pid", process.pid);
     // 方法零 一次整個傳輸
     //   fs.readFile(__dirname + '/images/img1.jpg', function(err, buf) {
     //     console.log(buf);
@@ -153,133 +161,133 @@ const childProcess = () => {
     //   sinkStream.end();
     // });
 
-    socket.on('join', ({ name, room }, errorCallback) => {
+    socket.on("join", ({ name, room }, errorCallback) => {
       const { error, user } = addUser({ id: socket.id, name, room });
       if (error) return errorCallback(error);
       socket.join(user.room);
 
       socket.emit(
-        'message',
+        "message",
         Message({
           id: uuid(),
-          type: 'text',
+          type: "text",
           content: `${user.name}, welcome to the room ${user.room}`,
-          user: 'admin',
+          user: "admin",
           // name,
           //percent,
-          date: new Date()
+          date: new Date(),
         })
       );
 
       // broadcast: send message to everyone besides to that user
       // socket跟io都可以to https://socket.io/docs/rooms/, 但是socket發出不會傳個自己
-      console.log('房間', user.room, user.name);
+      console.log("房間", user.room, user.name);
       socket.broadcast.to(user.room).emit(
-        'message',
+        "message",
         Message({
           id: uuid(),
-          type: 'text',
+          type: "text",
           content: `${user.name} has joined!`,
-          user: 'admin',
-          date: new Date()
+          user: "admin",
+          date: new Date(),
         })
       );
-      io.to(user.room).emit('roomData', {
+      io.to(user.room).emit("roomData", {
         room: user.room,
-        users: getUsersInRoom(user.room)
+        users: getUsersInRoom(user.room),
       });
       errorCallback();
     });
-    socket.on('sendMessage', (text, callback) => {
+    socket.on("sendMessage", (text, callback) => {
       const user = getUser(socket.id);
-      const isGoogleTyping = text.includes('@gg=');
-      const addressDom = '';
+      const isGoogleTyping = text.includes("@gg=");
+      const addressDom = "";
 
       if (isGoogleTyping) {
-        const destination = text.split('@gg=').pop();
+        const destination = text.split("@gg=").pop();
         addressDom = `<a target="blank" href='https://www.google.com.tw/maps/search/${destination}'>${destination}</a>`;
       }
       io.to(user.room).emit(
-        'message',
+        "message",
         Message({
           id: uuid(),
-          type: 'text',
+          type: "text",
           content: text,
           user: user.name,
           date: new Date(),
-          address: addressDom
+          address: addressDom,
         })
       );
       // io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
       callback(); //奇怪
     });
 
-    const AWS = require('aws-sdk');
+    const AWS = require("aws-sdk");
 
     const uploadFileToAws = (bufferData, fileName, userName) => {
       const s3 = new AWS.S3({
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        accessKeyId: process.env.AWS_SECRET_ACCESS_KEY,
-        apiVersion: 'test-1027'
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        accessKeyId: AWS_SECRET_ACCESS_KEY,
+        apiVersion: "test-1027",
       });
       const pathFileName = path.basename(fileName);
       const params = {
-        Bucket: 'easychat', // pass your bucket name
+        Bucket: "easychat", // pass your bucket name
         Key: pathFileName, // file will be saved as testBucket/contacts.csv
-        Body: bufferData //JSON.stringify(data, null, 2)
+        Body: bufferData, //JSON.stringify(data, null, 2)
       };
 
       s3.upload(params, function (err, data) {
         if (err) throw err;
-        console.log('資料', data);
+        console.log("資料", data);
         console.log(`上傳成功位子在  ${data.Location}`);
       });
     };
 
-    ss(socket).on('sendFile', (stream, data, callback) => {
+    ss(socket).on("sendFile", (stream, data, callback) => {
       const user = getUser(socket.id);
       // const filename = path.basename(data.name);
       let size = 0;
       let fileBuffer = [];
       const id = uuid();
-      stream.on('data', chunk => {
+      stream.on("data", (chunk) => {
         size += chunk.length;
-        io.to(user.room).emit('percent', (size / data.size) * 100, {
+        io.to(user.room).emit("percent", (size / data.size) * 100, {
           user: user.name,
           type: data.type,
-          id: id
+          id: id,
         });
         //TODO要再寄通知到前端 > 注意NODE EVENTLOOP 優先權 !!!
         fileBuffer.push(chunk);
       });
-      stream.on('end', () => {
+      stream.on("end", () => {
         /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
       右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/ */
-        const sentFile = Buffer.concat(fileBuffer).toString('base64');
-        io.to(user.room).emit('file', {
+        const sentFile = Buffer.concat(fileBuffer).toString("base64");
+        io.to(user.room).emit("file", {
           user: user.name,
           upload: sentFile,
           type: data.type,
-          id
+          id,
         });
       });
       callback && callback();
     });
 
-    ss(socket).on('uploadFile', (stream, data, callback) => {
+    ss(socket).on("uploadFile", (stream, data, callback) => {
       const user = getUser(socket.id);
       //io.to要查
       // const filename = path.basename(data.name);
       let size = 0;
       let fileBuffer = [];
-      stream.on('data', chunk => {
+      stream.on("data", (chunk) => {
         size += chunk.length;
-        console.log(Math.floor((size / data.size) * 100) + '%');
+        console.log(Math.floor((size / data.size) * 100) + "%");
         fileBuffer.push(chunk);
       });
-      stream.on('end', () => {
+      stream.on("end", () => {
         const BufferData = Buffer.concat(fileBuffer);
-        console.log('要上傳了!!!!!!!!!!!!!!!!!!!!!!!!!!!!', BufferData);
+        console.log("要上傳了!!!!!!!!!!!!!!!!!!!!!!!!!!!!", BufferData);
         console.log(data, user);
         uploadFileToAws(BufferData, data.name, user.name);
         /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
@@ -297,18 +305,18 @@ const childProcess = () => {
       // });
       callback && callback();
     });
-    socket.on('disconnect', () => {
-      console.log('disconnect!!!');
+    socket.on("disconnect", () => {
+      console.log("disconnect!!!");
       const user = removeUser(socket.id);
       if (user) {
         io.to(user.room).emit(
-          'message',
+          "message",
           Message({
             id: uuid(),
-            type: 'text',
+            type: "text",
             content: `${user.name} has left.`,
-            user: 'admin',
-            date: new Date()
+            user: "admin",
+            date: new Date(),
           })
         );
       }
@@ -324,15 +332,15 @@ const childProcess = () => {
     res.status(error.status || 500).send({
       error: {
         status: error.status || 500,
-        message: error.message || 'Internal Server Error'
-      }
+        message: error.message || "Internal Server Error",
+      },
     });
   });
 };
 
 const PORT = process.env.PORT || 5000;
 
-const os = require('os');
+const os = require("os");
 //sticky.listen() will return false if Master
 
 // if (!sticky.listen(server, PORT)) {

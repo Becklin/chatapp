@@ -1,11 +1,13 @@
-function Message(type, data, user) {
+function Message(type, content, user, date) {
   return {
     id: Math.random(),
     type,
-    data,
+    content,
     user,
+    date,
     getAll() {
       return this.id + this.user;
     },
   };
 }
+s

@@ -75,3 +75,10 @@ https://www.sitepoint.com/immutability-javascript/
 https://stackoverflow.com/questions/62618417/serve-static-react-app-with-nodejs-through-docker
 https://mherman.org/blog/dockerizing-a-react-app/#project-setup
 https://docs.docker.com/develop/develop-images/multistage-build/
+
+// everythisng about variable
+https://medium.com/the-node-js-collection/making-your-node-js-work-everywhere-with-environment-variables-2da8cdf6e786
+https://www.twilio.com/blog/2017/08/working-with-environment-variables-in-node-js.html
+
+// about production
+// https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/deployment

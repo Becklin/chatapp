@@ -10,7 +10,13 @@ const {
   AWS_SECRET_ACCESS_KEY,
   NODE_ENV,
 } = process.env;
-
+console.log(
+  MONGO_PW,
+  MONGO_DB,
+  AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY,
+  NODE_ENV
+);
 const childProcess = () => {
   const express = require("express");
   const ss = require("socket.io-stream");

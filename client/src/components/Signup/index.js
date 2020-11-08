@@ -4,9 +4,7 @@ import { Form, Button } from 'react-bootstrap';
 import Box from '../Box';
 import { NotificationContext } from '../../context/notification-context';
 import AuthService from '../../util/auth';
-// import axios from 'axios';
 import './index.scss';
-import AuthService from '../../util/auth';
 
 const Signup = (props) => {
   const [notification, setNotification] = useContext(NotificationContext);

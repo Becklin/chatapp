@@ -9,7 +9,7 @@ import {
   Switch,
   // withRouter,
 } from 'react-router-dom';
-
+import { NotificationContextProvider } from '../src/context/notification-context';
 import {
   Home,
   Head,
@@ -28,18 +28,19 @@ import './index.scss';
 // );
 const App = () => (
   <Router>
-    <Head>
-      <AuthButton />
-    </Head>
-    <Switch>
-      <Route path="/" exact component={Home} />
-      <Route path="/Signup" component={Signup} />
-      <Route path="/login" component={Login} />
-      <PrivateRoute path="/join" component={Join} />
-      <PrivateRoute path="/chat" component={Chat} />
-      <Redirect from="*" to="/" />
-    </Switch>
-    <div id="portal"></div>
+    <NotificationContextProvider>
+      <Head>
+        <AuthButton />
+      </Head>
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/Signup" component={Signup} />
+        <Route path="/login" component={Login} />
+        <PrivateRoute path="/join" component={Join} />
+        <PrivateRoute path="/chat" component={Chat} />
+        <Redirect from="*" to="/" />
+      </Switch>
+    </NotificationContextProvider>
   </Router>
 );
 

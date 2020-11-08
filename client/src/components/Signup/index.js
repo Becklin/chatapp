@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import Box from '../Box';
-import axios from 'axios';
+import { NotificationContext } from '../../context/notification-context';
+import AuthService from '../../util/auth';
+// import axios from 'axios';
 import './index.scss';
 import AuthService from '../../util/auth';
 
 const Signup = (props) => {
+  const [notification, setNotification] = useContext(NotificationContext);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hasSignup, setHasSignup] = useState(false);
-  const [hasError, setHasError] = useState(false);
 
   const signup = (e) => {
     e.preventDefault();
@@ -20,8 +22,16 @@ const Signup = (props) => {
         setHasSignup(true);
       })
       .catch((error) => {
-        console.log('catch', error);
-        setHasError(true);
+        setNotification({
+          status: error.name,
+          content: error.message,
+        });
+        setTimeout(() => {
+          setNotification({
+            status: null,
+            content: null,
+          });
+        }, 3000);
       });
   };
   const handleNameChange = (e) => {
@@ -74,9 +84,6 @@ const Signup = (props) => {
           Sign Up
         </Button>
       }
-      setHasNotification={setHasError}
-      hasNotification={hasError}
-      notificationContent="Oops, something went wrong!"
     />
   );
 };

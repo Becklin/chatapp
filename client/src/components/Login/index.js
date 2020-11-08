@@ -1,28 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 
 import Box from '../Box';
+import { NotificationContext } from '../../context/notification-context';
 import AuthService from '../../util/auth';
 import './index.scss';
 
 const Login = (props) => {
+  const [notification, setNotification] = useContext(NotificationContext);
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [hasError, setHasError] = useState(false);
-
   const login = (e) => {
     e.preventDefault();
     AuthService.login(username, password)
       .then((response) => {
         // 以驗證mongodb data以及設定localstorage
-        console.log('資料', response);
         setRedirectToReferrer(true);
       })
       .catch((error) => {
-        console.log('catch', error);
-        setHasError(true);
+        setNotification({
+          status: error.name,
+          content: error.message,
+        });
+        setTimeout(() => {
+          setNotification({
+            status: null,
+            content: null,
+          });
+        }, 3000);
       });
   };
   // const { from } = props.location.state || { from: { pathname: '/' } };
@@ -64,9 +71,6 @@ const Login = (props) => {
             Submit
           </Button>
         }
-        // setHasNotification={setHasError}
-        hasNotification={hasError}
-        notificationContent="Oops, something went wrong!"
       />
     </>
   );

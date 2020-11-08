@@ -66,8 +66,7 @@ const childProcess = () => {
     // Handle React routing, return all requests to React app
     app.get("*", function (req, res) {
       console.log("產品到了");
-      res.send("就是我的");
-      // res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+      res.sendFile(path.join(__dirname, "../client/build", "index.html"));
     });
   }
   // if (NODE_ENV === 'production') {

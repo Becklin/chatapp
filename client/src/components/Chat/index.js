@@ -20,7 +20,7 @@ const Chat = () => {
 
   let ENDPOINT = 'localhost:5000';
   if (process.env.NODE_ENV === 'production') {
-    ENDPOINT = 'https://freshtalk.herokuapp.com';
+    ENDPOINT = 'https://dailytalk.herokuapp.com';
   }
   console.log(ENDPOINT);
   useEffect(() => {

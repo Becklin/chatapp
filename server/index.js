@@ -1,9 +1,22 @@
-require('dotenv').config();
-// const cluster = require('cluster'); // Only required if you want the worker id
-// const sticky = require('sticky-session');
-const server = require('http').createServer(function (req, res) {
-  console.log('server: ', server);
-});
+// const cluster = require("cluster"); // Only required if you want the worker id
+// const sticky = require("sticky-session");
+// const server = require("http").createServer(function (req, res) {
+//   console.log("server: ", server);
+// });
+const {
+  MONGO_PW,
+  MONGO_DB,
+  AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY,
+  NODE_ENV
+} = process.env;
+console.log(
+  MONGO_PW,
+  MONGO_DB,
+  AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY,
+  NODE_ENV
+);
 
 const childProcess = () => {
   const express = require('express');
@@ -13,8 +26,13 @@ const childProcess = () => {
   const cors = require('cors');
   const path = require('path');
   const app = express();
+  const server = require('http').createServer(app);
+  server.listen(PORT, () => {
+    console.log(`Running on ${PORT}`);
+  });
   const io = require('socket.io')(server);
   const AppError = require('./utils/AppError');
+
   const { v4: uuid } = require('uuid');
   const Message = require('./utils/Message');
 
@@ -29,34 +47,46 @@ const childProcess = () => {
 
   // provides Express middleware to enable CORS
   const corsOptions = {
-    // origin: `http://localhost:${PORT}`
-    origin: 'http://localhost:3000'
+    origin: `http://localhost:${PORT}`
+    // origin: 'http://localhost:3000'
   };
   // provides Express middleware to enable CORS
-  app.use(cors(corsOptions));
+  // app.use(cors(corsOptions));
 
   // parse requests of content-type - application/json
   // body-parser helps to parse the request and create the req.body object
   app.use(bodyParser.json());
   // parse requests of content-type - application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({ extended: true }));
+  console.log('產品', NODE_ENV);
 
-  if (process.env.NODE_ENV === 'production') {
+  if (NODE_ENV === 'production') {
     // Serve any static files
-    app.use(express.static(path.join(__dirname, 'client/build')));
+    console.log('產品');
+    app.use(express.static(path.join(__dirname, '../client/build')));
     // Handle React routing, return all requests to React app
     app.get('*', function (req, res) {
-      res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+      console.log('產品到了');
+      res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
     });
   }
-
+  // if (NODE_ENV === 'production') {
+  //   // Serve any static files
+  //   console.log('產品', __dirname);
+  //   app.use(express.static(path.join(__dirname, '../client')));
+  //   // Handle React routing, return all requests to React app
+  //   app.get('*', function (req, res) {
+  //     console.log('產品到了');
+  //     res.sendFile(path.join(__dirname, '../client/public', 'index.html'));
+  //   });
+  // }
   require('./routes/index.routes')(app);
-
-  const uri = `mongodb+srv://beckLin:${process.env.MONGO_PW}@cluster1.juqcg.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
+  console.log('process.env.MONGO_PW', MONGO_PW);
+  const dev_uri = `mongodb+srv://beckLin:${MONGO_PW}@cluster1.juqcg.mongodb.net/${MONGO_DB}?retryWrites=true&w=majority`;
   const db = require('./models');
   const Role = db.role;
   db.mongoose
-    .connect(uri, {
+    .connect(dev_uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     })
@@ -65,7 +95,7 @@ const childProcess = () => {
       initial();
     })
     .catch(err => {
-      console.error('Connection error');
+      console.error('Connection error', err);
       // process.exit();
     });
 
@@ -202,8 +232,8 @@ const childProcess = () => {
 
     const uploadFileToAws = (bufferData, fileName, userName) => {
       const s3 = new AWS.S3({
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        accessKeyId: process.env.AWS_SECRET_ACCESS_KEY,
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        accessKeyId: AWS_SECRET_ACCESS_KEY,
         apiVersion: 'test-1027'
       });
       const pathFileName = path.basename(fileName);
@@ -314,23 +344,23 @@ const childProcess = () => {
   });
 };
 
-// const PORT = process.env.PORT || 5000;
-// server.listen(PORT);
+const PORT = process.env.PORT || 5000;
 
-// const os = require('os');
+const os = require('os');
+
 //sticky.listen() will return false if Master
 
 // if (!sticky.listen(server, PORT)) {
 //   // Master code
-//   server.once('listening', function () {
+//   server.once("listening", function () {
 //     console.log(`server started on ${PORT} port`);
 //   });
 // } else {
-// Worker code
-// console.log('i am worker', cluster.worker.id);
+//   // Worker code
+//   console.log("i am worker", cluster.worker.id);
 /**
  *  For multiple processes service, Heroku may have extra charge in production; otherewiese,
  *  we may get this https://devcenter.heroku.com/articles/error-codes#h22-connection-limit-reached due to free dyno
  */
-// childProcess();
+childProcess();
 // }

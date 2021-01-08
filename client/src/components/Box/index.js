@@ -4,7 +4,6 @@ import './index.scss';
 // import useMediaQuery from '../../util/useMediaQuery';
 
 const Box = ({ title, content, control }) => {
-  // const mediaQuery = useMediaQuery();
   return (
     <div className="chat__box">
       <h1>{title}</h1>
@@ -12,11 +11,6 @@ const Box = ({ title, content, control }) => {
       <div>{control}</div>
     </div>
   );
-};
-
-Box.defaultProps = {
-  setHasNotification: () => {},
-  hasNotification: false,
 };
 
 export default Box;

@@ -3,6 +3,7 @@
 // const server = require("http").createServer(function (req, res) {
 //   console.log("server: ", server);
 // });
+
 const {
   MONGO_PW,
   MONGO_DB,
@@ -19,6 +20,13 @@ console.log(
 );
 
 const childProcess = () => {
+  const plusOne = require('./test');
+  const cal = plusOne();
+  console.log('test', cal());
+  console.log('test', cal());
+  console.log('test', cal());
+  console.log('test', cal());
+
   const express = require('express');
   const ss = require('socket.io-stream');
 

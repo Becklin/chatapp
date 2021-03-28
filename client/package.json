@@ -29,7 +29,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src/*.js"
   },
   "proxy": "http://localhost:5000/",
   "browserslist": {
@@ -45,8 +46,10 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining": "^7.13.12",
     "axios": "^0.20.0",
     "customize-cra": "^1.0.0",
+    "pre-commit": "^1.2.2",
     "react-app-rewired": "^2.1.6"
   }
 }

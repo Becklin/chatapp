@@ -1,67 +1,41 @@
+const SignupService = require( "../services/SignupService" );
+// get the reference of EventEmitter class of events module
+var events = require('events');
+
+//create an object of EventEmitter class by using above reference
+var em = new events.EventEmitter();
+
+em.on('user_signup', ({ user }) => {
+    console.log("we have sent email to you");
+  })
+
+const SignupServiceInstance = new SignupService();
+
 const config = require('../config/auth.config');
 const db = require('../models');
 const User = db.user;
-const Role = db.role;
 
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 
-exports.signup = (req, res) => {
-  console.log('這裏', req);
-  const user = new User({
-    username: req.body.username,
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
-  });
-
-  user.save((err, user) => {
-    if (err) {
-      console.log('有錯');
-      res.status(500).send({ message: err });
-      return;
-    }
-
-    if (req.body.roles) {
-      Role.find(
-        {
-          name: { $in: req.body.roles }
-        },
-        (err, roles) => {
-          if (err) {
-            res.status(500).send({ message: err });
-            return;
-          }
-          user.roles = roles.map(role => role._id);
-          user.save(err => {
-            if (err) {
-              res.status(500).send({ message: err });
-              return;
-            }
-
-            res.send({ message: 'User was registered successfully!' });
-          });
-        }
-      );
-    } else {
-      Role.findOne({ name: 'user' }, (err, role) => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
-
-        user.roles = [role._id];
-        user.save(err => {
-          if (err) {
-            res.status(500).send({ message: err });
-            return;
-          }
-
-          res.send({ message: 'User was registered successfully!' });
-        });
-      });
-    }
-  });
-};
+/**
+ * @description Create a cord with the provided body
+ * @param req {object} Express req object 
+ * @param res {object} Express res object
+ * @returns {Promise<*>}
+ */
+async function signupUser ( req, res ) {
+  try {
+    // We only pass the body object, never the req object
+  await SignupServiceInstance.create( req.body );
+    em.emit('user_signup', { user: req.body })
+    return res.send( { message: 'User was registered successfully!' } );
+  } catch ( err ) {
+    console.log("err", err);
+    res.status( 500 ).send( err );
+  }
+}
+exports.signup = signupUser;
 
 exports.signin = (req, res) => {
   User.findOne({
@@ -73,7 +47,6 @@ exports.signin = (req, res) => {
      * 並且用被關聯 document 的內容替換掉原來關聯欄位(field)的內容。
      * https://codertw.com/%E8%B3%87%E6%96%99%E5%BA%AB/18236/
      */
-    .populate('roles', '-__v')
     .exec((err, user) => {
       if (err) {
         res.status(500).send({ message: err });
@@ -98,17 +71,10 @@ exports.signin = (req, res) => {
       var token = jwt.sign({ id: user.id }, config.secret, {
         expiresIn: 86400 // 24 hours
       });
-
-      var authorities = [];
-
-      for (let i = 0; i < user.roles.length; i++) {
-        authorities.push('ROLE_' + user.roles[i].name.toUpperCase());
-      }
       res.status(200).send({
         id: user._id,
         username: user.username,
         email: user.email,
-        roles: authorities,
         accessToken: token
       });
     });

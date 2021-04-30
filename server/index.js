@@ -10,14 +10,11 @@ const {
 } = process.env;
 
 const childProcess = () => {
-  const plusOne = require('./test');
-  const cal = plusOne();
-  console.log('test', cal());
-
 
   const dev_uri = `mongodb+srv://beckLin:${MONGO_PW}@cluster1.juqcg.mongodb.net/${MONGO_DB}?retryWrites=true&w=majority`;
+  console.log(dev_uri);
   const db = require('./models');
-  const Role = db.role;
+
   db.mongoose
     .connect(dev_uri, {
       useNewUrlParser: true,
@@ -37,37 +34,6 @@ const childProcess = () => {
   const initial = () => {
     /* Returns the count of all documents in a collection or view.
   The method wraps the count command. */
-    Role.estimatedDocumentCount((err, count) => {
-      if (!err && count === 0) {
-        new Role({
-          name: 'user'
-        }).save(err => {
-          // create a new User: object.save()
-          if (err) {
-            console.log('error', err);
-          }
-          console.log("added 'user' to roles collection");
-        });
-
-        new Role({
-          name: 'moderator'
-        }).save(err => {
-          if (err) {
-            console.log('error', err);
-          }
-          console.log("added 'moderator' to roles collection");
-        });
-
-        new Role({
-          name: 'admin'
-        }).save(err => {
-          if (err) {
-            console.log('error', err);
-          }
-          console.log("added 'admin' to roles collection");
-        });
-      }
-    });
   };
 };
 

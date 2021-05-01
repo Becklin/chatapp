@@ -6,7 +6,7 @@ import { NotificationContext } from '../../context/notification-context';
 import AuthService from '../../util/auth';
 import './index.scss';
 
-const Signup = (props) => {
+const Signup = () => {
   const [notification, setNotification] = useContext(NotificationContext);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -16,7 +16,7 @@ const Signup = (props) => {
   const signup = (e) => {
     e.preventDefault();
     AuthService.signup(username, email, password, ['user'])
-      .then((response) => {
+      .then(() => {
         setHasSignup(true);
       })
       .catch((error) => {
@@ -42,7 +42,7 @@ const Signup = (props) => {
     setPassword(e.target.value);
   };
   if (hasSignup) return <Redirect to="login" />;
-  console.log('process', process.env);
+  console.log('process', process.env, notification);
   return (
     <Box
       title="Sign Up"

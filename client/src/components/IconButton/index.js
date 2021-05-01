@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './index.scss';
 
 //USER送發訊息的人，name該聊天室使用者名字
@@ -26,5 +27,13 @@ const IconButton = ({ onHandleClick, className, name, disabled, icon }) => {
     </span>
   );
 };
+
+IconButton.propTypes = {
+  onHandleClick: PropTypes.func,
+  className: PropTypes.string,
+  name: PropTypes.string,
+  disabled: PropTypes.bool,
+  icon: PropTypes.element,
+}
 
 export default IconButton;

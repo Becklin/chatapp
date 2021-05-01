@@ -17,6 +17,14 @@
     "plugins": [
         "react"
     ],
+    "settings": {
+        "react": {
+            "version": "latest"
+        }
+    },
     "rules": {
+    //    "react/prop-types": 0
+    //    "no-unused-vars": 0,
+    // "no-unreachable": 0
     }
 }

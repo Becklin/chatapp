@@ -7,7 +7,7 @@ import { NotificationContext } from '../../context/notification-context';
 import AuthService from '../../util/auth';
 import './index.scss';
 
-const Login = (props) => {
+const Login = () => {
   const [notification, setNotification] = useContext(NotificationContext);
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
   const [username, setUsername] = useState('');
@@ -15,7 +15,7 @@ const Login = (props) => {
   const login = (e) => {
     e.preventDefault();
     AuthService.login(username, password)
-      .then((response) => {
+      .then(() => {
         // 以驗證mongodb data以及設定localstorage
         setRedirectToReferrer(true);
       })
@@ -42,8 +42,10 @@ const Login = (props) => {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
+  console.log(notification);
   return (
     <>
+
       <Box
         title="Login"
         content={

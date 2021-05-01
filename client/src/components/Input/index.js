@@ -1,5 +1,6 @@
 import React from 'react';
 // import { Row, Col, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import { ChatTextFill, CloudUploadFill, Image } from 'react-bootstrap-icons';
 import IconButton from '../IconButton';
 import './index.scss';
@@ -53,4 +54,13 @@ const Input = ({
     </form>
   );
 };
+
+Input.propTypes = {
+  message: PropTypes.string,
+  setMessage: PropTypes.func,
+  sendMessage: PropTypes.func,
+  sendFile: PropTypes.func,
+  uploadFile: PropTypes.func,
+}
+
 export default Input;

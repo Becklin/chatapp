@@ -2,7 +2,7 @@ import ss from 'socket.io-stream';
 import { dataURLtoFile } from './FileConverter';
 
 class FileProcessor {
-  constructor(file, socket, callback) {
+  constructor(file, socket) {
     console.log('檔案', file);
 
     this.socket = socket;

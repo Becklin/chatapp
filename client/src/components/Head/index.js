@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { NotificationContext } from '../../context/notification-context';
 import './index.scss';
 
@@ -18,5 +19,9 @@ const Head = ({ children }) => {
     </section>
   );
 };
+
+Head.propTypes = {
+  children: PropTypes.any,
+}
 
 export default Head;

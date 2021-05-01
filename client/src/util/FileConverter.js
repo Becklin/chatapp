@@ -1,4 +1,4 @@
-export function dataURLtoFile(base64, config, callback) {
+export function dataURLtoFile(base64, config) {
   var arr = base64.split(','),
     mime = arr[0].match(/:(.*?);/)[1],
     bstr = atob(arr[1]),

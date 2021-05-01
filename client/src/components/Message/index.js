@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Image, ProgressBar } from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
 import ReactEmoji from 'react-emoji';
@@ -8,11 +9,11 @@ import './index.scss';
 //USER送發訊息的人，name該聊天室使用者名字
 const Message = ({
   message,
-  message: { user, content, upload, type, address, percent, date },
   name,
   avatarSrc,
 }) => {
   // console.log('最後', user, content, message);
+  const { user, content, upload, type, address, percent, date } = message;
   let isSentByCurrentUser = false;
   const trimmedName = name.trim().toLowerCase();
   if (trimmedName === user) isSentByCurrentUser = true;
@@ -46,7 +47,6 @@ const Message = ({
               Your browser does not support the video tag.
             </video>
           );
-          break;
         }
         case 'image/*':
           return (
@@ -55,7 +55,6 @@ const Message = ({
               src={`data:image/png;base64, ${upload}`}
             />
           );
-          break;
         default:
           return (
             <img
@@ -92,5 +91,12 @@ const Message = ({
     </div>
   );
 };
+
+Message.propTypes = {
+  message: PropTypes.object,
+  counts: PropTypes.number,
+  name: PropTypes.string,
+  avatarSrc: PropTypes.string,
+}
 
 export default Message;

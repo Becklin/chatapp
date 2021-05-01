@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 // import { Row, Col } from 'react-bootstrap';
 import { ArrowLeftCircle, PeopleFill } from 'react-bootstrap-icons';
 import './index.scss';
@@ -19,5 +21,10 @@ const InfoBar = ({ room, counts }) => (
     </div>
   </div>
 );
+
+InfoBar.propTypes = {
+  room: PropTypes.string,
+  counts: PropTypes.number,
+}
 
 export default React.memo(InfoBar);

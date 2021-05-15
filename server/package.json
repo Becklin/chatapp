@@ -4,11 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon index.js",
     "client": "cd client && npm start",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon -r dotenv/config index.js",
-    "start": "node index.js",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
     "lint": "eslint *.js"
   },

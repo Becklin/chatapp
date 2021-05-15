@@ -12,7 +12,6 @@ const {
 const childProcess = () => {
 
   const dev_uri = `mongodb+srv://beckLin:${MONGO_PW}@cluster1.juqcg.mongodb.net/${MONGO_DB}?retryWrites=true&w=majority`;
-  console.log(dev_uri);
   const db = require('./models');
 
   db.mongoose

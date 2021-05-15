@@ -32,6 +32,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint src/**/*.js"
   },
+  "//": [
+    "Without proxy to server port(5000), client request will fail becasue the url localhost:3000/api does not exist"],
   "proxy": "http://localhost:5000/",
   "browserslist": {
     "production": [

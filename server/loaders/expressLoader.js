@@ -46,14 +46,17 @@ class ExpressLoader {
       app.use(bodyParser.json());
       // parse requests of content-type - application/x-www-form-urlencoded
       app.use(bodyParser.urlencoded({ extended: true }));
+
+
       if (NODE_ENV === 'production') {
         // Serve any static files
-        app.use(express.static(path.join(__dirname, '../client/build')));
+        app.use(express.static(path.join(__dirname, '../../client/build')));
         // Handle React routing, return all requests to React app
         app.get('*', function (req, res) {
-          res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+          res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
         });
       }
+
       require('../routes/index.routes')(app);
 
       const { addUser, getUser, removeUser, getUsersInRoom } = require('../users');
@@ -62,7 +65,6 @@ class ExpressLoader {
 
       io.on('connection', socket => {
         console.log('we have connection!!!');
-        console.log('socketio', socket.id, 'process.pid', process.pid);
         // 方法零 一次整個傳輸
         //   fs.readFile(__dirname + '/images/img1.jpg', function(err, buf) {
         //     console.log(buf);
@@ -168,7 +170,6 @@ class ExpressLoader {
     
           s3.upload(params, function (err, data) {
             if (err) throw err;
-            console.log('資料', data);
             console.log(`上傳成功位子在  ${data.Location}`);
           });
         };
@@ -216,8 +217,6 @@ class ExpressLoader {
           });
           stream.on('end', () => {
             const BufferData = Buffer.concat(fileBuffer);
-            console.log('要上傳了!!!!!!!!!!!!!!!!!!!!!!!!!!!!', BufferData);
-            console.log(data, user);
             uploadFileToAws(BufferData, data.name, user.name);
             /* TODO 以上會在上傳到aws，上傳前直接在前端把圖檔preview就好，以下可以不用作
         右邊為轉成webP技巧網站 https://css-tricks.com/using-webp-images/ */

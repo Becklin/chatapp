@@ -3,13 +3,11 @@ import { dataURLtoFile } from './FileConverter';
 
 class FileProcessor {
   constructor(file, socket) {
-    console.log('檔案', file);
-
     this.socket = socket;
     this.file = file;
     this.name = file.name;
   }
-  process(file, socket) {
+  static process(file, socket) {
     const config = {
       name: file.name,
       quality: 0.6,
@@ -18,7 +16,6 @@ class FileProcessor {
     return convertToDataUrl(file, config)
       .then(({ readerDataUrl, config, callback }) => {
         this.base64 = readerDataUrl;
-        console.log('轉換成convertToDataUrl');
         switch (config.type) {
           // case 'image/jpeg': {
           //   return minifiedDataURL(readerDataUrl, config, callback);
@@ -37,12 +34,10 @@ class FileProcessor {
       })
       .then(data => {
         this.data = data;
-        console.log("資料", data);
         return new FileProcessor(this.data, socket);
       });
   }
   send() {
-    console.log('送出', this, this.file.size);
     const stream = ss.createStream();
     const blobStream = ss.createBlobReadStream(this.file); //for browser use, 本來寫法是什麼
     blobStream.pipe(stream);
@@ -52,7 +47,6 @@ class FileProcessor {
       type: this.file.type,
       size: this.file.size
     });
-    console.log('this.file', this.file);
   }
 
   upload() {
@@ -92,7 +86,6 @@ const convertToDataUrl = async (file, config, callback) => {
       reader.readAsDataURL(file); // 讀取文件內容，結果用data:url的字符串形式表示
       reader.onload = function() {
         const readerDataUrl = this.result;
-        console.log('加載開始');
         resolve({ readerDataUrl, config, callback });
       };
       reader.onerror = () => reject('加载失败');

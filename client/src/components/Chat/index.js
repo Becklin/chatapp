@@ -22,7 +22,6 @@ const Chat = () => {
   if (process.env.NODE_ENV === 'production') {
     ENDPOINT = 'https://dailytalk.herokuapp.com';
   }
-  console.log(ENDPOINT);
   useEffect(() => {
     const { name, room } = qs.parse(search);
     socket = io(ENDPOINT, {

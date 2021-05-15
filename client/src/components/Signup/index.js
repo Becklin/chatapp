@@ -42,7 +42,6 @@ const Signup = () => {
     setPassword(e.target.value);
   };
   if (hasSignup) return <Redirect to="login" />;
-  console.log('process', process.env, notification);
   return (
     <Box
       title="Sign Up"

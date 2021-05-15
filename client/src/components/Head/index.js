@@ -5,7 +5,6 @@ import './index.scss';
 
 const Head = ({ children }) => {
   const [notification] = useContext(NotificationContext);
-  console.log('提示', notification);
   return (
     <section className="chat__head">
       <div

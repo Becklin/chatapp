@@ -42,7 +42,6 @@ const Login = () => {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
-  console.log(notification);
   return (
     <>
 

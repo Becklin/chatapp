@@ -12,7 +12,6 @@ const Message = ({
   name,
   avatarSrc,
 }) => {
-  // console.log('最後', user, content, message);
   const { user, content, upload, type, address, percent, date } = message;
   let isSentByCurrentUser = false;
   const trimmedName = name.trim().toLowerCase();

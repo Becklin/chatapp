@@ -4,7 +4,6 @@ let API_URL = '/api/auth/';
 if (process.env.NODE_ENV === 'production') {
   API_URL = 'https://dailytalk.herokuapp.com/api/auth/';
 }
-console.log(API_URL);
 class AuthService {
   login(username, password) {
     return axios
@@ -16,7 +15,6 @@ class AuthService {
         if (response.data.accessToken) {
           localStorage.setItem('user', JSON.stringify(response.data));
         }
-        console.log("lresponse.data", response.data);
         return response.data;
       })
       .catch((err) => {

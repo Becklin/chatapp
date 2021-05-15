@@ -9,7 +9,7 @@ class FileProcessor {
     this.file = file;
     this.name = file.name;
   }
-  static process(file, socket) {
+  process(file, socket) {
     const config = {
       name: file.name,
       quality: 0.6,
@@ -37,12 +37,12 @@ class FileProcessor {
       })
       .then(data => {
         this.data = data;
+        console.log("資料", data);
         return new FileProcessor(this.data, socket);
       });
   }
   send() {
     console.log('送出', this, this.file.size);
-
     const stream = ss.createStream();
     const blobStream = ss.createBlobReadStream(this.file); //for browser use, 本來寫法是什麼
     blobStream.pipe(stream);
@@ -53,14 +53,6 @@ class FileProcessor {
       size: this.file.size
     });
     console.log('this.file', this.file);
-    // const totalSize = this.file.size;
-    // let size = 0;
-    // blobStream.on('data', function (chunk) {
-    //   size += chunk.length;
-    //   console.log('totalSize', totalSize);
-    //   console.log(Math.floor((size / totalSize) * 100) + '%');
-    // });
-    // console.log('完成Blob', Date());
   }
 
   upload() {
@@ -71,11 +63,6 @@ class FileProcessor {
       size: this.file.size
     });
     const blobStream = ss.createBlobReadStream(this.file); //for browser use, 本來寫法是什麼
-    // let size = 0;
-    // blobStream.on('data', function(chunk) {
-    //   size += chunk.length;
-    //   console.log(Math.floor((size / file.size) * 100) + '%');
-    // });
     blobStream.pipe(stream);
   }
 }

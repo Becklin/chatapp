@@ -38,7 +38,7 @@ const childProcess = () => {
 };
 
 
-const os = require('os');
+// const os = require('os');
 
 //sticky.listen() will return false if Master
 

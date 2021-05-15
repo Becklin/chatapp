@@ -16,7 +16,11 @@ class AuthService {
         if (response.data.accessToken) {
           localStorage.setItem('user', JSON.stringify(response.data));
         }
+        console.log("lresponse.data", response.data);
         return response.data;
+      })
+      .catch((err) => {
+        console.log("login err", err);
       });
   }
 

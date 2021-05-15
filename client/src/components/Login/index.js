@@ -47,6 +47,7 @@ const Login = () => {
 
       <Box
         title="Login"
+        notification={notification}
         content={
           <Form>
             <Form.Group controlId="formBasicName">

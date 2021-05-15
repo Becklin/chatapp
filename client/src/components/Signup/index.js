@@ -45,6 +45,7 @@ const Signup = () => {
   return (
     <Box
       title="Sign Up"
+      notification={notification}
       content={
         <Form>
           <Form.Group controlId="formBasicName">

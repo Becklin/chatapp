@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.4.0",
+    "@emotion/styled": "^11.3.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "bootstrap": "^4.5.2",
+    "emotion-normalize": "^11.0.1",
     "grommet-icons": "^4.4.0",
     "moment": "^2.29.1",
     "node-sass": "^5.0.0",
@@ -26,14 +29,15 @@
     "styled-components": "^5.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject",
     "lint": "eslint src/**/*.js"
   },
   "//": [
-    "Without proxy to server port(5000), client request will fail becasue the url localhost:3000/api does not exist"],
+    "Without proxy to server port(5000), client request will fail becasue the url localhost:3000/api does not exist"
+  ],
   "proxy": "http://localhost:5000/",
   "browserslist": {
     "production": [

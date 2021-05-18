@@ -42,10 +42,11 @@ const Signup = () => {
     setPassword(e.target.value);
   };
   if (hasSignup) return <Redirect to="login" />;
+
   return (
     <Box
+    notification={notification}
       title="Sign Up"
-      notification={notification}
       content={
         <Form>
           <Form.Group controlId="formBasicName">

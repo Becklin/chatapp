@@ -1,18 +1,6 @@
 @import './variables.scss';
 @import '~bootstrap/scss/bootstrap';
 
-html,
-body {
-  //prevent pull-down-to-refresh of mobile chrome
-  overscroll-behavior-y: contain;
-}
-
-#root {
-  background-color: $main;
-  height: 100vh;
-  // display: flex;
-}
-
 #portal {
   display: flex;
   justify-content: center;
@@ -28,5 +16,3 @@ body {
     border: none;
   }
 }
-
-//https://itnext.io/structuring-your-sass-projects-c8d41fa55ed4

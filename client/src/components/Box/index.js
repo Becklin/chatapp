@@ -1,16 +1,78 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './index.scss';
+import styled from '@emotion/styled';
+// import { css } from '@emotion/react';
 
+const BoxStyle = styled('div')`
+  width: 300px;
+  margin: 0;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+// const Child = styled('span')`
+//   color: blue;
+// `
+// const Button = styled.button`
+//   color: ${props =>
+//     props.primary ? 'hotpink' : 'turquoise'};
+//     ${Child} {
+//       color: yellow;
+//     }
+// `
+// const AnotherSpan = Button.withComponent('span');
+// const dynamicStyle = props =>
+//   css`
+//     color: ${props.color};
+//   `
+//   const Example = styled('span')`
+//   color: lightgreen;
+//   & > a {
+//     color: hotpink;
+//   }
+`
+
+// const Container = styled.div`
+//   ${dynamicStyle};
+// `
 const Box = ({ title, content, control, notification }) => {
   return (
-    <div className="chat__box">
+    <BoxStyle
+    className="chat__box"
+    >
+        {/* <Example>
+    This is <a>nested</a>.
+  </Example> */}
+      {/* <Button
+        as="a"
+        href="https://github.com/emotion-js/emotion"
+      >
+        Emotion on GitHub
+      </Button>
+      <Container color="lightgreen">
+        This is lightgreen.
+      </Container>
+      <H1>febfhtjffnfyukfukyf</H1>
+      <Button primary>ddd<Child>child</Child></Button>
+      <AnotherSpan>heyhehyehy</AnotherSpan> */}
       <div>{notification.content}</div>
       <h1>{title}</h1>
       {content}
       <div>{control}</div>
-    </div>
+    </BoxStyle>
   );
+};
+// const H1 = styled('h1')(() => ({
+//   color: 'yellow'
+// }))
+
+Box.defaultProps = {
+  notification: {
+    content: "",
+    type: null,
+  }
 };
 
 Box.propTypes = {

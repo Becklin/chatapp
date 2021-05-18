@@ -5,6 +5,8 @@ import {
   Redirect,
   Switch,
 } from 'react-router-dom';
+import { Global, css } from "@emotion/react";
+import emotionNormalize from 'emotion-normalize';
 import { NotificationContextProvider } from '../src/context/notification-context';
 import {
   Home,
@@ -17,10 +19,31 @@ import {
   PrivateRoute,
 } from './components';
 import './index.scss';
-
+import {colors}  from "./variables";
+// main: "#3cb67f",
+// BtnBgColor: "#2F80EB",
+// BorderDecoColor: "#ECECEE",
+// MainFontColor: "#2A3346",
+// ChatFontColor: "#808187",
+// ChatRoomBfColor: "#F2F3F7",
 const App = () => (
   <Router>
     <NotificationContextProvider>
+      <Global
+        styles={css`
+          ${emotionNormalize}
+          html,
+          body {
+            padding: 0;
+            margin: 0;
+            background: ${colors.bgGradient};
+            color: ${colors.ChatFontColor};
+            min-height: 100%;
+            //prevent pull-down-to-refresh of mobile chrome
+            overscroll-behavior-y: contain;
+          }
+        `}
+      />
       <Head>
         <AuthButton />
       </Head>

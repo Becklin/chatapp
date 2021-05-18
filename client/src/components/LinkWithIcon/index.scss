@@ -1,0 +1,24 @@
+.chat {
+  &__icon.disabled {
+    color: #e3e3e3;
+  }
+}
+
+.chat__label {
+  cursor: pointer;
+  margin: 0px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-right: 6px;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.hidden-input {
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}

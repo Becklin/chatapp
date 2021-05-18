@@ -19,13 +19,8 @@ import {
   PrivateRoute,
 } from './components';
 import './index.scss';
-import {colors}  from "./variables";
-// main: "#3cb67f",
-// BtnBgColor: "#2F80EB",
-// BorderDecoColor: "#ECECEE",
-// MainFontColor: "#2A3346",
-// ChatFontColor: "#808187",
-// ChatRoomBfColor: "#F2F3F7",
+import {vars}  from "./variables";
+
 const App = () => (
   <Router>
     <NotificationContextProvider>
@@ -36,8 +31,8 @@ const App = () => (
           body {
             padding: 0;
             margin: 0;
-            background: ${colors.bgGradient};
-            color: ${colors.ChatFontColor};
+            background: ${vars.bgGradient};
+            color: ${vars.ChatFontColor};
             min-height: 100%;
             //prevent pull-down-to-refresh of mobile chrome
             overscroll-behavior-y: contain;

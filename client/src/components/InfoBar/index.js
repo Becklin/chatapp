@@ -1,25 +1,45 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
-// import { Row, Col } from 'react-bootstrap';
 import { ArrowLeftCircle, PeopleFill } from 'react-bootstrap-icons';
-import './index.scss';
+import LinkWithIcon from '../LinkWithIcon';
+import { vars }  from "../../variables";
+import styled from "@emotion/styled";
+
+const InfoBarStyled = styled('div')`
+      display: flex;
+      align-items: center;
+      padding: 0 50px 0 12px;
+      & .chat__room {
+        width: 100px;
+        flex: 5;
+        color: ${vars.MainFontColor};
+      }
+      & .chat__count {
+        width: 100px;
+        flex: 1;
+        color: ${vars.MainFontColor};
+      }
+      & .chat__back {
+        width: 100px;
+        flex: 1;
+      }
+`
 
 const InfoBar = ({ room, counts }) => (
-  <div className="chat__infoBar">
+  <InfoBarStyled>
     <div className="chat__room">
       <h3>{room}</h3>
     </div>
     <div className="chat__count">
-      {counts} <PeopleFill color="#ffffff" size={24} />
+      {counts} <PeopleFill color={vars.MainFontColor} size={24} />
     </div>
     <div className="chat__back">
-      <Link to="/">
-        <ArrowLeftCircle color="white" size={24} />
-      </Link>
+      <LinkWithIcon
+            to='/'
+            icon={<ArrowLeftCircle color={vars.MainFontColor} size={24} />}
+      />
     </div>
-  </div>
+  </InfoBarStyled>
 );
 
 InfoBar.propTypes = {

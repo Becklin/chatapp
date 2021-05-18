@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import Box from '../Box';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
+import LinkWithIcon from "../LinkWithIcon";
+
 import './index.scss';
 
 const Join = () => {
@@ -11,6 +12,7 @@ const Join = () => {
   const handleChange = (event) => {
     setAvatar(URL.createObjectURL(event.target.files[0]));
   };
+  const isComplete = name && room;
   return (
     <Box
       title="Join"
@@ -35,14 +37,14 @@ const Join = () => {
         </Form>
       }
       control={
-        <Link
-          onClick={(event) => (!name || !room ? event.preventDefault() : null)}
-          to={`/chat?name=${name}&room=${room}`}
-        >
-          <Button block type="submit">
+          <LinkWithIcon
+            primary
+            disabled={isComplete}
+            width="90%"
+            to={`/chat?name=${name}&room=${room}`}
+          >
             Join In
-          </Button>
-        </Link>
+          </LinkWithIcon>
       }
     />
   );

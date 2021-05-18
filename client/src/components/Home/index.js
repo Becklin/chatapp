@@ -1,39 +1,31 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import AuthService from '../../util/auth';
-import './index.scss';
 
+import { Person, PersonPlus, FilePlus } from 'react-bootstrap-icons';
+import LinkWithIcon from '../LinkWithIcon';
 import styled from '@emotion/styled';
-const BgGradient = styled('div')`
+
+const HomeStyled = styled('div')`
+  display: flex;
   background: radial-gradient(circle, rgba(238,238,238,1) 0%, rgba(255,255,255,1) 100%);
-`;
-const StyledLink = styled(Link)`
-    &:focus, &:hover, &:visited, &:link, &:active {
-        text-decoration: none;
-        padding: 16px;
-        background: #007bff;
-        border-radius: 10px;
-        color: #ffffff;
-        margin: 8px;
-        display: flex;
-        justify-content: center;
-        width: ${props => props.width};
-    }
-`;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`
+
 const Home = () => (
-  <BgGradient>
-    <div className="chat-home">
+    <HomeStyled>
       <h1>Fresh Talk</h1>
       <div className="chat-home__controls">
-        <StyledLink width="90%" to="/signup">Sign up</StyledLink>
+        <LinkWithIcon primary width="120px" to="/join" icon={<FilePlus size="24" />} >Sign up</LinkWithIcon>
         {AuthService.getCurrentUser() ? (
-          <StyledLink width="90%" to="/join">Join</StyledLink>
+          <LinkWithIcon primary width="120px" to="/join" icon={<PersonPlus size="24" />} >Join</LinkWithIcon>
         ) : (
-          <StyledLink width="90%" to="/login">Login</StyledLink>
+          <LinkWithIcon primary width="120px" to="/login" icon={<Person size="24" />} >Login</LinkWithIcon>
         )}
       </div>
-    </div>
-  </BgGradient>
+    </HomeStyled>
 );
 
 export default Home;

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import Box from '../Box';
 import { Form } from 'react-bootstrap';
+import styled from '@emotion/styled';
 import LinkWithIcon from "../LinkWithIcon";
+import { vars } from '../../variables';
 
 import './index.scss';
 
@@ -13,12 +15,37 @@ const Join = () => {
     setAvatar(URL.createObjectURL(event.target.files[0]));
   };
   const isComplete = name && room;
+
+  const FileInputStyled = styled('input')`
+    color: transparent;
+    position:relative;
+    height: 50px;
+    margin-left: -140px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    &::before {
+      content: 'Select some files';
+      display: inline-block;
+      background: ${vars.BorderDecoColor};
+      color: ${vars.ChatFontColor};;
+      border-radius: 3px;
+      padding: 0px 8px;
+      outline: none;
+      cursor: pointer;
+      width: 140px;
+      height: 50px;
+      position: absolute;
+      left: 140px;
+      line-height: 50px;
+    }
+  }
+  `
   return (
     <Box
       title="Join"
       content={
         <Form>
-          <input type="file" onChange={handleChange} />
+          <FileInputStyled type="file" onChange={handleChange} />
           <img width="50px" src={avatar} />
           <Form.Group controlId="formBasicPassword">
             <Form.Label>Username</Form.Label>

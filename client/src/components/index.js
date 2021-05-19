@@ -15,6 +15,7 @@ import Box from './Box';
 import IconButton from './IconButton';
 import LinkWithIcon from './LinkWithIcon';
 import Menu from './Menu';
+import Title from './Title';
 
 export {
   Box,
@@ -34,4 +35,5 @@ export {
   IconButton,
   LinkWithIcon,
   Menu,
+  Title,
 };

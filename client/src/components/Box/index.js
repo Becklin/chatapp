@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import { Title } from '../../components';
 // import { css } from '@emotion/react';
 
 const BoxStyle = styled('div')`
@@ -12,6 +13,9 @@ const BoxStyle = styled('div')`
   transform: translate(-50%, -50%);
 `;
 
+const ControlStyled = styled('div')`
+  margin: 12px 0px;
+`
 // const Child = styled('span')`
 //   color: blue;
 // `
@@ -32,7 +36,7 @@ const BoxStyle = styled('div')`
 //   & > a {
 //     color: hotpink;
 //   }
-`
+//`
 
 // const Container = styled.div`
 //   ${dynamicStyle};
@@ -58,9 +62,9 @@ const Box = ({ title, content, control, notification }) => {
       <Button primary>ddd<Child>child</Child></Button>
       <AnotherSpan>heyhehyehy</AnotherSpan> */}
       <div>{notification.content}</div>
-      <h1>{title}</h1>
+      <Title>{title}</Title>
       {content}
-      <div>{control}</div>
+      <ControlStyled>{control}</ControlStyled>
     </BoxStyle>
   );
 };

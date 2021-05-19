@@ -11,6 +11,7 @@ const primaryStyle = () =>
     border-radius: 5px;
     margin: 8px;
     color: #ffffff;
+    display: inline-block;
   `
 
 const StyledLink = styled(Link)`

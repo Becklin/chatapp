@@ -4,6 +4,7 @@ import AuthService from '../../util/auth';
 import { Person, PersonPlus, FilePlus } from 'react-bootstrap-icons';
 import LinkWithIcon from '../LinkWithIcon';
 import styled from '@emotion/styled';
+import { Title } from '../../components';
 
 const HomeStyled = styled('div')`
   display: flex;
@@ -16,9 +17,9 @@ const HomeStyled = styled('div')`
 
 const Home = () => (
     <HomeStyled>
-      <h1>Fresh Talk</h1>
+      <Title>Fresh Talk</Title>
       <div className="chat-home__controls">
-        <LinkWithIcon primary width="120px" to="/join" icon={<FilePlus size="24" />} >Sign up</LinkWithIcon>
+        <LinkWithIcon primary width="120px" to="/signup" icon={<FilePlus size="24" />} >Sign up</LinkWithIcon>
         {AuthService.getCurrentUser() ? (
           <LinkWithIcon primary width="120px" to="/join" icon={<PersonPlus size="24" />} >Join</LinkWithIcon>
         ) : (

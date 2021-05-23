@@ -1,7 +1,21 @@
-- For local developement, run **redis-server** at the first place.
+# Chatapp
 
-- run `node s3_createbucket.js BUCKET_NAME` to create s3 bucket
+Chatapp is a web app, which I practice as a playground manily in several aspects:
+* React
+    * Emotion style component
+* Nodejs
+    * Express api
+    * MongoDB
+* socket.io
+* Docker
 
-- Running Docker in window, ` docker-machine ip default` to get windows port, https://stackoverflow.com/questions/44014698/docker-failed-to-connect-to-localhost-port-4000-connection-refused
+## Installation
 
-- ` "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",`
+```bash
+npm install
+```
+
+### TODO 
+- [ ] Use styled component 
+- [ ] Implement profile pic in chat room
+

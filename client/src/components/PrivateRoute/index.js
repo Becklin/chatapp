@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 import AuthService from '../../util/auth';
 
-const PrivateRoute = ({ component: Component, location, ...rest }) => (
+const PrivateRoute = ({ component: Component, location, ...rest }) => {
+  console.log("location", location);
+  return (
   <Route
     {...rest}
     render={(props) =>
@@ -19,7 +21,7 @@ const PrivateRoute = ({ component: Component, location, ...rest }) => (
       )
     }
   />
-);
+)};
 
 PrivateRoute.propTypes = {
   component: PropTypes.Component,

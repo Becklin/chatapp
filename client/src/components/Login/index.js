@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 
 import Box from '../Box';
@@ -8,6 +8,7 @@ import AuthService from '../../util/auth';
 import './index.scss';
 
 const Login = () => {
+  const { state } = useLocation();
   const [notification, setNotification] = useContext(NotificationContext);
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
   const [username, setUsername] = useState('');
@@ -32,9 +33,9 @@ const Login = () => {
         }, 3000);
       });
   };
-  // const { from } = props.location.state || { from: { pathname: '/' } };
+  const { from } = state || { from: { pathname: '/' } };
   if (redirectToReferrer === true) {
-    return <Redirect to="join" />;
+    return <Redirect to={from} />;
   }
   const handleNameChange = (e) => {
     setUsername(e.target.value);
@@ -44,7 +45,6 @@ const Login = () => {
   };
   return (
     <>
-
       <Box
         title="Login"
         notification={notification}

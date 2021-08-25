@@ -116,6 +116,7 @@ const Chat = () => {
 
   const sendMessage = (event) => {
     event.preventDefault();
+    console.log(message);
     if (message) {
       socket.emit('sendMessage', message, () => setMessage(''));
     }

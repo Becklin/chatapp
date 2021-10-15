@@ -41,14 +41,11 @@ class ExpressLoader {
       // provides Express middleware to enable CORS
       // app.use(cors(corsOptions));
     
-      // parse requests of content-type - application/json
-      // body-parser helps to parse the request and create the req.body object
       app.use(bodyParser.json());
-      // parse requests of content-type - application/x-www-form-urlencoded
       app.use(bodyParser.urlencoded({ extended: true }));
 
-
       if (NODE_ENV === 'production') {
+        console.log('dont run this');
         // Serve any static files
         app.use(express.static(path.join(__dirname, '../../client/build')));
         // Handle React routing, return all requests to React app
@@ -56,7 +53,9 @@ class ExpressLoader {
           res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
         });
       }
-
+      if (NODE_ENV === 'development') {
+        console.log('development');
+      }
       require('../routes/index.routes')(app);
 
       const { addUser, getUser, removeUser, getUsersInRoom } = require('../users');

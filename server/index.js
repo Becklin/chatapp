@@ -20,7 +20,7 @@ const childProcess = () => {
       useUnifiedTopology: true
     })
     .then(() => {
-      console.log('成功Successfully connect to MongoDB.');
+      console.log('Successfully connect to MongoDB.');
       initial();
       const ExpressLoader = require( "./loaders/expressLoader" );
       new ExpressLoader();

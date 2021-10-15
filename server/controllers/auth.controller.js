@@ -10,7 +10,7 @@ var em = new events.EventEmitter();
 
 em.on('user_signup', ({ user }) => {
     console.log("we have sent email to you");
-  })
+})
 
 const SignupServiceInstance = new SignupService(UserModel); //Dependency Injection
 /**

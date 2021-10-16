@@ -1,25 +1,20 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import {
   BrowserRouter as Router,
   Route,
   Redirect,
   Switch,
 } from 'react-router-dom';
-import { Global, css } from "@emotion/react";
+import { Global, css } from '@emotion/react';
 import emotionNormalize from 'emotion-normalize';
 import { NotificationContextProvider } from '../src/context/notification-context';
-import {
-  Home,
-  Head,
-  Login,
-  Signup,
-  AuthButton,
-  Join,
-  Chat,
-  PrivateRoute,
-} from './components';
+import { Head, AuthButton } from './components';
 import './index.scss';
-import {vars}  from "./variables";
+import { vars } from './variables';
+
+const Home = lazy(() => import('./components/Home'));
+const Join = lazy(() => import('./components/Join'));
+const Chat = lazy(() => import('./components/Chat'));
 
 const App = () => (
   <Router>
@@ -42,14 +37,18 @@ const App = () => (
       <Head>
         <AuthButton />
       </Head>
-      <Switch>
-        <Route path="/" exact component={Home} />
-        <Route path="/Signup" component={Signup} />
-        <Route path="/login" component={Login} />
-        <PrivateRoute path="/join" component={Join} />
-        <PrivateRoute path="/chat" component={Chat} />
-        <Redirect from="*" to="/" />
-      </Switch>
+      <Suspense fallback={() => <div>Loading...</div>}>
+        <Switch>
+          <Route path="/" exact component={Home} />
+          {/* <Route path="/Signup" component={Signup} />
+          <Route path="/login" component={Login} /> */}
+          {/* <PrivateRoute path="/join" component={Join} />
+          <PrivateRoute path="/chat" component={Chat} /> */}
+          <Route path="/join" component={Join} />
+          <Route path="/chat" component={Chat} />
+          <Redirect from="*" to="/" />
+        </Switch>
+      </Suspense>
     </NotificationContextProvider>
   </Router>
 );
